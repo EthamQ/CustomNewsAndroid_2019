@@ -12,6 +12,6 @@ public class Technology extends NewsCategory{
     };
 
     public Technology(){
-        this.categoryID = CATEGORY_ID;
+        this.setCategoryID(CATEGORY_ID);
     }
 }

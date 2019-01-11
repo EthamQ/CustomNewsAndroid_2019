@@ -18,7 +18,7 @@ public class NewsArticle implements Parcelable {
 	String urlToImage = "";
 	String publishedAt = "";
 	String content = "";
-	int newsCategory = 0;
+	public int newsCategory = 0;
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many
     // articles the api has stored that match this query. It sends only up to 100 results

@@ -13,6 +13,6 @@ public class Finance extends NewsCategory {
     };
 
     public Finance(){
-        this.categoryID = CATEGORY_ID;
+        this.setCategoryID(CATEGORY_ID);
     }
 }

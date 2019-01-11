@@ -12,6 +12,6 @@ public class Politics extends NewsCategory{
     };
 
     public Politics(){
-        this.categoryID = CATEGORY_ID;
+        this.setCategoryID(CATEGORY_ID);
     }
 }

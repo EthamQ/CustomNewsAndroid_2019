@@ -25,7 +25,7 @@ public class FilterNewsService {
         categoryDistribution.setDistribution(distribution);
         for(int i = 0; i < distribution.size(); i++){
             Log.d("**", "amount in query: " + distribution.get(i).amountInCurrentQuery);
-            Log.d("**", "category id: " + distribution.get(i).categoryID);
+            Log.d("**", "category id: " + distribution.get(i).getCategoryID());
         }
         return categoryDistribution;
     }

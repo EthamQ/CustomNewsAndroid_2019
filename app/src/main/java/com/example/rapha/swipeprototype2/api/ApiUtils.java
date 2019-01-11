@@ -15,7 +15,7 @@ public class ApiUtils {
         for(int i = 0; i < newsCategories.size(); i++){
             NewsCategory currentCategory = newsCategories.get(i);
             NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder();
-            queryBuilder.setQueryCategory(currentCategory.categoryID);
+            queryBuilder.setQueryCategory(currentCategory.getCategoryID());
             LinkedList<NewsArticle> articlesForCurrentCategory = newsApi.queryNewsArticles(queryBuilder);
             newsArticles.addAll(articlesForCurrentCategory);
         }

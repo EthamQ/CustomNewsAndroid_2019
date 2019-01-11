@@ -7,8 +7,9 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
-@Database(entities = {UserPreferenceTable.class}, version = 1, exportSchema = false)
+@Database(entities = {UserPreferenceRoomModel.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
 
         private static AppDatabase instance;
@@ -43,9 +44,6 @@ public abstract class AppDatabase extends RoomDatabase{
                 }
                 @Override
                 protected Void doInBackground(Void... voids) {
-//                        dao.insertOneNewsCategory(new UserPreferenceTable(0, 1));
-//                        dao.insertOneNewsCategory(new UserPreferenceTable(1, 3));
-//                        dao.insertOneNewsCategory(new UserPreferenceTable(2, 2));
                         return null;
                 }
         }

@@ -12,6 +12,6 @@ public class Movie  extends NewsCategory{
     };
 
     public Movie(){
-        this.categoryID = CATEGORY_ID;
+        this.setCategoryID(CATEGORY_ID);
     }
 }

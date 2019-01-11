@@ -12,6 +12,6 @@ public class Food  extends NewsCategory{
     };
 
     public Food(){
-        this.categoryID = CATEGORY_ID;
+        this.setCategoryID(CATEGORY_ID);
     }
 }

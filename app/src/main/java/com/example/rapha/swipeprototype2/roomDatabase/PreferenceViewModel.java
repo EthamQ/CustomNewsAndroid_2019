@@ -10,7 +10,7 @@ import java.util.List;
 public class PreferenceViewModel extends AndroidViewModel {
 
     private UserPreferenceRepository repository;
-    private LiveData<List<UserPreferenceTable>> allCategories;
+    private LiveData<List<UserPreferenceRoomModel>> allCategories;
 
     public PreferenceViewModel(@NonNull Application application){
         super(application);
@@ -18,15 +18,15 @@ public class PreferenceViewModel extends AndroidViewModel {
         allCategories = repository.getAllUserPreferences();
     }
 
-    public void insert(UserPreferenceTable userPreferenceTable){
-        repository.insert(userPreferenceTable);
+    public void insert(UserPreferenceRoomModel userPreferenceRoomModel){
+        repository.insert(userPreferenceRoomModel);
     }
 
-    public void update(UserPreferenceTable userPreferenceTable){
+    public void update(UserPreferenceRoomModel userPreferenceRoomModel){
         //
     }
 
-    public LiveData<List<UserPreferenceTable>> getAllPreferences(){
+    public LiveData<List<UserPreferenceRoomModel>> getAllPreferences(){
         return allCategories;
     }
 }

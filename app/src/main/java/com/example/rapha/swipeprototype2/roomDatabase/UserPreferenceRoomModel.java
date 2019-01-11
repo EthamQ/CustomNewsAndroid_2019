@@ -6,14 +6,14 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
 @Entity(tableName = "UserPreference")
-public class UserPreferenceTable {
+public class UserPreferenceRoomModel {
     @NonNull
     @PrimaryKey
     private int newsCategoryId;
 
     private int rating;
 
-    public UserPreferenceTable(int newsCategoryId, int rating) {
+    public UserPreferenceRoomModel(int newsCategoryId, int rating) {
         this.newsCategoryId = newsCategoryId;
         this.rating = rating;
     }

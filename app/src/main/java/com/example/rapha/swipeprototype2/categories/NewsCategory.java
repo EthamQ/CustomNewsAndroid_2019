@@ -1,12 +1,16 @@
 package com.example.rapha.swipeprototype2.categories;
 
-public abstract class NewsCategory {
+public class NewsCategory {
 
     private int rating = 0;
+    private int categoryID;
     public int amountInCurrentQuery = 0;
-    public int categoryID;
 
     public NewsCategory(){}
+
+    public int getCategoryID() { return categoryID; }
+
+    public void setCategoryID(int categoryID) { this.categoryID = categoryID; }
 
     public void setRating(int rating) {
         this.rating = rating;

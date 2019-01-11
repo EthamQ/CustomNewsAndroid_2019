@@ -1,7 +1,6 @@
 package com.example.rapha.swipeprototype2;
 
 import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
@@ -11,14 +10,12 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rapha.swipeprototype2.UserPreferences.FilterNewsService;
 import com.example.rapha.swipeprototype2.UserPreferences.PreferenceRatingService;
 import com.example.rapha.swipeprototype2.api.ApiService;
+import com.example.rapha.swipeprototype2.categories.NewsCategory;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-import com.example.rapha.swipeprototype2.roomDatabase.PreferenceViewModel;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRepository;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceTable;
+import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -30,27 +27,25 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<NewsArticle> articlesArrayList;
     private NewsArticleAdapter articlesArrayAdapter;
     private LinkedList<NewsArticle> newsArticlesNewsApi;
-    private PreferenceViewModel preferenceViewModel;
+    private DbService dbService;
+    List<UserPreferenceRoomModel> liveUserPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        //loadArticles();
+        loadArticles();
         setSwipeFunctionality();
 
-        //preferenceViewModel = ViewModelProvider.of();
-
-        UserPreferenceRepository ur = new UserPreferenceRepository(getApplication());
-        //ur.insert(new UserPreferenceTable(6, 5));
-        ur.getAllUserPreferences().observe(this, new Observer<List<UserPreferenceTable>>() {
+        dbService.getAllUserPreferences().observe(this, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<UserPreferenceTable> userPreferenceTables) {
-                for(int i = 0; i< userPreferenceTables.size(); i++){
-                    Log.d("FROMDB", "Rating: " + userPreferenceTables.get(i));
+            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
+                liveUserPreferences = userPreferenceRoomModels;
+                for(int i = 0; i< userPreferenceRoomModels.size(); i++){
+                    Log.d("FROMDB", "Rating: " + userPreferenceRoomModels.get(i));
+                    //ur.deleteAll();
                 }
-
             }
         });
 
@@ -65,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO: wait until real articles are loaded
         articlesArrayList.add(new NewsArticle());
         articlesArrayAdapter = new NewsArticleAdapter(MainActivity.this, R.layout.item, articlesArrayList);
+        dbService = DbService.getInstance(getApplication());
     }
 
     /**
@@ -117,15 +113,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLeftCardExit(Object dataObject) {
                 NewsArticle swipedArticle = (NewsArticle)dataObject;
-                makeToast(MainActivity.this, swipedArticle.title);
-                PreferenceRatingService.rateAsNotInteresting(swipedArticle.newsCategory);
+                PreferenceRatingService.rateAsNotInteresting(getApplication(), MainActivity.this, swipedArticle);
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
-                NewsArticle swipedArticle = (NewsArticle)dataObject;
-                makeToast(MainActivity.this, swipedArticle.title);
-                PreferenceRatingService.rateAsInteresting(swipedArticle.newsCategory);
+                final NewsArticle swipedArticle = (NewsArticle)dataObject;
+                PreferenceRatingService.rateAsInteresting(getApplication(), MainActivity.this, swipedArticle);
             }
 
             @Override
