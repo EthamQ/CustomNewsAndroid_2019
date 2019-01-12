@@ -29,13 +29,15 @@ public class MainActivity extends AppCompatActivity {
     private LinkedList<NewsArticle> newsArticlesNewsApi;
     private DbService dbService;
     List<UserPreferenceRoomModel> liveUserPreferences;
+    // TODO: Use state pattern
+    boolean articlesShouldBeLoaded = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
-        loadArticles();
+
         setSwipeFunctionality();
 
         dbService.getAllUserPreferences().observe(this, new Observer<List<UserPreferenceRoomModel>>() {
@@ -45,10 +47,13 @@ public class MainActivity extends AppCompatActivity {
                 for(int i = 0; i< userPreferenceRoomModels.size(); i++){
                     Log.d("FROMDB", "Rating: " + userPreferenceRoomModels.get(i));
                     //ur.deleteAll();
+                    if(articlesShouldBeLoaded){
+                        loadArticles(userPreferenceRoomModels);
+                        articlesShouldBeLoaded = false;
+                    }
                 }
             }
         });
-
     }
 
     /**
@@ -67,13 +72,13 @@ public class MainActivity extends AppCompatActivity {
      * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
      * which shows them on the cards to the user.
      */
-    public void loadArticles(){
+    public void loadArticles(final List<UserPreferenceRoomModel> userPreferenceRoomModels){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     // Load articles.
-                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(MainActivity.this, getApplication());
+                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(userPreferenceRoomModels);
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -82,6 +87,36 @@ public class MainActivity extends AppCompatActivity {
                             TextView tv = findViewById(R.id.helloText);
                             tv.setText("Articles loaded, start to swipe");
                             articlesArrayAdapter.notifyDataSetChanged();
+
+                            // ugly quick testing
+                            int amount0 = 0;
+                            int amount1 = 0;
+                            int amount2 = 0;
+                            int amount3 = 0;
+                            int amount4 = 0;
+                            for(int i = 0; i< newsArticlesNewsApi.size(); i++){
+                                Log.d("§§§", newsArticlesNewsApi.get(i).toString());
+                                if(newsArticlesNewsApi.get(i).newsCategory == 0){
+                                    amount0++;
+                                }
+                                if(newsArticlesNewsApi.get(i).newsCategory == 1){
+                                    amount1++;
+                                }
+                                if(newsArticlesNewsApi.get(i).newsCategory == 2){
+                                    amount2++;
+                                }
+                                if(newsArticlesNewsApi.get(i).newsCategory == 3){
+                                    amount3++;
+                                }
+                                if(newsArticlesNewsApi.get(i).newsCategory == 4){
+                                    amount4++;
+                                }
+                            }
+                            Log.d("&&&", "0: " + amount0 + "\n"
+                                    + "1: " + amount1 + "\n"
+                                    + "2: " + amount2 + "\n"
+                                    + "3: " + amount3 + "\n"
+                                    + "4: " + amount4 + "\n");
                         }
                     });
                 } catch (Exception e) {

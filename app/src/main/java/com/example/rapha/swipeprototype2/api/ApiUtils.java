@@ -28,4 +28,8 @@ public class ApiUtils {
         }
         return newsArticles;
     }
+
+    public static LinkedList<NewsArticle> orderRandomly(LinkedList<NewsArticle> newsArticles){
+            return new LinkedList<NewsArticle>();
+    }
 }

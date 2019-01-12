@@ -19,4 +19,5 @@ public class NewsCategory {
     public int getRating() {
         return this.rating;
     }
+
 }

@@ -8,9 +8,11 @@ import com.example.rapha.swipeprototype2.UserPreferences.FilterNewsService;
 import com.example.rapha.swipeprototype2.categories.CategoryDistribution;
 import com.example.rapha.swipeprototype2.categories.Finance;
 import com.example.rapha.swipeprototype2.categories.NewsCategory;
+import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class ApiService {
 
@@ -23,8 +25,8 @@ public class ApiService {
      * @return
      * @throws Exception
      */
-    public static LinkedList<NewsArticle> getAllArticlesNewsApi(LifecycleOwner lifecycleOwner, Application application) throws Exception{
-        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(application, lifecycleOwner));
+    public static LinkedList<NewsArticle> getAllArticlesNewsApi(List<UserPreferenceRoomModel> userPreferenceRoomModels) throws Exception{
+        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 
 

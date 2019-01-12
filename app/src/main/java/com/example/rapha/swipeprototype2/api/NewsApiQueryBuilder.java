@@ -99,6 +99,11 @@ public class NewsApiQueryBuilder {
             sb.append(this.dateTo);
             sb.append("&");
         }
+        if(!this.numberOfNewsArticles.isEmpty()){
+            sb.append("pageSize=");
+            sb.append(this.numberOfNewsArticles);
+            sb.append("&");
+        }
         String query = sb.toString();
         // remove the last "&"
         this.finalQuery = query.substring(0, query.length()-1);

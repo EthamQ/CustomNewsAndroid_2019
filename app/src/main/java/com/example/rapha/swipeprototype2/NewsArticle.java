@@ -58,6 +58,15 @@ public class NewsArticle implements Parcelable {
 	public void setTotalAmountInThisQuery(int totalAmount){ this.totalAmountInThisQuery = totalAmount; }
 	public int getTotalAmountInThisQuery(){ return this.totalAmountInThisQuery; }
 
+    @Override
+    public String toString(){
+        String ret = "";
+        ret += "Hello i'm a news article with the category " + newsCategory;
+        ret += "\n";
+        ret += "My title is: " + this.title;
+        return ret;
+    }
+
 
 	// Below obligatory functions to make this object parcelable.
     // Needed to pass a news Article to another Activity.

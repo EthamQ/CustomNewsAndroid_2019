@@ -26,18 +26,13 @@ public class FilterNewsUtils {
      * @param lifecycleOwner
      * @return
      */
-    public static UserPreference retrieveAndSetCategoryRating(final UserPreference userPreference, Application application, LifecycleOwner lifecycleOwner){
+    public static UserPreference retrieveAndSetCategoryRating(final UserPreference userPreference, List<UserPreferenceRoomModel> userPreferenceRoomModels){
         final NewsCategory finance = userPreference.getCategories().finance;
         final NewsCategory politics = userPreference.getCategories().politics;
         final NewsCategory food = userPreference.getCategories().food;
         final NewsCategory movie = userPreference.getCategories().movie;
         final NewsCategory technology  = userPreference.getCategories().technology;
 
-        DbService.getInstance(application)
-                .getAllUserPreferences()
-                .observe(lifecycleOwner, new Observer<List<UserPreferenceRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 for(int i = 0; i< userPreferenceRoomModels.size(); i++){
                     UserPreferenceRoomModel currentPreference = userPreferenceRoomModels.get(i);
                     int currentRating = currentPreference.getRating();
@@ -60,8 +55,7 @@ public class FilterNewsUtils {
                             break;
                     }
                 }
-            }
-        });
+
         return userPreference;
     }
 }
