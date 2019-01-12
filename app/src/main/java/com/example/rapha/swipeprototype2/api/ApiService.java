@@ -1,8 +1,11 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
+import android.util.Log;
 
+import com.example.rapha.swipeprototype2.MainActivity;
 import com.example.rapha.swipeprototype2.NewsArticle;
 import com.example.rapha.swipeprototype2.UserPreferences.FilterNewsService;
 import com.example.rapha.swipeprototype2.categories.CategoryDistribution;
@@ -23,9 +26,23 @@ public class ApiService {
      * @return
      * @throws Exception
      */
-    public static LinkedList<NewsArticle> getAllArticlesNewsApi(LifecycleOwner lifecycleOwner, Application application) throws Exception{
-        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(application, lifecycleOwner));
+    public static void getAllArticlesNewsApi(MainActivity mainActivity)throws Exception{
+        Log.d("ää", "getAllArticlesNewsApi");
+        FilterNewsService.getCategoryDistribution(mainActivity);
+
+        // ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(mainActivity));
     }
+
+    public static void getAllArticlesNewsApiCallback(CategoryDistribution distribution, MainActivity mainActivity) throws Exception{
+        Log.d("ää", "inside getAllArticlesNewsApiCallback");
+        LinkedList<NewsArticle> newsArticlesNewsApi;
+        newsArticlesNewsApi = ApiUtils.buildNewsArticlesList(distribution);
+        mainActivity.loadArticlesCallback(newsArticlesNewsApi);
+        mainActivity.test();
+
+    }
+
+
 
 
     public static int getTotalAmountNewsArticles(LinkedList<NewsArticle> newsArticles){

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainActivityCallback {
 
     private ArrayList<NewsArticle> articlesArrayList;
     private NewsArticleAdapter articlesArrayAdapter;
@@ -63,6 +63,26 @@ public class MainActivity extends AppCompatActivity {
         dbService = DbService.getInstance(getApplication());
     }
 
+    public void test(){
+        Log.d("testt", "inside test");
+    }
+
+    public void loadArticlesCallback(final LinkedList<NewsArticle> newsArticlesNewsApi){
+        Log.d("ää", "inside loadArticlesCallback");
+        this.newsArticlesNewsApi = newsArticlesNewsApi;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                // Add articles to articlesArrayList.
+                articlesArrayList.addAll(newsArticlesNewsApi);
+                TextView tv = findViewById(R.id.helloText);
+                tv.setText("Articles loaded, start to swipe");
+                articlesArrayAdapter.notifyDataSetChanged();
+                }
+        });
+
+    }
+
     /**
      * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
      * which shows them on the cards to the user.
@@ -72,18 +92,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+                    ApiService.getAllArticlesNewsApi(MainActivity.this);
                     // Load articles.
-                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(MainActivity.this, getApplication());
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Add articles to articlesArrayList.
-                            articlesArrayList.addAll(newsArticlesNewsApi);
-                            TextView tv = findViewById(R.id.helloText);
-                            tv.setText("Articles loaded, start to swipe");
-                            articlesArrayAdapter.notifyDataSetChanged();
-                        }
-                    });
+//                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(MainActivity.this);
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            // Add articles to articlesArrayList.
+//                            articlesArrayList.addAll(newsArticlesNewsApi);
+//                            TextView tv = findViewById(R.id.helloText);
+//                            tv.setText("Articles loaded, start to swipe");
+//                            articlesArrayAdapter.notifyDataSetChanged();
+//                        }
+//                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

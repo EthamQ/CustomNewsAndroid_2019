@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.NewsArticle;
 import com.example.rapha.swipeprototype2.categories.CategoryDistribution;
 import com.example.rapha.swipeprototype2.categories.NewsCategory;
@@ -15,6 +17,7 @@ public class ApiUtils {
      * @throws Exception
      */
     public static LinkedList<NewsArticle> buildNewsArticlesList(CategoryDistribution categoryDistribution)throws Exception{
+        Log.d("ää", "inside buildNewsArticlesList");
         NewsApi newsApi = new NewsApi();
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
         LinkedList<NewsCategory> distribution = categoryDistribution.getDistribution();
@@ -27,5 +30,9 @@ public class ApiUtils {
             newsArticles.addAll(articlesForCurrentCategory);
         }
         return newsArticles;
+    }
+
+    public static void buildNewsArticlesCallback(){
+
     }
 }
