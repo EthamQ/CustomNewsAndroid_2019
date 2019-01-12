@@ -18,11 +18,12 @@ public class NewsApi {
 	public NewsApi(){ }
 
     public LinkedList<NewsArticle> queryNewsArticles(NewsApiQueryBuilder queryBuilder) throws Exception {
+	    int newsCategory = queryBuilder.getNewsCategory();
 	    queryBuilder.buildQuery();
 	    String urlForApi = URL_ALL_NEWS_API + API_KEY_NEWS_API + queryBuilder.getQuery();
 	    Log.d("##", urlForApi);
         JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
-        return NewsApiUtils.jsonToNewsArticleArray(newsArticleJson);
+        return NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, newsCategory);
 	}
 
 

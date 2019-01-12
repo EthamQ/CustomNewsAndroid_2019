@@ -8,14 +8,21 @@ import java.util.LinkedList;
 
 public class ApiUtils {
 
+    /**
+     * Builds
+     * @param categoryDistribution
+     * @return
+     * @throws Exception
+     */
     public static LinkedList<NewsArticle> buildNewsArticlesList(CategoryDistribution categoryDistribution)throws Exception{
         NewsApi newsApi = new NewsApi();
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
-        LinkedList<NewsCategory> newsCategories = categoryDistribution.getDistribution();
-        for(int i = 0; i < newsCategories.size(); i++){
-            NewsCategory currentCategory = newsCategories.get(i);
+        LinkedList<NewsCategory> distribution = categoryDistribution.getDistribution();
+        for(int i = 0; i < distribution.size(); i++){
+            NewsCategory currentCategory = distribution.get(i);
             NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder();
             queryBuilder.setQueryCategory(currentCategory.getCategoryID());
+            queryBuilder.setNumberOfNewsArticles(currentCategory.amountInCurrentQuery);
             LinkedList<NewsArticle> articlesForCurrentCategory = newsApi.queryNewsArticles(queryBuilder);
             newsArticles.addAll(articlesForCurrentCategory);
         }

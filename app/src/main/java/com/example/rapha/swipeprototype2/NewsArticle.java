@@ -11,14 +11,15 @@ public class NewsArticle implements Parcelable {
 
 	String sourceId;
 	String sourceName;
-	String author = "";
-	public String title = "";
-	String description = "";
-	String url = "";
-	String urlToImage = "";
-	String publishedAt = "";
-	String content = "";
-	public int newsCategory = 0;
+	String author;
+	public String title;
+    public String description;
+    public String url;
+    public String urlToImage;
+    public String publishedAt;
+    public String content;
+	public int newsCategory;
+
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many
     // articles the api has stored that match this query. It sends only up to 100 results
@@ -26,10 +27,24 @@ public class NewsArticle implements Parcelable {
 	private int totalAmountInThisQuery;
 	
 	public NewsArticle() {
-		
+		this.title = "";
+		this.description = "";
+		this.url = "";
+		this.urlToImage = "";
+		this.publishedAt = "";
+		this.content = "";
+		this.newsCategory = 0;
+		this.totalAmountInThisQuery = 0;
 	}
-	
-	public void setArticleProperties(JSONObject articleJson){
+
+    /**
+     * Reads the values whose keys correspond to the properties of this
+     * class from the JSON object and assigns them to this NewsArticle object.
+     * It also sets the news category.
+     * @param articleJson
+     * @param newsCategory
+     */
+	public void setArticleProperties(JSONObject articleJson, int newsCategory){
 		this.author = JSONUtils.getStringErrorHandled(articleJson, "author");
 		this.title = JSONUtils.getStringErrorHandled(articleJson, "title");
 		this.description = JSONUtils.getStringErrorHandled(articleJson, "description");
@@ -37,17 +52,16 @@ public class NewsArticle implements Parcelable {
 		this.urlToImage = JSONUtils.getStringErrorHandled(articleJson, "urlToImage");
 		this.publishedAt = JSONUtils.getStringErrorHandled(articleJson, "publishedAt");
 		this.content = JSONUtils.getStringErrorHandled(articleJson, "content");
+		this.newsCategory = newsCategory;
 	}
 
-	public void setTotalAmountInThisQuery(int totalAmount){
-		this.totalAmountInThisQuery = totalAmount;
-	}
-
-	public int getTotalAmountInThisQuery(){
-		return this.totalAmountInThisQuery;
-	}
+	public void setTotalAmountInThisQuery(int totalAmount){ this.totalAmountInThisQuery = totalAmount; }
+	public int getTotalAmountInThisQuery(){ return this.totalAmountInThisQuery; }
 
 
+	// Below obligatory functions to make this object parcelable.
+    // Needed to pass a news Article to another Activity.
+    // Uses only the necessary data and not every property (properties can be added though)
     public NewsArticle(Parcel in){
         String[] data= new String[6];
         in.readStringArray(data);

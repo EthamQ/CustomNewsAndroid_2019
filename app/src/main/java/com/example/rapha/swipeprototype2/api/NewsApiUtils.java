@@ -20,14 +20,14 @@ public class NewsApiUtils {
      * @return
      * @throws Exception
      */
-    public static LinkedList<NewsArticle> jsonToNewsArticleArray(JSONObject newsArticlesJson)throws Exception{
+    public static LinkedList<NewsArticle> jsonToNewsArticleArray(JSONObject newsArticlesJson, int newsCategory)throws Exception{
         String jsonArticleKey = "articles";
         int numberOfArticles = newsArticlesJson.getJSONArray(jsonArticleKey).length();
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
         for(int i = 0; i < numberOfArticles - 1; i++) {
             JSONObject articleJson = JSONUtils.getArrayEntryFromJson(newsArticlesJson, jsonArticleKey, i);
             NewsArticle newsArticle = new NewsArticle();
-            newsArticle.setArticleProperties(articleJson);
+            newsArticle.setArticleProperties(articleJson, newsCategory);
             newsArticle.setTotalAmountInThisQuery(getTotalResults(newsArticlesJson));
             if(newsArticle != null){
                 newsArticles.add(newsArticle);

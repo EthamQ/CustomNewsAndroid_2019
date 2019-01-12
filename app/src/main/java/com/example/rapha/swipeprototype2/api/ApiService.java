@@ -1,5 +1,8 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.app.Application;
+import android.arch.lifecycle.LifecycleOwner;
+
 import com.example.rapha.swipeprototype2.NewsArticle;
 import com.example.rapha.swipeprototype2.UserPreferences.FilterNewsService;
 import com.example.rapha.swipeprototype2.categories.CategoryDistribution;
@@ -11,10 +14,17 @@ import java.util.LinkedList;
 
 public class ApiService {
 
-
-
-    public static LinkedList<NewsArticle> getAllArticlesNewsApi() throws Exception{
-        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution());
+    /**
+     * Retrieves news articles from the NewsApi and returns them in a list.
+     * The number of articles per category are already calculated and the list
+     * has the correct distribution of them.
+     * The maximum number of returned articles is defined in FilterNewsService.
+     *
+     * @return
+     * @throws Exception
+     */
+    public static LinkedList<NewsArticle> getAllArticlesNewsApi(LifecycleOwner lifecycleOwner, Application application) throws Exception{
+        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(application, lifecycleOwner));
     }
 
 

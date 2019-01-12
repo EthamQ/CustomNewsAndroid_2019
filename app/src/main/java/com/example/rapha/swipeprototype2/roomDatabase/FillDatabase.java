@@ -1,10 +1,7 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
 import com.example.rapha.swipeprototype2.categories.Categories;
-import com.example.rapha.swipeprototype2.categories.Finance;
-import com.example.rapha.swipeprototype2.categories.NewsCategory;
 
-import java.util.Locale;
 
 public class FillDatabase {
 

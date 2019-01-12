@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 try {
                     // Load articles.
-                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi();
+                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(MainActivity.this, getApplication());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {

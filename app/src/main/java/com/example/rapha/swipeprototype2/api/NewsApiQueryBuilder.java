@@ -11,6 +11,8 @@ public class NewsApiQueryBuilder {
     private String language = "";
     private String dateFrom = "";
     private String dateTo = "";
+    private String numberOfNewsArticles;
+    private int newsCategory;
 
     public final static String GERMAN = "de";
     public final static String ENGLISH = "en";
@@ -25,6 +27,7 @@ public class NewsApiQueryBuilder {
      * @param newsCategory
      */
     public void setQueryCategory(int newsCategory){
+        this.newsCategory = newsCategory;
         String[] queryWords = CategoryUtils.getQueryWords(newsCategory, this.language);
         for (int i = 0; i < queryWords.length; i++){
             this.queryWord += queryWords[i];
@@ -33,6 +36,8 @@ public class NewsApiQueryBuilder {
             }
         }
     }
+
+    public int getNewsCategory(){return this.newsCategory;}
 
     /**
      * Filters news articles by the date they were published.
@@ -60,6 +65,10 @@ public class NewsApiQueryBuilder {
 
     public void setLanguage(String language){
         this.language = language;
+    }
+
+    public void setNumberOfNewsArticles(int number){
+        this.numberOfNewsArticles = number + "";
     }
 
     /**
