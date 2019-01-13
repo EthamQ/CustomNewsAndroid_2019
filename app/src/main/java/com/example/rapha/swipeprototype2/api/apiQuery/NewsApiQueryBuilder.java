@@ -1,25 +1,21 @@
-package com.example.rapha.swipeprototype2.api;
-
-import android.util.Log;
+package com.example.rapha.swipeprototype2.api.apiQuery;
 
 import com.example.rapha.swipeprototype2.utils.CategoryUtils;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 public class NewsApiQueryBuilder {
-    private String finalQuery = "";
-    private String queryWord = "";
-    private String language = "";
-    private String dateFrom = "";
-    private String dateTo = "";
-    private String numberOfNewsArticles;
-    private int newsCategory;
 
+    QueryCategoryContainer categoryContainer;
+    private String finalQuery = "";
+    private int newsCategory;
     public final static String GERMAN = "de";
     public final static String ENGLISH = "en";
     public final static String RUSSIAN = "ru";
     public final static String FRENCH = "fr";
 
-    public NewsApiQueryBuilder(){}
+    public NewsApiQueryBuilder(){
+        categoryContainer = new QueryCategoryContainer();
+    }
 
     /**
      * Adds every query word from the category corresponding to the id
@@ -28,11 +24,15 @@ public class NewsApiQueryBuilder {
      */
     public void setQueryCategory(int newsCategory){
         this.newsCategory = newsCategory;
-        String[] queryWords = CategoryUtils.getQueryWords(newsCategory, this.language);
+        String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
+        String hashMapKeyLanguage = QueryCategoryContainer.Language.hashMapKey;
+        QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
+        QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
+        String[] queryWords = CategoryUtils.getQueryWords(newsCategory, language.queryString);
         for (int i = 0; i < queryWords.length; i++){
-            this.queryWord += queryWords[i];
+            queryCategory.queryString += queryWords[i];
             if(!(i == queryWords.length - 1)){
-                this.queryWord += " OR ";
+                queryCategory.queryString += " OR ";
             }
         }
     }
@@ -48,7 +48,8 @@ public class NewsApiQueryBuilder {
      * @param day
      */
     public void setDateFrom(String year, String month, String day){
-        this.dateFrom = DateUtils.dateToISO8601(year, month, day);
+        String hashMapKey = QueryCategoryContainer.DateFrom.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
     }
 
     /**
@@ -60,15 +61,18 @@ public class NewsApiQueryBuilder {
      * @param day
      */
     public void setDateTo(String year, String month, String day){
-        this.dateTo = DateUtils.dateToISO8601(year, month, day);
+        String hashMapKey = QueryCategoryContainer.DateTo.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
     }
 
     public void setLanguage(String language){
-        this.language = language;
+        String hashMapKey = QueryCategoryContainer.Language.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = language;
     }
 
     public void setNumberOfNewsArticles(int number){
-        this.numberOfNewsArticles = number + "";
+        String hashMapKey = QueryCategoryContainer.PageSize.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = number + "";
     }
 
     /**
@@ -79,31 +83,15 @@ public class NewsApiQueryBuilder {
     public void buildQuery(){
         StringBuilder sb = new StringBuilder();
         sb.append("&");
-        if(!this.queryWord.isEmpty()){
-            sb.append("q=");
-            sb.append(this.queryWord);
-            sb.append("&");
+        for (String key : categoryContainer.allQueryCategories.keySet()) {
+            QueryCategory currentCategory = categoryContainer.allQueryCategories.get(key);
+            if(!currentCategory.isEmpty()){
+                sb.append(currentCategory.keyUrlEncoded);
+                sb.append(currentCategory.queryString);
+                sb.append("&");
+            }
         }
-        if(!this.language.isEmpty()){
-            sb.append("language=");
-            sb.append(this.language);
-            sb.append("&");
-        }
-        if(!this.dateFrom.isEmpty()){
-            sb.append("from=");
-            sb.append(this.dateFrom);
-            sb.append("&");
-        }
-        if(!this.dateTo.isEmpty()){
-            sb.append("to=");
-            sb.append(this.dateTo);
-            sb.append("&");
-        }
-        if(!this.numberOfNewsArticles.isEmpty()){
-            sb.append("pageSize=");
-            sb.append(this.numberOfNewsArticles);
-            sb.append("&");
-        }
+
         String query = sb.toString();
         // remove the last "&"
         this.finalQuery = query.substring(0, query.length()-1);

@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.api;
 
 import android.util.Log;
 
+import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.utils.HttpUtils;
 

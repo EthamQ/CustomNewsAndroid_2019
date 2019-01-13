@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.api;
 
+import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryDistribution;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
