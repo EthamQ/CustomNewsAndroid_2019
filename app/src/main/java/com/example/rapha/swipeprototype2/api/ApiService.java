@@ -1,15 +1,8 @@
 package com.example.rapha.swipeprototype2.api;
 
-import android.app.Application;
-import android.arch.lifecycle.LifecycleOwner;
-
-import com.example.rapha.swipeprototype2.NewsArticle;
-import com.example.rapha.swipeprototype2.UserPreferences.FilterNewsService;
-import com.example.rapha.swipeprototype2.categories.CategoryDistribution;
-import com.example.rapha.swipeprototype2.categories.Finance;
-import com.example.rapha.swipeprototype2.categories.NewsCategory;
+import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.userPreferences.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import java.util.LinkedList;
 import java.util.List;

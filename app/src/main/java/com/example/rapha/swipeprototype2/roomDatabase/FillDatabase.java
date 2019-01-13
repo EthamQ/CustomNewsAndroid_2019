@@ -1,6 +1,6 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
-import com.example.rapha.swipeprototype2.categories.Categories;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 
 
 public class FillDatabase {
@@ -9,22 +9,27 @@ public class FillDatabase {
         fillCategories(repository);
     }
 
+    /**
+     * Fill the table that contains the categories with its corresponding ratings
+     * if it is empty.
+     * @param repository
+     */
     public static void fillCategories(UserPreferenceRepository repository){
-        Categories newsCategories = new Categories();
+        NewsCategoryContainer newsNewsCategoryContainer = new NewsCategoryContainer();
         repository.insert(new UserPreferenceRoomModel(
-                newsCategories.finance.getCategoryID(),
-                newsCategories.finance.getRating()));
+                newsNewsCategoryContainer.finance.getCategoryID(),
+                newsNewsCategoryContainer.finance.getRating()));
         repository.insert(new UserPreferenceRoomModel(
-                newsCategories.food.getCategoryID(),
-                newsCategories.food.getRating()));
+                newsNewsCategoryContainer.food.getCategoryID(),
+                newsNewsCategoryContainer.food.getRating()));
         repository.insert(new UserPreferenceRoomModel(
-                newsCategories.movie.getCategoryID(),
-                newsCategories.movie.getRating()));
+                newsNewsCategoryContainer.movie.getCategoryID(),
+                newsNewsCategoryContainer.movie.getRating()));
         repository.insert(new UserPreferenceRoomModel(
-                newsCategories.politics.getCategoryID(),
-                newsCategories.politics.getRating()));
+                newsNewsCategoryContainer.politics.getCategoryID(),
+                newsNewsCategoryContainer.politics.getRating()));
         repository.insert(new UserPreferenceRoomModel(
-                newsCategories.technology.getCategoryID(),
-                newsCategories.technology.getRating()));
+                newsNewsCategoryContainer.technology.getCategoryID(),
+                newsNewsCategoryContainer.technology.getRating()));
     }
 }

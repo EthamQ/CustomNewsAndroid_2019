@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.UserPreferences;
+package com.example.rapha.swipeprototype2.userPreferences;
 
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
@@ -6,8 +6,8 @@ import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.NewsArticle;
-import com.example.rapha.swipeprototype2.categories.NewsCategory;
+import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.roomDatabase.DbService;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 

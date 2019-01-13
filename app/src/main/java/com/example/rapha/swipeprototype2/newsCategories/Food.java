@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.categories;
+package com.example.rapha.swipeprototype2.newsCategories;
 
 public class Food  extends NewsCategory{
 

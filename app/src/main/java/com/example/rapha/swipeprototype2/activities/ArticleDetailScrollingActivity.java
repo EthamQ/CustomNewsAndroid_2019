@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2;
+package com.example.rapha.swipeprototype2.activities;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -10,6 +10,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.models.NewsArticle;
+
 public class ArticleDetailScrollingActivity extends AppCompatActivity {
 
     @Override
@@ -19,18 +22,7 @@ public class ArticleDetailScrollingActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         NewsArticle article = getIntent().getParcelableExtra("clickedArticle");
-        Log.d("+++", "in scrolling: " + article.title);
         CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolbarLayout.setTitle(article.title);
         ((TextView)findViewById(R.id.firstContent)).setText(article.title + "\n\n" + article.content + "\n\n" + article.url);

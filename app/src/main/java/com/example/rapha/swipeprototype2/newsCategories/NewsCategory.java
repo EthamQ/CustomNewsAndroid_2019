@@ -1,10 +1,10 @@
-package com.example.rapha.swipeprototype2.categories;
+package com.example.rapha.swipeprototype2.newsCategories;
 
 public class NewsCategory {
 
     private int rating = 1;
     private int categoryID;
-    public int amountInCurrentQuery = 0; //how many results for this category should the query return?
+    public int amountToRequestFromApi = 0; //how many results for this category should the query return?
 
     public NewsCategory(){}
 

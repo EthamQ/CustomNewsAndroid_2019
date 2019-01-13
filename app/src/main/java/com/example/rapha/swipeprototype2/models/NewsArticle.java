@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2;
+package com.example.rapha.swipeprototype2.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;

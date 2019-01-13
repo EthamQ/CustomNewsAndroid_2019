@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2;
+package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
@@ -10,9 +10,11 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.rapha.swipeprototype2.UserPreferences.PreferenceRatingService;
+import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
+import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.userPreferences.PreferenceRatingService;
 import com.example.rapha.swipeprototype2.api.ApiService;
-import com.example.rapha.swipeprototype2.categories.NewsCategory;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.roomDatabase.DbService;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
@@ -24,34 +26,29 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ArrayList<NewsArticle> articlesArrayList;
-    private NewsArticleAdapter articlesArrayAdapter;
-    private LinkedList<NewsArticle> newsArticlesNewsApi;
-    private DbService dbService;
+    public ArrayList<NewsArticle> articlesArrayList;
+    public NewsArticleAdapter articlesArrayAdapter;
+    public LinkedList<NewsArticle> newsArticlesNewsApi;
+    public DbService dbService;
     List<UserPreferenceRoomModel> liveUserPreferences;
-    // TODO: Use state pattern
-    boolean articlesShouldBeLoaded = true;
+    public IMainActivityState mainActivityState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivityState = new LoadArticlesOnCreateState(this);
         init();
-
         setSwipeFunctionality();
 
+        // Fetch all user preferences from the api and use them to load
+        // new articles from the api. We need the old preferences to decide
+        // how many news we want to load for each news category.
         dbService.getAllUserPreferences().observe(this, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 liveUserPreferences = userPreferenceRoomModels;
-                for(int i = 0; i< userPreferenceRoomModels.size(); i++){
-                    Log.d("FROMDB", "Rating: " + userPreferenceRoomModels.get(i));
-                    //ur.deleteAll();
-                    if(articlesShouldBeLoaded){
-                        loadArticles(userPreferenceRoomModels);
-                        articlesShouldBeLoaded = false;
-                    }
-                }
+                mainActivityState.loadArticlesFromApi(userPreferenceRoomModels);
             }
         });
     }
@@ -62,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     public void init(){
         articlesArrayList = new ArrayList<>();
         // Add empty article to show while real articles are being requested from the api.
-        // TODO: wait until real articles are loaded
+        // TODO: wait until real articles are loaded / use caching
         articlesArrayList.add(new NewsArticle());
         articlesArrayAdapter = new NewsArticleAdapter(MainActivity.this, R.layout.item, articlesArrayList);
         dbService = DbService.getInstance(getApplication());
@@ -82,41 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            // Add articles to articlesArrayList.
-                            articlesArrayList.addAll(newsArticlesNewsApi);
-                            TextView tv = findViewById(R.id.helloText);
-                            tv.setText("Articles loaded, start to swipe");
-                            articlesArrayAdapter.notifyDataSetChanged();
-
-                            // ugly quick testing
-                            int amount0 = 0;
-                            int amount1 = 0;
-                            int amount2 = 0;
-                            int amount3 = 0;
-                            int amount4 = 0;
-                            for(int i = 0; i< newsArticlesNewsApi.size(); i++){
-                                Log.d("§§§", newsArticlesNewsApi.get(i).toString());
-                                if(newsArticlesNewsApi.get(i).newsCategory == 0){
-                                    amount0++;
-                                }
-                                if(newsArticlesNewsApi.get(i).newsCategory == 1){
-                                    amount1++;
-                                }
-                                if(newsArticlesNewsApi.get(i).newsCategory == 2){
-                                    amount2++;
-                                }
-                                if(newsArticlesNewsApi.get(i).newsCategory == 3){
-                                    amount3++;
-                                }
-                                if(newsArticlesNewsApi.get(i).newsCategory == 4){
-                                    amount4++;
-                                }
-                            }
-                            Log.d("&&&", "0: " + amount0 + "\n"
-                                    + "1: " + amount1 + "\n"
-                                    + "2: " + amount2 + "\n"
-                                    + "3: " + amount3 + "\n"
-                                    + "4: " + amount4 + "\n");
+                            mainActivityState.articlesAreLoaded();
+                            mainActivityState.addArticlesToView();
                         }
                     });
                 } catch (Exception e) {
@@ -127,9 +91,7 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
-    static void makeToast(Context ctx, String s){
-        Toast.makeText(ctx, s, Toast.LENGTH_SHORT).show();
-    }
+
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality
@@ -145,12 +107,20 @@ public class MainActivity extends AppCompatActivity {
                 articlesArrayAdapter.notifyDataSetChanged();
             }
 
+            /**
+             * Gives the swiped news card a minus rating in the database.
+             * @param dataObject The swiped news card.
+             */
             @Override
             public void onLeftCardExit(Object dataObject) {
                 NewsArticle swipedArticle = (NewsArticle)dataObject;
                 PreferenceRatingService.rateAsNotInteresting(getApplication(), MainActivity.this, swipedArticle);
             }
 
+            /**
+             * Gives the swiped news card a minus rating in the database.
+             * @param dataObject The swiped news card.
+             */
             @Override
             public void onRightCardExit(Object dataObject) {
                 final NewsArticle swipedArticle = (NewsArticle)dataObject;
@@ -174,11 +144,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Optionally add an OnItemClickListener
         flingContainer.setOnItemClickListener(new SwipeFlingAdapterView.OnItemClickListener() {
+            /**
+             * Opens the ArticleDetailScrollActivity which displays the clicked article.
+             * @param itemPosition
+             * @param dataObject
+             */
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                makeToast(MainActivity.this, "Clicked!");
                 Intent intent = new Intent(MainActivity.this, ArticleDetailScrollingActivity.class);
                 intent.putExtra("clickedArticle", (NewsArticle)dataObject);
                 startActivity(intent);

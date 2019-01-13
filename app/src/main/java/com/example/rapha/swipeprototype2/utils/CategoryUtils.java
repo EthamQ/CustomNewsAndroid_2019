@@ -1,10 +1,10 @@
 package com.example.rapha.swipeprototype2.utils;
 
-import com.example.rapha.swipeprototype2.categories.Finance;
-import com.example.rapha.swipeprototype2.categories.Food;
-import com.example.rapha.swipeprototype2.categories.Movie;
-import com.example.rapha.swipeprototype2.categories.Politics;
-import com.example.rapha.swipeprototype2.categories.Technology;
+import com.example.rapha.swipeprototype2.newsCategories.Finance;
+import com.example.rapha.swipeprototype2.newsCategories.Food;
+import com.example.rapha.swipeprototype2.newsCategories.Movie;
+import com.example.rapha.swipeprototype2.newsCategories.Politics;
+import com.example.rapha.swipeprototype2.newsCategories.Technology;
 
 public class CategoryUtils {
 
