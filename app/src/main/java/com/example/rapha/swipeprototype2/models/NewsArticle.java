@@ -27,6 +27,8 @@ public class NewsArticle implements Parcelable {
 	private int totalAmountInThisQuery;
 	
 	public NewsArticle() {
+	    this.sourceId = "";
+	    this.sourceName = "";
 		this.title = "";
 		this.description = "";
 		this.url = "";

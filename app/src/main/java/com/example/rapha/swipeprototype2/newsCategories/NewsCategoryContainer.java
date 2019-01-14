@@ -6,6 +6,11 @@ import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 
 import java.util.LinkedList;
 
+/**
+ * Contains an instance of every news category we have.
+ * Another class can set rating values for each category and receive the
+ * correct amount for every category that it should request from the api.
+ */
 public class NewsCategoryContainer {
 
     // All available news categories.
@@ -30,7 +35,7 @@ public class NewsCategoryContainer {
      * how many of each NewsCategory should be requested.
      */
     public LinkedList<Distribution> getCategoryDistribution(){
-        LinkedList<Distribution> distribution = new LinkedList<>();
+        LinkedList<Distribution> distributionList = new LinkedList<>();
         int totalRating = this.finance.getRating()
                 + this.food.getRating()
                 + this.movie.getRating()
@@ -38,28 +43,32 @@ public class NewsCategoryContainer {
                 + this.technology.getRating();
         Log.d("RATING", "Total rating: " + totalRating);
 
+        // Instantiate a Distribution object for every category.
         Distribution finance = new Distribution(this.finance.getCategoryID());
-        finance.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.finance, totalRating);
         Distribution food = new Distribution(this.food.getCategoryID());
-        food .amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.food , totalRating);
         Distribution movie = new Distribution(this.movie.getCategoryID());
-        movie.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.movie, totalRating);
         Distribution politics = new Distribution(this.politics.getCategoryID());
-        politics.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.politics, totalRating);
         Distribution technology = new Distribution(this.technology.getCategoryID());
+
+        // Set the correct amount to be requested for every Distribution object.
+        finance.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.finance, totalRating);
+        food .amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.food , totalRating);
+        movie.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.movie, totalRating);
+        politics.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.politics, totalRating);
         technology.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.technology, totalRating);
 
-        distribution.add(finance);
-        distribution.add(food);
-        distribution.add(movie);
-        distribution.add(politics);
-        distribution.add(technology);
+        // Add every distribution object to the LinkedList.
+        distributionList.add(finance);
+        distributionList.add(food);
+        distributionList.add(movie);
+        distributionList.add(politics);
+        distributionList.add(technology);
 
-        return distribution;
+        return distributionList;
     }
 
-    //Below all the different news categories as classes
 
+    //Below all the different news categories as classes
     public static class Finance extends NewsCategory {
 
         public static final int CATEGORY_ID = 2;

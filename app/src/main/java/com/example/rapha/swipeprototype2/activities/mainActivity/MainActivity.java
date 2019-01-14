@@ -5,9 +5,14 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.Logging;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates.ArticlesNotLoadedState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates.IMainActivityState;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.api.ApiService;
@@ -22,18 +27,34 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public ArrayList<NewsArticle> articlesArrayList;
+    // Everything public so the state classes can access them
+
+    // When "articlesAmountReload" articles are left in
+    // articlesArrayList we load new articles from the api
+    public static final int articlesAmountReload = 10;
+
+    // Adapter for the fling Container (swipe functionality)
     public NewsArticleAdapter articlesArrayAdapter;
-    public LinkedList<NewsArticle> newsArticlesNewsApi;
+
+    // "articlesArrayList" is added to the "articlesArrayAdapter" and contains
+    // the news articles to be displayed
+    public ArrayList<NewsArticle> articlesArrayList;
+
+    // Temporary store newly loaded articles in "newsArticlesToSwipe"
+    // before they are added to "articlesArrayList"
+    public LinkedList<NewsArticle> newsArticlesToSwipe;
+
+    // Contains all the user preferences fetched from the database (news category and its rating).
+    public List<UserPreferenceRoomModel> liveUserPreferences;
+
     public DbService dbService;
-    List<UserPreferenceRoomModel> liveUserPreferences;
     public IMainActivityState mainActivityState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mainActivityState = new LoadArticlesOnCreateState(this);
+        mainActivityState = new ArticlesNotLoadedState(this);
         init();
         setSwipeFunctionality();
 
@@ -70,8 +91,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
+                    // Clean previous data if it exists.
+                    newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
-                    newsArticlesNewsApi = ApiService.getAllArticlesNewsApi(userPreferenceRoomModels);
+                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(userPreferenceRoomModels);
+                    Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -87,7 +111,19 @@ public class MainActivity extends AppCompatActivity {
         thread.start();
     }
 
+    /**
+     * Adds news articles from the list "newsArticlesToSwipe" to the "articlesArrayList"
+     * which is displayed on the cards in the view.
+     */
+    public void addArticlesToView() {
+        articlesArrayList.addAll(newsArticlesToSwipe);
+        articlesArrayAdapter.notifyDataSetChanged();
 
+        // Pseudo functionality to show when the articles are loaded.
+        TextView textView = findViewById(R.id.itemText);
+        textView.setText("Articles loaded, start to swipe");
+        Logging.logAmountOfArticles(this);
+    }
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality
@@ -100,6 +136,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void removeFirstObjectInAdapter() {
                 articlesArrayList.remove(0);
+                // Handled here because every swiped card is removed here.
+                mainActivityState.handleArticlesOnEmpty();
                 articlesArrayAdapter.notifyDataSetChanged();
             }
 
@@ -125,11 +163,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // Ask for more data here
-                //articlesArrayList.add("XML ".concat(String.valueOf(i)));
-                //arrayAdapter.notifyDataSetChanged();
-                //Log.d("LIST", "notified");
-                //i++;
+                // didn't always work so implemented elsewhere
             }
 
             @Override

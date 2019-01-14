@@ -4,11 +4,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * A wrapper class to store the total amount of each news category that should be requested
+ * A wrapper class to store the distribution for each news category
  * calculated by NewsCategoryContainer.
+ * (Distribution tells you the amount of articles you should request from a news category)
  */
 public class DistributionContainer {
 
+    // Contains a Distribution object for every news category.
     private LinkedList<Distribution> distribution;
 
     public DistributionContainer(){}

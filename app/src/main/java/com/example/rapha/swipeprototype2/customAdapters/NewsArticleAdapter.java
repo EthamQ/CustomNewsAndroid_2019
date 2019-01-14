@@ -26,9 +26,8 @@ public class NewsArticleAdapter extends ArrayAdapter{
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item, parent, false);
         }
 
-        TextView textView = convertView.findViewById(R.id.helloText);
+        TextView textView = convertView.findViewById(R.id.itemText);
         textView.setText(newsArticle.title);
         return convertView;
-
     }
 }

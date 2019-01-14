@@ -7,7 +7,7 @@
     android:layout_gravity="center">
 
     <TextView
-        android:id="@+id/helloText"
+        android:id="@+id/itemText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/holo_blue_dark"

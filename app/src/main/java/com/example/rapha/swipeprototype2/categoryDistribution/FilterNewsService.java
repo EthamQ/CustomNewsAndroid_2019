@@ -9,6 +9,11 @@ public class FilterNewsService {
 
     public static final int MAX_NUMBER_OF_ARTICLES = 100;
 
+    /**
+     * Calculates the amount for every news category that should be requested from the api.
+     * @param userPreferenceRoomModels
+     * @return A DistributionContainer containing the distribution for every single news category.
+     */
     public static DistributionContainer getCategoryDistribution(List<UserPreferenceRoomModel> userPreferenceRoomModels){
         LinkedList<Distribution> distribution =
                 FilterNewsUtils.retrieveAndSetCategoryRating(userPreferenceRoomModels).getCategoryDistribution();
