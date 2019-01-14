@@ -1,19 +1,15 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.userPreferences.PreferenceRatingService;
+import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.roomDatabase.DbService;
@@ -114,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLeftCardExit(Object dataObject) {
                 NewsArticle swipedArticle = (NewsArticle)dataObject;
-                PreferenceRatingService.rateAsNotInteresting(getApplication(), MainActivity.this, swipedArticle);
+                CategoryRatingService.rateAsNotInteresting(getApplication(), MainActivity.this, swipedArticle);
             }
 
             /**
@@ -124,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRightCardExit(Object dataObject) {
                 final NewsArticle swipedArticle = (NewsArticle)dataObject;
-                PreferenceRatingService.rateAsInteresting(getApplication(), MainActivity.this, swipedArticle);
+                CategoryRatingService.rateAsInteresting(getApplication(), MainActivity.this, swipedArticle);
             }
 
             @Override

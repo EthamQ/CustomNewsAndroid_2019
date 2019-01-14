@@ -4,7 +4,6 @@ public class NewsCategory {
 
     private int rating = 1;
     private int categoryID;
-    public int amountToRequestFromApi = 0; //how many results for this category should the query return?
 
     public NewsCategory(){}
 

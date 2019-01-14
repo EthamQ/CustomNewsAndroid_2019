@@ -1,6 +1,6 @@
 package com.example.rapha.swipeprototype2.newsCategories;
 
-import com.example.rapha.swipeprototype2.userPreferences.FilterNewsService;
+import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 
 public class NewsCategoryUtils {
 

@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.userPreferences;
+package com.example.rapha.swipeprototype2.categoryDistribution;
 
 import android.app.Application;
 import android.arch.lifecycle.LifecycleOwner;
@@ -13,7 +13,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.List;
 
-public class PreferenceRatingService {
+public class CategoryRatingService {
 
     // The rating mustn't go lower than this value.
     private static final int MIN_RATING = 1;

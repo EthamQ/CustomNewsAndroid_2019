@@ -1,20 +1,16 @@
 package com.example.rapha.swipeprototype2.utils;
 
-import com.example.rapha.swipeprototype2.newsCategories.Finance;
-import com.example.rapha.swipeprototype2.newsCategories.Food;
-import com.example.rapha.swipeprototype2.newsCategories.Movie;
-import com.example.rapha.swipeprototype2.newsCategories.Politics;
-import com.example.rapha.swipeprototype2.newsCategories.Technology;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 
 public class CategoryUtils {
 
     public static String[] getQueryWords(int category, String language){
         switch(category){
-            case Politics.CATEGORY_ID: return Politics.POLITICS_QUERY_STRINGS_EN;
-            case Finance.CATEGORY_ID: return Finance.FINANCE_QUERY_STRINGS_EN;
-            case Movie.CATEGORY_ID: return Movie.MOVIE_QUERY_STRINGS_EN;
-            case Food.CATEGORY_ID: return Food.FOOD_QUERY_STRINGS_EN;
-            case Technology.CATEGORY_ID: return Technology.TECHNOLOGY_QUERY_STRINGS_EN;
+            case NewsCategoryContainer.Politics.CATEGORY_ID: return NewsCategoryContainer.Politics.POLITICS_QUERY_STRINGS_EN;
+            case NewsCategoryContainer.Finance.CATEGORY_ID: return NewsCategoryContainer.Finance.FINANCE_QUERY_STRINGS_EN;
+            case NewsCategoryContainer.Movie.CATEGORY_ID: return NewsCategoryContainer.Movie.MOVIE_QUERY_STRINGS_EN;
+            case NewsCategoryContainer.Food.CATEGORY_ID: return NewsCategoryContainer.Food.FOOD_QUERY_STRINGS_EN;
+            case NewsCategoryContainer.Technology.CATEGORY_ID: return NewsCategoryContainer.Technology.TECHNOLOGY_QUERY_STRINGS_EN;
             default: return new String[]{"a"};
         }
     }

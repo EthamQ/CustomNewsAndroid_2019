@@ -1,7 +1,7 @@
 package com.example.rapha.swipeprototype2.api;
 
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.userPreferences.FilterNewsService;
+import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.LinkedList;
