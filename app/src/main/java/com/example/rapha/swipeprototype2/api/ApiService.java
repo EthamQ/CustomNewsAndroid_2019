@@ -9,6 +9,10 @@ import java.util.List;
 
 public class ApiService {
 
+    // How old should the news articles be? (days)
+    public static int AMOUNT_DAYS_BEFORE_TODAY = 10;
+    public static final int MAX_NUMBER_OF_ARTICLES = 100;
+
     /**
      * Retrieves news articles from the NewsApi and returns them in a list.
      * The number of articles per category are already calculated and the list
@@ -21,10 +25,4 @@ public class ApiService {
     public static LinkedList<NewsArticle> getAllArticlesNewsApi(List<UserPreferenceRoomModel> userPreferenceRoomModels) throws Exception{
         return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
-
-
-    public static int getTotalAmountNewsArticles(LinkedList<NewsArticle> newsArticles){
-        return newsArticles.get(0).getTotalAmountInThisQuery();
-    }
-
 }

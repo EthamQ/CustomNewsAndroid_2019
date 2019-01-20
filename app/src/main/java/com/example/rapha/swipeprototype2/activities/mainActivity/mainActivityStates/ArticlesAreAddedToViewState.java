@@ -2,7 +2,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivitySt
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.Logging;
+import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 

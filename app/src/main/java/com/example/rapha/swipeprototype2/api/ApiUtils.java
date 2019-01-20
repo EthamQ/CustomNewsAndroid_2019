@@ -4,6 +4,9 @@ import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
+import com.example.rapha.swipeprototype2.utils.DateUtils;
+
+import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.LinkedList;
 
@@ -26,7 +29,7 @@ public class ApiUtils {
             Distribution currentDistribution = distribution.get(i);
             newsArticles.addAll(buildQueryAndFetchArticlesFromApi(currentDistribution));
         }
-        return newsArticles;
+        return orderRandomly(newsArticles);
     }
 
     /**
@@ -41,10 +44,22 @@ public class ApiUtils {
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder();
         queryBuilder.setQueryCategory(distribution.categoryId);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
+        queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
         return newsApi.queryNewsArticles(queryBuilder);
     }
 
+    /**
+     * Return the LinkedList that the function receives in random order.
+     * @param newsArticles
+     * @return
+     */
     public static LinkedList<NewsArticle> orderRandomly(LinkedList<NewsArticle> newsArticles){
-            return new LinkedList<NewsArticle>();
+        LinkedList<NewsArticle> randomOrderedList = new LinkedList<>();
+        while(newsArticles.size() > 0){
+            int randomIndex = ThreadLocalRandom.current().nextInt(0, newsArticles.size());
+            randomOrderedList.add(newsArticles.get(randomIndex));
+            newsArticles.remove(randomIndex);
+        }
+        return randomOrderedList;
     }
 }

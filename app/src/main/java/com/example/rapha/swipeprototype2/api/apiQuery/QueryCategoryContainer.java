@@ -1,7 +1,6 @@
 package com.example.rapha.swipeprototype2.api.apiQuery;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class QueryCategoryContainer {
 

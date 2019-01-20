@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.rapha.swipeprototype2.Logging;
+import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates.ArticlesNotLoadedState;

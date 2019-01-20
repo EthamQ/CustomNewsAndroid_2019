@@ -27,9 +27,9 @@ public class JSONUtils {
 	/**
 	 * Takes the entry in the "jsonObject" with the key "arrayKey".
 	 * The entry has to be an array. It then returns the array entry at "arrayIndex".
-	 * @param arrayIndex
 	 * @param jsonObject
 	 * @param arrayKey
+	 * @param arrayIndex
 	 * @return
 	 */
 	public static JSONObject getArrayEntryFromJson(JSONObject jsonObject, String arrayKey, int arrayIndex) {
@@ -41,5 +41,4 @@ public class JSONUtils {
 		}
 		return article;
 	}
-
 }

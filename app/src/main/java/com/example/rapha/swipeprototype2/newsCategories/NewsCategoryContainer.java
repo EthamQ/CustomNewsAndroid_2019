@@ -8,7 +8,7 @@ import java.util.LinkedList;
 
 /**
  * Contains an instance of every news category we have.
- * Another class can set rating values for each category and receive the
+ * Another class can set rating values for each available category and receive the
  * correct amount for every category that it should request from the api.
  */
 public class NewsCategoryContainer {
@@ -74,11 +74,9 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 2;
 
         public static final String[] FINANCE_QUERY_STRINGS_EN = {
-                "bank",
-                "money",
-                "economy",
-                "finance",
-                "market"
+                "bank", "money", "economy", "finance", "market",
+                "refund", "fund", "wage", "investment", "jobs", "tax",
+                "bills", "customer", "employer", "employee", "insurance"
         };
 
         public Finance(){
@@ -90,11 +88,8 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 4;
         public static final String[] FOOD_QUERY_STRINGS_EN = {
-                "pasta",
-                "cook",
-                "food",
-                "meal",
-                "delicious"
+                "pasta", "cook", "food", "meal", "delicious",
+                "recipe", "vegetables", "tomato", "pasta", "dinner"
         };
 
         public Food(){
@@ -106,11 +101,7 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 3;
         public static final String[] MOVIE_QUERY_STRINGS_EN = {
-                "movie",
-                "cinema",
-                "blockbuster",
-                "television",
-                "market"
+                "movie", "cinema", "blockbuster", "television", "tv",
         };
 
         public Movie(){
@@ -122,11 +113,8 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 0;
         public static final String[] POLITICS_QUERY_STRINGS_EN = {
-                "Trump",
-                "Putin",
-                "Politic",
-                "War",
-                "Troops"
+                "Trump", "Putin", "Politic", "War", "Troops",
+                "president", "syria", "white house"
         };
 
         public Politics(){
@@ -138,11 +126,8 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 1;
         public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = {
-                "Apple",
-                "Phone",
-                "technology",
-                "computer",
-                "hacker"
+                "Apple", "Phone", "technology", "computer", "hacker",
+                "streaming", "app", "mac"
         };
 
         public Technology(){

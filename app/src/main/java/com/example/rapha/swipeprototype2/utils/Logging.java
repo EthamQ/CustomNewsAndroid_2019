@@ -1,8 +1,11 @@
-package com.example.rapha.swipeprototype2;
+package com.example.rapha.swipeprototype2.utils;
 
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.models.NewsArticle;
+
+import java.util.LinkedList;
 
 public class Logging {
 
@@ -41,4 +44,12 @@ public class Logging {
     public static void logArticlesLeft(MainActivity mainActivity){
         Log.d("AMOUNT", "Articles left: " + mainActivity.articlesArrayList.size());
     }
+
+    public static void logAllArticles(LinkedList<NewsArticle> newsArticles, String info){
+        for (int i = 0; i < newsArticles.size(); i++){
+            Log.d("ARTICLES", info + newsArticles.get(i).toString());
+        }
+    }
+
+
 }

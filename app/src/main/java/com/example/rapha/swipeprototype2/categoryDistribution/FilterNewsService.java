@@ -7,8 +7,6 @@ import java.util.List;
 
 public class FilterNewsService {
 
-    public static final int MAX_NUMBER_OF_ARTICLES = 100;
-
     /**
      * Calculates the amount for every news category that should be requested from the api.
      * @param userPreferenceRoomModels

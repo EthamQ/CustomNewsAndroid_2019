@@ -52,6 +52,11 @@ public class NewsApiQueryBuilder {
         this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
     }
 
+    public void setDateFrom(String ISO8601Date){
+        String hashMapKey = QueryCategoryContainer.DateFrom.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = ISO8601Date;
+    }
+
     /**
      * Filters news articles by the date they were published.
      * Expects the following format: setDateFrom(2018, 05, 11)
