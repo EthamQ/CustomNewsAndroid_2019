@@ -13,7 +13,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
@@ -65,21 +64,25 @@ public class MainActivity extends AppCompatActivity {
         init();
         setSwipeFunctionality();
         setLanguageDialog();
+
+        // Set visible when article data is here
         findViewById(R.id.frame).setVisibility(View.INVISIBLE);
         findViewById(R.id.button_languages).setVisibility(View.INVISIBLE);
 
         // Fetch all user preferences from the api and use them to load
         // new articles from the api. We need the old preferences to decide
         // how many news we want to load for each news category.
-        dbService.getAllUserPreferences().observe(this, new Observer<List<UserPreferenceRoomModel>>() {
+        dbService.getAllUserPreferences().observe(MainActivity.this, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 liveUserPreferences = userPreferenceRoomModels;
+                for(int i = 0; i < userPreferenceRoomModels.size(); i++){
+                    Log.d("RATINGLIVE", userPreferenceRoomModels.get(i).toString());
+                }
                 mainActivityState.loadArticlesFromApi(userPreferenceRoomModels);
             }
         });
     }
-
 
     /**
      * Initialize global objects.
@@ -148,7 +151,8 @@ public class MainActivity extends AppCompatActivity {
                     newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
                     newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(MainActivity.this, userPreferenceRoomModels);
-                    ArticleImageService.setImagesForTextView(newsArticlesToSwipe);
+                    // TODO: don't load all images at once, the application can't handle it!
+                    // ArticleImageService.setImagesForTextView(newsArticlesToSwipe);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {
                         @Override
@@ -178,7 +182,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Pseudo functionality to show when the articles are loaded.
         TextView textView = findViewById(R.id.itemText);
-        textView.setText("Start swiping to read articles!");
+        textView.setText("Start swiping to read articles!\n\n " +
+                "Swipe interesting articles to the right\n\n " +
+                "Swipe articles that aren't interesting to the left");
         Logging.logAmountOfArticles(this);
     }
 
@@ -205,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onLeftCardExit(Object dataObject) {
                 NewsArticle swipedArticle = (NewsArticle)dataObject;
-                CategoryRatingService.rateAsNotInteresting(getApplication(), MainActivity.this, swipedArticle);
+                CategoryRatingService.rateAsNotInteresting(MainActivity.this.liveUserPreferences, MainActivity.this, swipedArticle);
             }
 
             /**
@@ -215,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRightCardExit(Object dataObject) {
                 final NewsArticle swipedArticle = (NewsArticle)dataObject;
-                CategoryRatingService.rateAsInteresting(getApplication(), MainActivity.this, swipedArticle);
+                CategoryRatingService.rateAsInteresting(MainActivity.this.liveUserPreferences,MainActivity.this, swipedArticle);
             }
 
             @Override

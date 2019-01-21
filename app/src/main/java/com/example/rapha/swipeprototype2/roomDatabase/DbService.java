@@ -30,6 +30,7 @@ public class DbService {
     }
 
     public void updateUserPreference(UserPreferenceRoomModel preference){
+        Log.d("RIGHTEXIT", "updateUserPreference");
         repository.update(preference);
     }
 

@@ -7,10 +7,8 @@ import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 public class CategoryUtils {
 
     public static String[] getQueryWords(int categoryId, int languageId){
-        languageId = LanguageSettingsService.INDEX_ENGLISH;
         NewsCategory categoryToQuery = NewsCategoryContainer.getCategory(categoryId);
-        String[] queryWords = getLanguageQueryString(categoryToQuery, languageId);
-        return categoryToQuery.QUERY_STRINGS_EN;
+        return getLanguageQueryString(categoryToQuery, languageId);
     }
 
     public static String[] getLanguageQueryString(NewsCategory newsCategory, int languageId){

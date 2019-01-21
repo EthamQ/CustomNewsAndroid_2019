@@ -22,6 +22,7 @@ public class UserPreferenceRepository {
     }
 
     public void update(UserPreferenceRoomModel userPreferenceRoomModel){
+        Log.d("RIGHTEXIT", "update");
         new UpdatePreferencesAsyncTask(dao).execute(userPreferenceRoomModel);
     }
 
@@ -74,6 +75,7 @@ public class UserPreferenceRepository {
         }
         @Override
         protected Void doInBackground(UserPreferenceRoomModel... preferences) {
+            Log.d("RIGHTEXIT", "doInBackground");
             dao.updateUserPreference(preferences[0]);
             return null;
         }

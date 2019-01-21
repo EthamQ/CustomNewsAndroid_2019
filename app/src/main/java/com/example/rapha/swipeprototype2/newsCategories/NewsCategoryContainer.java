@@ -93,6 +93,21 @@ public class NewsCategoryContainer {
                     "refund", "fund", "wage", "investment", "jobs", "tax",
                     "bills", "customer", "employer", "employee", "insurance"
             };
+            this.QUERY_STRINGS_GER = new String[]{
+                    "bank", "money", "economy", "finance", "market",
+                    "refund", "fund", "wage", "investment", "jobs", "tax",
+                    "bills", "customer", "employer", "employee", "insurance"
+            };
+            this.QUERY_STRINGS_FR = new String[]{
+                    "bank", "money", "economy", "finance", "market",
+                    "refund", "fund", "wage", "investment", "jobs", "tax",
+                    "bills", "customer", "employer", "employee", "insurance"
+            };
+            this.QUERY_STRINGS_RU = new String[]{
+                    "bank", "money", "economy", "finance", "market",
+                    "refund", "fund", "wage", "investment", "jobs", "tax",
+                    "bills", "customer", "employer", "employee", "insurance"
+            };
         }
     }
 
@@ -103,6 +118,18 @@ public class NewsCategoryContainer {
         public Food(){
             this.setCategoryID(CATEGORY_ID);
             this.QUERY_STRINGS_EN = new String[] {
+                    "pasta", "cook", "food", "meal", "delicious",
+                    "recipe", "vegetables", "tomato", "pasta", "dinner"
+            };
+            this.QUERY_STRINGS_GER = new String[] {
+                    "pasta", "cook", "food", "meal", "delicious",
+                    "recipe", "vegetables", "tomato", "pasta", "dinner"
+            };
+            this.QUERY_STRINGS_FR = new String[] {
+                    "pasta", "cook", "food", "meal", "delicious",
+                    "recipe", "vegetables", "tomato", "pasta", "dinner"
+            };
+            this.QUERY_STRINGS_RU = new String[] {
                     "pasta", "cook", "food", "meal", "delicious",
                     "recipe", "vegetables", "tomato", "pasta", "dinner"
             };
@@ -118,6 +145,15 @@ public class NewsCategoryContainer {
             this.QUERY_STRINGS_EN = new String[] {
                     "movie", "cinema", "blockbuster", "television", "tv",
             };
+            this.QUERY_STRINGS_GER = new String[] {
+                    "movie", "cinema", "blockbuster", "television", "tv",
+            };
+            this.QUERY_STRINGS_FR = new String[] {
+                    "movie", "cinema", "blockbuster", "television", "tv",
+            };
+            this.QUERY_STRINGS_RU = new String[] {
+                    "movie", "cinema", "blockbuster", "television", "tv",
+            };
         }
     }
 
@@ -131,6 +167,18 @@ public class NewsCategoryContainer {
                     "Trump", "Putin", "Politic", "War", "Troops",
                     "president", "syria", "white house"
             };
+            this.QUERY_STRINGS_GER = new String[] {
+                    "Trump", "Putin", "Politic", "War", "Troops",
+                    "president", "syria", "white house"
+            };
+            this.QUERY_STRINGS_FR = new String[] {
+                    "Trump", "Putin", "Politic", "War", "Troops",
+                    "president", "syria", "white house"
+            };
+            this.QUERY_STRINGS_RU = new String[] {
+                    "Trump", "Putin", "Politic", "War", "Troops",
+                    "president", "syria", "white house"
+            };
         }
     }
 
@@ -141,6 +189,18 @@ public class NewsCategoryContainer {
         public Technology(){
             this.setCategoryID(CATEGORY_ID);
             this.QUERY_STRINGS_EN = new String[] {
+                    "Apple", "Phone", "technology", "computer", "hacker",
+                    "streaming", "app", "mac"
+            };
+            this.QUERY_STRINGS_GER = new String[] {
+                    "Apple", "Phone", "technology", "computer", "hacker",
+                    "streaming", "app", "mac"
+            };
+            this.QUERY_STRINGS_RU = new String[] {
+                    "Apple", "Phone", "technology", "computer", "hacker",
+                    "streaming", "app", "mac"
+            };
+            this.QUERY_STRINGS_FR = new String[] {
                     "Apple", "Phone", "technology", "computer", "hacker",
                     "streaming", "app", "mac"
             };
