@@ -1,12 +1,15 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainActivityState = new ArticlesNotLoadedState(this);
         init();
+        initLanguageSelect();
         setSwipeFunctionality();
 
         // Fetch all user preferences from the api and use them to load
@@ -82,6 +86,39 @@ public class MainActivity extends AppCompatActivity {
         articlesArrayList.add(new NewsArticle());
         articlesArrayAdapter = new NewsArticleAdapter(MainActivity.this, R.layout.item, articlesArrayList);
         dbService = DbService.getInstance(getApplication());
+    }
+
+    public void initLanguageSelect(){
+        Log.d("CLICK", "initLanguageSelect");
+        Button languageButton = findViewById(R.id.language_button);
+        Log.d("CLICK", "languagebutton" + languageButton.toString());
+        languageButton.setOnClickListener(new Button.OnClickListener() {
+
+            public void onClick(View v) {
+                Log.d("CLICK", "button on click");
+                AlertDialog.Builder dialog = new
+                        AlertDialog.Builder(MainActivity.this);
+                dialog.setMessage("Вы действительно хотите выйти?");
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("Да", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                dialog.setNegativeButton("Нет", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+
+            }
+        });
     }
 
     /**
@@ -127,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         textView.setText("Articles loaded, start to swipe");
         Logging.logAmountOfArticles(this);
     }
+
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality

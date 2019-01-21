@@ -6,4 +6,5 @@
     <color name="news_card_background">#ffffff</color>
     <color name="news_card_text">#298497</color>
     <color name="main_background">#d1cecb</color>
+    <color name="button_background">#ffffff</color>
 </resources>
