@@ -9,10 +9,11 @@
     tools:showIn="@layout/activity_article_detail_scrolling">
 
     <TextView
-        android:id="@+id/firstContent"
+        android:id="@+id/articleContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:textColor="@color/news_card_text"
+        android:text="Example 123 LoremIpsum"/>
 
 </android.support.v4.widget.NestedScrollView>

@@ -25,7 +25,7 @@ public class ArticleDetailScrollingActivity extends AppCompatActivity {
         NewsArticle article = getIntent().getParcelableExtra("clickedArticle");
         CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolbarLayout.setTitle(article.title);
-        ((TextView)findViewById(R.id.firstContent)).setText(article.title + "\n\n" + article.content + "\n\n" + article.url);
+        ((TextView)findViewById(R.id.articleContent)).setText(article.title + "\n\n" + article.content + "\n\n" + article.url);
 
     }
 }

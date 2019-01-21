@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.models;
 
+import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -16,6 +17,7 @@ public class NewsArticle implements Parcelable {
     public String description;
     public String url;
     public String urlToImage;
+    public Bitmap imageForTextView;
     public String publishedAt;
     public String content;
 	public int newsCategory;

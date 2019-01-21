@@ -11,7 +11,7 @@ public class ApiService {
 
     // How old should the news articles be? (days)
     public static int AMOUNT_DAYS_BEFORE_TODAY = 10;
-    public static final int MAX_NUMBER_OF_ARTICLES = 100;
+    public static final int MAX_NUMBER_OF_ARTICLES = 50;
 
     /**
      * Retrieves news articles from the NewsApi and returns them in a list.

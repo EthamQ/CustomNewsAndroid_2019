@@ -2,12 +2,14 @@ package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
@@ -95,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
                     newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(userPreferenceRoomModels);
+                    ArticleImageService.setImagesForTextView(newsArticlesToSwipe);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {
                         @Override
