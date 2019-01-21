@@ -2,10 +2,8 @@ package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -67,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
         init();
         setSwipeFunctionality();
         setLanguageDialog();
+        findViewById(R.id.frame).setVisibility(View.INVISIBLE);
+        findViewById(R.id.button_languages).setVisibility(View.INVISIBLE);
 
         // Fetch all user preferences from the api and use them to load
         // new articles from the api. We need the old preferences to decide
@@ -154,10 +154,13 @@ public class MainActivity extends AppCompatActivity {
                         public void run() {
                             mainActivityState.articlesAreLoaded();
                             mainActivityState.addArticlesToView();
+                            findViewById(R.id.frame).setVisibility(View.VISIBLE);
+                            findViewById(R.id.button_languages).setVisibility(View.VISIBLE);
                         }
                     });
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Log.e("HTTPERROR", e.toString());
                 }
             }
         });
@@ -174,7 +177,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Pseudo functionality to show when the articles are loaded.
         TextView textView = findViewById(R.id.itemText);
-        textView.setText("Articles loaded, start to swipe");
+        textView.setText("Start swiping to read articles!");
         Logging.logAmountOfArticles(this);
     }
 

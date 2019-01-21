@@ -1,11 +1,15 @@
 package com.example.rapha.swipeprototype2.utils;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.JSONObject;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class HttpUtils {
 	
@@ -16,8 +20,9 @@ public class HttpUtils {
 	 * @throws Exception
 	 */
 	public static JSONObject httpGET(String url) throws Exception {
-		System.out.println("ABC in httpGET");
 
+		StringBuffer response = new StringBuffer();
+	try{
 		final String USER_AGENT = "Mozilla/5.0";
 		URL urlObject = new URL(url);
 		HttpURLConnection connnection = (HttpURLConnection) urlObject.openConnection();
@@ -28,15 +33,21 @@ public class HttpUtils {
 
 		// TODO: check responseCode!
 		int responseCode = connnection.getResponseCode();
+		Log.d("HTTPCHECK", "Request to URL: " + url + ", ResponseCode: " + responseCode);
 
 		BufferedReader reader = new BufferedReader(
-		        new InputStreamReader(connnection.getInputStream()));
+				new InputStreamReader(connnection.getInputStream()));
 		String inputLine;
-		StringBuffer response = new StringBuffer();
+
 		while ((inputLine = reader.readLine()) != null) {
 			response.append(inputLine);
 		}
 		reader.close();
+	}
+	catch(Exception e){
+		e.printStackTrace();
+		}
+
 
 		return new JSONObject(response.toString());
 	}
