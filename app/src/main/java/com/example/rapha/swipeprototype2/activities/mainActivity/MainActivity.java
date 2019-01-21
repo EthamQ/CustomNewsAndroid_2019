@@ -1,15 +1,22 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 import android.arch.lifecycle.Observer;
+
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
+import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.ArticleDetailScrollingActivity;
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         mainActivityState = new ArticlesNotLoadedState(this);
         init();
         setSwipeFunctionality();
+        setLanguageDialog();
 
         // Fetch all user preferences from the api and use them to load
         // new articles from the api. We need the old preferences to decide
@@ -82,6 +90,48 @@ public class MainActivity extends AppCompatActivity {
         articlesArrayList.add(new NewsArticle());
         articlesArrayAdapter = new NewsArticleAdapter(MainActivity.this, R.layout.item, articlesArrayList);
         dbService = DbService.getInstance(getApplication());
+    }
+
+    /**
+     * Set the OnClickListener for the language button so it displays
+     * an alert dialog that makes it possible for the user to select in which languages
+     * he wants to see his news.
+     */
+    public void setLanguageDialog(){
+        Button button = findViewById(R.id.button_languages);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder dialog = new
+                        AlertDialog.Builder(MainActivity.this);
+                dialog.setTitle("Select languages");
+                final String[] languageItems = LanguageSettingsService.languageItems;
+                final boolean[] checkedItems = LanguageSettingsService.loadChecked(MainActivity.this);
+                dialog.setMultiChoiceItems(languageItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener()  {
+                    @Override
+                    public void onClick(DialogInterface var1, int which, boolean isChecked){
+                        checkedItems[which] = isChecked;
+                        LanguageSettingsService.saveChecked(MainActivity.this, checkedItems);
+                    }
+                });
+                dialog.setCancelable(false);
+                dialog.setPositiveButton("Confirm choice", new
+                        DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+                AlertDialog alertDialog = dialog.create();
+                alertDialog.show();
+            }
+        });
     }
 
     /**
