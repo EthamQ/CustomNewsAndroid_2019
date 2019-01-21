@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.api;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
@@ -22,7 +23,7 @@ public class ApiService {
      * @return
      * @throws Exception
      */
-    public static LinkedList<NewsArticle> getAllArticlesNewsApi(List<UserPreferenceRoomModel> userPreferenceRoomModels) throws Exception{
-        return ApiUtils.buildNewsArticlesList(FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
+    public static LinkedList<NewsArticle> getAllArticlesNewsApi(MainActivity mainActivity, List<UserPreferenceRoomModel> userPreferenceRoomModels) throws Exception{
+        return ApiUtils.buildNewsArticlesList(mainActivity, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 }

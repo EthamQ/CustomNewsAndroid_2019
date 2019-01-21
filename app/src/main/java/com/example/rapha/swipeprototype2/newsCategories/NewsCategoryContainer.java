@@ -67,71 +67,83 @@ public class NewsCategoryContainer {
         return distributionList;
     }
 
+    public static NewsCategory getCategory(int categoryId){
+            switch(categoryId){
+                case Politics.CATEGORY_ID: return new Politics();
+                case Finance.CATEGORY_ID: return new Finance();
+                case Movie.CATEGORY_ID: return new Movie();
+                case Food.CATEGORY_ID: return new Food();
+                case Technology.CATEGORY_ID: return new Technology();
+                default: return new NewsCategory();
+            }
+
+    }
+
 
     //Below all the different news categories as classes
     public static class Finance extends NewsCategory {
 
         public static final int CATEGORY_ID = 2;
 
-        public static final String[] FINANCE_QUERY_STRINGS_EN = {
-                "bank", "money", "economy", "finance", "market",
-                "refund", "fund", "wage", "investment", "jobs", "tax",
-                "bills", "customer", "employer", "employee", "insurance"
-        };
 
         public Finance(){
             this.setCategoryID(CATEGORY_ID);
+            this.QUERY_STRINGS_EN = new String[]{
+                    "bank", "money", "economy", "finance", "market",
+                    "refund", "fund", "wage", "investment", "jobs", "tax",
+                    "bills", "customer", "employer", "employee", "insurance"
+            };
         }
     }
 
     public static class Food  extends NewsCategory{
 
         public static final int CATEGORY_ID = 4;
-        public static final String[] FOOD_QUERY_STRINGS_EN = {
-                "pasta", "cook", "food", "meal", "delicious",
-                "recipe", "vegetables", "tomato", "pasta", "dinner"
-        };
 
         public Food(){
             this.setCategoryID(CATEGORY_ID);
+            this.QUERY_STRINGS_EN = new String[] {
+                    "pasta", "cook", "food", "meal", "delicious",
+                    "recipe", "vegetables", "tomato", "pasta", "dinner"
+            };
         }
     }
 
     public static class Movie  extends NewsCategory{
 
         public static final int CATEGORY_ID = 3;
-        public static final String[] MOVIE_QUERY_STRINGS_EN = {
-                "movie", "cinema", "blockbuster", "television", "tv",
-        };
 
         public Movie(){
             this.setCategoryID(CATEGORY_ID);
+            this.QUERY_STRINGS_EN = new String[] {
+                    "movie", "cinema", "blockbuster", "television", "tv",
+            };
         }
     }
 
     public static class Politics extends NewsCategory{
 
         public static final int CATEGORY_ID = 0;
-        public static final String[] POLITICS_QUERY_STRINGS_EN = {
-                "Trump", "Putin", "Politic", "War", "Troops",
-                "president", "syria", "white house"
-        };
 
         public Politics(){
             this.setCategoryID(CATEGORY_ID);
+            this.QUERY_STRINGS_EN = new String[] {
+                    "Trump", "Putin", "Politic", "War", "Troops",
+                    "president", "syria", "white house"
+            };
         }
     }
 
     public static class Technology extends NewsCategory{
 
         public static final int CATEGORY_ID = 1;
-        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = {
-                "Apple", "Phone", "technology", "computer", "hacker",
-                "streaming", "app", "mac"
-        };
 
         public Technology(){
             this.setCategoryID(CATEGORY_ID);
+            this.QUERY_STRINGS_EN = new String[] {
+                    "Apple", "Phone", "technology", "computer", "hacker",
+                    "streaming", "app", "mac"
+            };
         }
     }
 }

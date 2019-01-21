@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     /**
      * Initialize global objects.
      */
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
                     // Clean previous data if it exists.
                     newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
-                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(userPreferenceRoomModels);
+                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(MainActivity.this, userPreferenceRoomModels);
                     ArticleImageService.setImagesForTextView(newsArticlesToSwipe);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {

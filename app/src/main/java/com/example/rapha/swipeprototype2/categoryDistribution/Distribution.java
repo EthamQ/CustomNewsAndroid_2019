@@ -8,4 +8,8 @@ public class Distribution {
     public Distribution(int categoryId) {
         this.categoryId = categoryId;
     }
+
+    public void balanceWithLanguageDistribution(int numberOfLanguages){
+        this.amountToFetchFromApi /= numberOfLanguages;
+    }
 }

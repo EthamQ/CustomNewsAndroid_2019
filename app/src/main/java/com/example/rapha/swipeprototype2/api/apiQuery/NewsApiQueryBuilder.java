@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.api.apiQuery;
 
+import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.CategoryUtils;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
@@ -8,13 +9,15 @@ public class NewsApiQueryBuilder {
     QueryCategoryContainer categoryContainer;
     private String finalQuery = "";
     private int newsCategory;
+    private int languageId = -1;
     public final static String GERMAN = "de";
     public final static String ENGLISH = "en";
     public final static String RUSSIAN = "ru";
     public final static String FRENCH = "fr";
 
-    public NewsApiQueryBuilder(){
+    public NewsApiQueryBuilder(int languageId){
         categoryContainer = new QueryCategoryContainer();
+        this.setLanguage(languageId);
     }
 
     /**
@@ -27,8 +30,8 @@ public class NewsApiQueryBuilder {
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         String hashMapKeyLanguage = QueryCategoryContainer.Language.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
-        QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
-        String[] queryWords = CategoryUtils.getQueryWords(newsCategory, language.queryString);
+        //QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
+        String[] queryWords = CategoryUtils.getQueryWords(newsCategory, this.languageId);
         for (int i = 0; i < queryWords.length; i++){
             queryCategory.queryString += queryWords[i];
             if(!(i == queryWords.length - 1)){
@@ -70,9 +73,22 @@ public class NewsApiQueryBuilder {
         this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
     }
 
-    public void setLanguage(String language){
+    private void setLanguage(int languageId){
+        this.languageId = languageId;
+        String languageQueryString;
+        switch(languageId){
+            case LanguageSettingsService
+                    .INDEX_ENGLISH: languageQueryString = ENGLISH; break;
+            case LanguageSettingsService
+                    .INDEX_FRENCH: languageQueryString = FRENCH; break;
+            case LanguageSettingsService
+                    .INDEX_GERMAN: languageQueryString = GERMAN; break;
+            case LanguageSettingsService
+                    .INDEX_RUSSIAN: languageQueryString = RUSSIAN; break;
+            default: languageQueryString = ENGLISH; break;
+        }
         String hashMapKey = QueryCategoryContainer.Language.hashMapKey;
-        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = language;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = languageQueryString;
     }
 
     public void setNumberOfNewsArticles(int number){

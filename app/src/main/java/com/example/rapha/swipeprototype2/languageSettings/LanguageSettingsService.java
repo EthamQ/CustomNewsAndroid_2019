@@ -8,6 +8,10 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 public class LanguageSettingsService {
 
     public static final String[] languageItems = {" English", " German", " Russian", " French"};
+    public static final int INDEX_ENGLISH = 0;
+    public static final int INDEX_GERMAN = 1;
+    public static final int INDEX_RUSSIAN = 2;
+    public static final int INDEX_FRENCH = 3;
 
     public static void saveChecked(MainActivity mainActivity, final boolean[] isChecked) {
         SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
@@ -28,4 +32,5 @@ public class LanguageSettingsService {
         }
         return reChecked;
     }
+
 }
