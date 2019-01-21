@@ -21,6 +21,7 @@ public class NewsArticle implements Parcelable {
     public String publishedAt;
     public String content;
 	public int newsCategory;
+	public boolean isDefault = false;
 
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many

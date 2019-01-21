@@ -13,8 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -38,11 +40,18 @@ public class NewsArticleAdapter extends ArrayAdapter{
 
         // News image
         ImageView imageView = convertView.findViewById(R.id.news_card_image);
-        imageView.setImageBitmap(newsArticle.imageForTextView);
-
-        // Image background
-        if(newsArticle.imageForTextView == null){
+        try{
+            Picasso.get()
+                    .load(newsArticle.urlToImage)
+                    .into(imageView);
+        } catch(Exception e){
             convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+        }
+
+        // The first default information card doesn't need an image
+        if(newsArticle.isDefault || (newsArticle.urlToImage == null)){
+            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+            imageView.setVisibility(TextView.INVISIBLE);
         }
 
         return convertView;

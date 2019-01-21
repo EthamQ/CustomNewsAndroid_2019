@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
@@ -91,7 +92,9 @@ public class MainActivity extends AppCompatActivity {
         articlesArrayList = new ArrayList<>();
         // Add empty article to show while real articles are being requested from the api.
         // TODO: wait until real articles are loaded / use caching
-        articlesArrayList.add(new NewsArticle());
+        NewsArticle firstCard = new NewsArticle();
+        firstCard.isDefault = true;
+        articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(MainActivity.this, R.layout.item, articlesArrayList);
         dbService = DbService.getInstance(getApplication());
     }
@@ -152,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
                     // Load articles.
                     newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(MainActivity.this, userPreferenceRoomModels);
                     // TODO: don't load all images at once, the application can't handle it!
-                    // ArticleImageService.setImagesForTextView(newsArticlesToSwipe);
+                    // ArticleImageService.setImagesForTextView(newsArticlesToSwipe, 0);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {
                         @Override

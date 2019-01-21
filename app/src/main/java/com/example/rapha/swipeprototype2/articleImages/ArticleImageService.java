@@ -19,8 +19,9 @@ public class ArticleImageService {
      * that can be used as an image in a TextView.
      * @param newsArticle
      */
-    public static void setImagesForTextView(LinkedList<NewsArticle> newsArticle){
-        for(int i = 0; i < newsArticle.size(); i++){
+    public static void setImagesForTextView(LinkedList<NewsArticle> newsArticle, int offset){
+        int endOfLoop = offset + 5 > newsArticle.size() ? newsArticle.size() : offset + 5;
+        for(int i = offset; i < endOfLoop; i++){
             new DownloadImageTask(newsArticle.get(i)).execute();
         }
     }
