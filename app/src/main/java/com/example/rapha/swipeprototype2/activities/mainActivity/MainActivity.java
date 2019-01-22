@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rapha.swipeprototype2.activities.StatisticsActivity;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
@@ -37,7 +39,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     // Navigation drawer
     private DrawerLayout drawerLayout;
@@ -116,34 +118,35 @@ public class MainActivity extends AppCompatActivity {
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        navigationView = findViewById(R.id.nv);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                int id = item.getItemId();
-                switch (id) {
-                    case R.id.account:
-                        Toast.makeText(MainActivity.this, "My Account", Toast.LENGTH_SHORT).show();
-                    case R.id.settings:
-                        Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
-                    case R.id.mycart:
-                        Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
-                    default:
-                        return true;
-                }
-            }
-        });
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nv);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
     }
 
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Log.d("MENUU", "first: ");
+//        if(item.getItemId() == R.id.mycart){
+//            Intent inten = new Intent(MainActivity.this, StatisticsActivity.class);
+//            startActivity(inten);
+//        }
+        // Handle navigation view item clicks here.
 
-        if(actionBarDrawerToggle.onOptionsItemSelected(item))
-            return true;
-
-        return super.onOptionsItemSelected(item);
+//        switch (item.getItemId()) {
+//
+//            case R.id.nav_maths: {
+//                //do somthing
+//                break;
+//            }
+//        }
+        //close navigation drawer
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     /**

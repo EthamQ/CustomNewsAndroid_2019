@@ -43,6 +43,7 @@ public class NewsArticleAdapter extends ArrayAdapter{
         try{
             Picasso.get()
                     .load(newsArticle.urlToImage)
+                    .error(R.drawable.newsdefault)
                     .into(imageView);
         } catch(Exception e){
             convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);

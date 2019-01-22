@@ -21,7 +21,8 @@
         <activity
             android:name=".activities.ArticleDetailScrollingActivity"
             android:label="@string/title_activity_article_detail_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.StatisticsActivity"></activity>
     </application>
 
 </manifest>
