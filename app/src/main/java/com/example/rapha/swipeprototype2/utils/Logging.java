@@ -11,38 +11,38 @@ public class Logging {
 
     public static void logAmountOfArticles(MainActivity mainActivity){
         // ugly quick testing
-        int amount0 = 0;
-        int amount1 = 0;
-        int amount2 = 0;
-        int amount3 = 0;
-        int amount4 = 0;
-        for(int i = 0; i< mainActivity.newsArticlesToSwipe.size(); i++){
-            Log.d("§§§", mainActivity.newsArticlesToSwipe.get(i).toString());
-            if(mainActivity.newsArticlesToSwipe.get(i).newsCategory == 0){
-                amount0++;
-            }
-            if(mainActivity.newsArticlesToSwipe.get(i).newsCategory == 1){
-                amount1++;
-            }
-            if(mainActivity.newsArticlesToSwipe.get(i).newsCategory == 2){
-                amount2++;
-            }
-            if(mainActivity.newsArticlesToSwipe.get(i).newsCategory == 3){
-                amount3++;
-            }
-            if(mainActivity.newsArticlesToSwipe.get(i).newsCategory == 4){
-                amount4++;
-            }
-        }
-        Log.d("&&&", "0: " + amount0 + "\n"
-                + "1: " + amount1 + "\n"
-                + "2: " + amount2 + "\n"
-                + "3: " + amount3 + "\n"
-                + "4: " + amount4 + "\n");
+//        int amount0 = 0;
+//        int amount1 = 0;
+//        int amount2 = 0;
+//        int amount3 = 0;
+//        int amount4 = 0;
+//        for(int i = 0; i< swipeFragment.newsArticlesToSwipe.size(); i++){
+//            Log.d("§§§", swipeFragment.newsArticlesToSwipe.get(i).toString());
+//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 0){
+//                amount0++;
+//            }
+//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 1){
+//                amount1++;
+//            }
+//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 2){
+//                amount2++;
+//            }
+//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 3){
+//                amount3++;
+//            }
+//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 4){
+//                amount4++;
+//            }
+//        }
+//        Log.d("&&&", "0: " + amount0 + "\n"
+//                + "1: " + amount1 + "\n"
+//                + "2: " + amount2 + "\n"
+//                + "3: " + amount3 + "\n"
+//                + "4: " + amount4 + "\n");
     }
 
     public static void logArticlesLeft(MainActivity mainActivity){
-        Log.d("AMOUNT", "Articles left: " + mainActivity.articlesArrayList.size());
+//        Log.d("AMOUNT", "Articles left: " + swipeFragment.articlesArrayList.size());
     }
 
     public static void logAllArticles(LinkedList<NewsArticle> newsArticles, String info){

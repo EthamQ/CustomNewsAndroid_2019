@@ -1,19 +1,20 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.List;
 
 public class WaitForArticlesState extends MainActivityState implements IMainActivityState {
 
-    public WaitForArticlesState(MainActivity mainActivity) {
-        super(mainActivity);
+    public WaitForArticlesState(SwipeFragment swipeFragment) {
+        super(swipeFragment);
     }
 
     @Override
     public void articlesAreLoaded() {
-        changeStateTo(new ArticlesAreLoadedState(mainActivity));
+        changeStateTo(new ArticlesAreLoadedState(swipeFragment));
     }
 
     @Override

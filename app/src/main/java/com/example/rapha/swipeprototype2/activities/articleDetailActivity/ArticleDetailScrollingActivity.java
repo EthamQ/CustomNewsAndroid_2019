@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.activities;
+package com.example.rapha.swipeprototype2.activities.articleDetailActivity;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;

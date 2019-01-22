@@ -10,6 +10,8 @@ public class Distribution {
     }
 
     public void balanceWithLanguageDistribution(int numberOfLanguages){
-        this.amountToFetchFromApi /= numberOfLanguages;
+        if(numberOfLanguages > 0) {
+            this.amountToFetchFromApi /= numberOfLanguages;
+        }
     }
 }

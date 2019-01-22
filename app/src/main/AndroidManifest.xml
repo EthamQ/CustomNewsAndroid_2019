@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.mainActivity.MainActivity">
+        <activity android:name=".activities.mainActivity.MainActivity" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -19,10 +19,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ArticleDetailScrollingActivity"
+            android:name=".activities.articleDetailActivity.ArticleDetailScrollingActivity"
             android:label="@string/title_activity_article_detail_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.StatisticsActivity"></activity>
+
     </application>
 
 </manifest>

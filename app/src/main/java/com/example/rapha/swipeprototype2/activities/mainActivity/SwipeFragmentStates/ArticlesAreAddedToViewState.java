@@ -1,17 +1,17 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.utils.Logging;
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.List;
 
 public class ArticlesAreAddedToViewState extends MainActivityState implements IMainActivityState {
 
-    public ArticlesAreAddedToViewState(MainActivity mainActivity) {
-        super(mainActivity);
+    public ArticlesAreAddedToViewState(SwipeFragment swipeFragment) {
+        super(swipeFragment);
     }
 
     /**
@@ -21,11 +21,10 @@ public class ArticlesAreAddedToViewState extends MainActivityState implements IM
      */
     @Override
     public void handleArticlesOnEmpty() {
-        Logging.logArticlesLeft(mainActivity);
-        if(mainActivity.articlesArrayList.size() < MainActivity.articlesAmountReload){
+        if(swipeFragment.articlesArrayList.size() < SwipeFragment.articlesAmountReload){
             Log.d("AMOUNT", "Reload now");
-            changeStateTo(new ArticlesNotLoadedState(mainActivity));
-            mainActivity.loadArticles(mainActivity.liveUserPreferences);
+            changeStateTo(new ArticlesNotLoadedState(swipeFragment));
+            swipeFragment.loadArticles(swipeFragment.liveUserPreferences);
         }
     }
 

@@ -1,19 +1,20 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.List;
 
 public class ArticlesNotLoadedState extends MainActivityState implements IMainActivityState{
 
-    public ArticlesNotLoadedState(MainActivity mainActivity){
-        super(mainActivity);
+    public ArticlesNotLoadedState(SwipeFragment swipeFragment){
+        super(swipeFragment);
     }
 
     public void loadArticlesFromApi(List<UserPreferenceRoomModel> preferencesInDb){
-        mainActivity.loadArticles(preferencesInDb);
-        changeStateTo(new WaitForArticlesState(mainActivity));
+        swipeFragment.loadArticles(preferencesInDb);
+        changeStateTo(new WaitForArticlesState(swipeFragment));
     }
 
     @Override

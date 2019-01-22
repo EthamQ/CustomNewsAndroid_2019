@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 

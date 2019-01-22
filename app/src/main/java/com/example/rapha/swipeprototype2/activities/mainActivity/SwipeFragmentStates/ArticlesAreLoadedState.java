@@ -1,20 +1,20 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityStates;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
 
 import java.util.List;
 
 public class ArticlesAreLoadedState extends MainActivityState implements IMainActivityState {
 
-    public ArticlesAreLoadedState(MainActivity mainActivity) {
-        super(mainActivity);
+    public ArticlesAreLoadedState(SwipeFragment swipeFragment) {
+        super(swipeFragment);
     }
 
     @Override
     public void addArticlesToView() {
-        mainActivity.addArticlesToView();
-        changeStateTo(new ArticlesAreAddedToViewState(mainActivity));
+        swipeFragment.addArticlesToView();
+        changeStateTo(new ArticlesAreAddedToViewState(swipeFragment));
     }
 
     @Override
