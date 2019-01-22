@@ -4,16 +4,21 @@ import android.arch.lifecycle.Observer;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.example.rapha.swipeprototype2.R;
@@ -34,7 +39,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    // Everything public so the state classes can access them
+    // Navigation drawer
+    private DrawerLayout drawerLayout;
+    private ActionBarDrawerToggle actionBarDrawerToggle;
+    private NavigationView navigationView;
 
     // When "articlesAmountReload" articles are left in
     // articlesArrayList we load new articles from the api
@@ -63,8 +71,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainActivityState = new ArticlesNotLoadedState(this);
         init();
+        initNavigationDrawer();
         setSwipeFunctionality();
         setLanguageDialog();
+        setTitle("Home");
 
         // Set visible when article data is here
         findViewById(R.id.frame).setVisibility(View.INVISIBLE);
@@ -99,6 +109,43 @@ public class MainActivity extends AppCompatActivity {
         dbService = DbService.getInstance(getApplication());
     }
 
+    public void initNavigationDrawer(){
+        drawerLayout = findViewById(R.id.activity_main);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout,R.string.Open, R.string.Close);
+
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        navigationView = findViewById(R.id.nv);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                switch (id) {
+                    case R.id.account:
+                        Toast.makeText(MainActivity.this, "My Account", Toast.LENGTH_SHORT).show();
+                    case R.id.settings:
+                        Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
+                    case R.id.mycart:
+                        Toast.makeText(MainActivity.this, "My Cart", Toast.LENGTH_SHORT).show();
+                    default:
+                        return true;
+                }
+            }
+        });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(actionBarDrawerToggle.onOptionsItemSelected(item))
+            return true;
+
+        return super.onOptionsItemSelected(item);
+    }
+
     /**
      * Set the OnClickListener for the language button so it displays
      * an alert dialog that makes it possible for the user to select in which languages
@@ -121,7 +168,6 @@ public class MainActivity extends AppCompatActivity {
                         LanguageSettingsService.saveChecked(MainActivity.this, checkedItems);
                     }
                 });
-                dialog.setCancelable(false);
                 dialog.setPositiveButton("Confirm choice", new
                         DialogInterface.OnClickListener() {
                             @Override
@@ -154,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                     newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
                     newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(MainActivity.this, userPreferenceRoomModels);
-                    // TODO: don't load all images at once, the application can't handle it!
+                    // TODO: don'actionBarDrawerToggle load all images at once, the application can'actionBarDrawerToggle handle it!
                     // ArticleImageService.setImagesForTextView(newsArticlesToSwipe, 0);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     runOnUiThread(new Runnable() {
@@ -187,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = findViewById(R.id.itemText);
         textView.setText("Start swiping to read articles!\n\n " +
                 "Swipe interesting articles to the right\n\n " +
-                "Swipe articles that aren't interesting to the left");
+                "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
         Logging.logAmountOfArticles(this);
     }
 
@@ -229,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // didn't always work so implemented elsewhere
+                // didn'actionBarDrawerToggle always work so implemented elsewhere
             }
 
             @Override
