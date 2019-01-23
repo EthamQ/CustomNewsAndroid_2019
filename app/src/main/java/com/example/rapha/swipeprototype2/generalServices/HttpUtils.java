@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.generalServices;
 
 import android.util.Log;
 
@@ -9,14 +9,12 @@ import java.net.URL;
 
 import org.json.JSONObject;
 
-import javax.net.ssl.HttpsURLConnection;
-
 public class HttpUtils {
 	
 	/**
 	 * Sends a http get request to "url".
 	 * @param url 
-	 * @return returns the answer to the requestas a JSONObject.
+	 * @return returns the answer to the request as a JSONObject.
 	 * @throws Exception
 	 */
 	public static JSONObject httpGET(String url) throws Exception {

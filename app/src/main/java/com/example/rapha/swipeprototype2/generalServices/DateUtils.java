@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.generalServices;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.roomDatabase;
+package com.example.rapha.swipeprototype2.roomDatabase.categoryRating;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;

@@ -11,7 +11,7 @@ public class MainActivityState {
         this.swipeFragment = swipeFragment;
     }
 
-    public void changeStateTo(IMainActivityState newMainActivityState){
+    public void changeStateTo(ISwipeFragmentState newMainActivityState){
         swipeFragment.swipeActivityState = newMainActivityState;
     }
 

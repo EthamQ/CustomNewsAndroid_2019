@@ -1,8 +1,7 @@
 package com.example.rapha.swipeprototype2.api;
 
-import com.example.rapha.swipeprototype2.articleImages.ArticleImageService;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.utils.JSONUtils;
+import com.example.rapha.swipeprototype2.generalServices.JSONUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;

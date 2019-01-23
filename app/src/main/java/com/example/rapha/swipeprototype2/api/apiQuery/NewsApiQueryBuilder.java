@@ -1,8 +1,8 @@
 package com.example.rapha.swipeprototype2.api.apiQuery;
 
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.utils.CategoryUtils;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.generalServices.CategoryUtils;
+import com.example.rapha.swipeprototype2.generalServices.DateUtils;
 
 public class NewsApiQueryBuilder {
 

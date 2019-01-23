@@ -7,13 +7,18 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
-@Database(entities = {UserPreferenceRoomModel.class}, version = 1, exportSchema = false)
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.IUserPreferenceDao;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.INewsArticleDao;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
+
+@Database(entities = {UserPreferenceRoomModel.class, NewsArticleRoomModel.class}, version = 3, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
 
         private static AppDatabase instance;
         public abstract IUserPreferenceDao dao();
+        public abstract INewsArticleDao newsArticleDao();
 
         public static synchronized AppDatabase getInstance(Context context){
                 if(instance == null){

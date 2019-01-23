@@ -2,28 +2,23 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFr
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
-import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -129,8 +124,8 @@ public class StatisticFragment extends Fragment {
 
     public void initGraph(){
         // Get user preferences from database.
-        DbService dbService = DbService.getInstance(getActivity().getApplication());
-        dbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {
+        RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
+        ratingDbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 // Set the values in the graph.
@@ -171,7 +166,7 @@ public class StatisticFragment extends Fragment {
                             }
                             return super.formatLabel(value, isValueX);
                         } else {
-                            return super.formatLabel(value, isValueX);
+                            return "";
                         }
                     }
                 });

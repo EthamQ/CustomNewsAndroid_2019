@@ -33,13 +33,13 @@
 //        import com.example.rapha.swipeprototype2.R;
 //        import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 //        import com.example.rapha.swipeprototype2.activities.swipeFragment.mainActivityStates.ArticlesNotLoadedState;
-//        import com.example.rapha.swipeprototype2.activities.swipeFragment.mainActivityStates.IMainActivityState;
+//        import com.example.rapha.swipeprototype2.activities.swipeFragment.mainActivityStates.ISwipeFragmentState;
 //        import com.example.rapha.swipeprototype2.models.NewsArticle;
 //        import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 //        import com.example.rapha.swipeprototype2.api.ApiService;
 //        import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
-//        import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-//        import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+//        import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+//        import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 //        import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 //
 //        import java.util.ArrayList;
@@ -71,8 +71,8 @@
 ////    // Contains all the user preferences fetched from the database (news category and its rating).
 ////    public List<UserPreferenceRoomModel> liveUserPreferences;
 ////
-////    public DbService dbService;
-////    public IMainActivityState swipeActivityState;
+////    public RatingDbService ratingDbService;
+////    public ISwipeFragmentState swipeActivityState;
 ////
 ////    @Override
 ////    protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +92,7 @@
 ////        // Fetch all user preferences from the api and use them to load
 ////        // new articles from the api. We need the old preferences to decide
 ////        // how many news we want to load for each news category.
-////        dbService.getAllUserPreferences().observe(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, new Observer<List<UserPreferenceRoomModel>>() {
+////        ratingDbService.getAllUserPreferences().observe(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, new Observer<List<UserPreferenceRoomModel>>() {
 ////            @Override
 ////            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
 ////                liveUserPreferences = userPreferenceRoomModels;
@@ -122,7 +122,7 @@
 ////        firstCard.isDefault = true;
 ////        articlesArrayList.add(firstCard);
 ////        articlesArrayAdapter = new NewsArticleAdapter(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, R.layout.swipe_card, articlesArrayList);
-////        dbService = DbService.getInstance(getApplication());
+////        ratingDbService = RatingDbService.getInstance(getApplication());
 ////    }
 ////
 ////    public void initNavigationDrawer(){

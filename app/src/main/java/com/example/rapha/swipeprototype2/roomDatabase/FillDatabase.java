@@ -1,6 +1,8 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 
 public class FillDatabase {

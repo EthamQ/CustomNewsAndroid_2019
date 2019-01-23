@@ -4,15 +4,15 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.example.rapha.swipeprototype2.utils.JSONUtils;
+import com.example.rapha.swipeprototype2.generalServices.JSONUtils;
 
 import org.json.JSONObject;
 
 public class NewsArticle implements Parcelable {
 
-	String sourceId;
-	String sourceName;
-	String author;
+    public String sourceId;
+    public String sourceName;
+    public String author;
 	public String title;
     public String description;
     public String url;
@@ -21,7 +21,7 @@ public class NewsArticle implements Parcelable {
     public String publishedAt;
     public String content;
 	public int newsCategory;
-	public boolean isDefault = false;
+	public boolean isDefault;
 
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many
@@ -40,6 +40,8 @@ public class NewsArticle implements Parcelable {
 		this.content = "";
 		this.newsCategory = 0;
 		this.totalAmountInThisQuery = 0;
+		this.author = "";
+		this.isDefault = false;
 	}
 
     /**

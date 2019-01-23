@@ -1,7 +1,6 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.generalServices;
 
-import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.HashMap;
 import java.util.LinkedList;

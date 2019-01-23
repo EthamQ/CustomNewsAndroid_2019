@@ -19,16 +19,18 @@ import android.widget.TextView;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ArticlesNotLoadedState;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.IMainActivityState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.InitialState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
-import com.example.rapha.swipeprototype2.utils.Logging;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.generalServices.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -45,7 +47,7 @@ import java.util.List;
  */
 public class SwipeFragment extends Fragment {
 
-    MainActivity mainActivity;
+    public MainActivity mainActivity;
     View view;
 
     // When "articlesAmountReload" articles are left in
@@ -66,8 +68,9 @@ public class SwipeFragment extends Fragment {
     // Contains all the user preferences fetched from the database (news category and its rating).
     public List<UserPreferenceRoomModel> liveUserPreferences;
 
-    public DbService dbService;
-    public IMainActivityState swipeActivityState;
+    public RatingDbService ratingDbService;
+    public NewsArticleDbService newsArticleDbService;
+    public ISwipeFragmentState swipeActivityState;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -117,7 +120,7 @@ public class SwipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
-        this.swipeActivityState = new ArticlesNotLoadedState(this);
+        this.swipeActivityState = new InitialState(this);
         init();
         setLanguageDialog();
         setSwipeFunctionality();
@@ -125,8 +128,8 @@ public class SwipeFragment extends Fragment {
         // Set visible when article data is here
         view.findViewById(R.id.frame).setVisibility(View.INVISIBLE);
         view.findViewById(R.id.button_languages).setVisibility(View.INVISIBLE);
-
-        dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
+        swipeActivityState.loadArticlesFromDB();
+        ratingDbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 liveUserPreferences = userPreferenceRoomModels;
@@ -187,7 +190,8 @@ public class SwipeFragment extends Fragment {
         firstCard.isDefault = true;
         articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
-        dbService = DbService.getInstance(getActivity().getApplication());
+        ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
+        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
     }
 
 
@@ -246,29 +250,27 @@ public class SwipeFragment extends Fragment {
                     // Clean previous data if it exists.
                     newsArticlesToSwipe = new LinkedList<>();
                     // Load articles.
-                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(mainActivity, userPreferenceRoomModels);
+                    setArticlesToAddToView(ApiService.getAllArticlesNewsApi(mainActivity, userPreferenceRoomModels));
                     // TODO: don'actionBarDrawerToggle load all images at once, the application can'actionBarDrawerToggle handle it!
                     // ArticleImageService.setImagesForTextView(newsArticlesToSwipe, 0);
                     Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("RESTRUCTURE", "inside runOnUiThread 1");
                             swipeActivityState.articlesAreLoaded();
-                            addArticlesToView();
-                            view.findViewById(R.id.frame).setVisibility(View.VISIBLE);
-                            view.findViewById(R.id.button_languages).setVisibility(View.VISIBLE);
-                            Log.d("RESTRUCTURE", "inside runOnUiThread 2");
+                            swipeActivityState.addArticlesToView();
                         }
                     });
                 } catch (Exception e) {
-                    Log.d("RESTRUCTURE", "inside catch thread");
                     e.printStackTrace();
-                    Log.e("HTTPERROR", e.toString());
                 }
             }
         });
         thread.start();
+    }
+
+    public void setArticlesToAddToView(LinkedList<NewsArticle> newsArticles){
+        this.newsArticlesToSwipe.addAll(newsArticles);
     }
 
     /**
@@ -278,13 +280,19 @@ public class SwipeFragment extends Fragment {
     public void addArticlesToView() {
         Log.d("RESTRUCTURE", "addArticlesToView");
         articlesArrayList.addAll(newsArticlesToSwipe);
+        if(articlesArrayList.size() > 1){
+            view.findViewById(R.id.frame).setVisibility(View.VISIBLE);
+            view.findViewById(R.id.button_languages).setVisibility(View.VISIBLE);
+        }
         articlesArrayAdapter.notifyDataSetChanged();
 
         // Pseudo functionality to show when the articles are loaded.
-        TextView textView = view.findViewById(R.id.itemText);
-        textView.setText("Start swiping to read articles!\n\n " +
-                "Swipe interesting articles to the right\n\n " +
-                "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
+        if(articlesArrayList.size() > 0){
+//            TextView textView = view.findViewById(R.id.itemText);
+//            textView.setText("Start swiping to read articles!\n\n " +
+//                    "Swipe interesting articles to the right\n\n " +
+//                    "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
+        }
         Logging.logAmountOfArticles(mainActivity);
     }
 
@@ -321,6 +329,8 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onRightCardExit(Object dataObject) {
                 final NewsArticle swipedArticle = (NewsArticle)dataObject;
+                Log.d("RIGHTE", "article cat: " + swipedArticle.newsCategory);
+                Log.d("RIGHTE", "size live: " + liveUserPreferences.size());
                 CategoryRatingService.rateAsInteresting(liveUserPreferences, SwipeFragment.this, swipedArticle);
             }
 

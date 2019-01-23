@@ -3,10 +3,9 @@ package com.example.rapha.swipeprototype2.categoryDistribution;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.List;
 
@@ -41,6 +40,7 @@ public class CategoryRatingService {
      * @param interesting
      */
     private static void rate(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final NewsArticle swipedArticle, final boolean interesting){
+        Log.d("RIGHTEXIT", "inside rate");
         // Get previous ratings to calculate the new one.
                 for(int i = 0; i < liveUserPreferences.size(); i++){
                     if(liveUserPreferences.get(i).getNewsCategoryId() == swipedArticle.newsCategory){
@@ -52,7 +52,8 @@ public class CategoryRatingService {
                             newRating--;
                         }
                         // Update in database.
-                        swipeFragment.dbService.updateUserPreference(new UserPreferenceRoomModel(
+                        Log.d("RIGHTEXIT", "category: " + swipedArticle.newsCategory + ", old rating: " + liveUserPreferences.get(i).getRating() + ", newRating: " + newRating);
+                        swipeFragment.ratingDbService.updateUserPreference(new UserPreferenceRoomModel(
                                 swipedArticle.newsCategory,
                                 newRating
                         ));

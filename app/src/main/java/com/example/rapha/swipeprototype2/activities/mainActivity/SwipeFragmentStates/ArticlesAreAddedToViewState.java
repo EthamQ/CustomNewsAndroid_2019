@@ -4,11 +4,11 @@ import android.util.Log;
 
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.List;
 
-public class ArticlesAreAddedToViewState extends MainActivityState implements IMainActivityState {
+public class ArticlesAreAddedToViewState extends MainActivityState implements ISwipeFragmentState {
 
     public ArticlesAreAddedToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
@@ -23,13 +23,18 @@ public class ArticlesAreAddedToViewState extends MainActivityState implements IM
     public void handleArticlesOnEmpty() {
         if(swipeFragment.articlesArrayList.size() < SwipeFragment.articlesAmountReload){
             Log.d("AMOUNT", "Reload now");
-            changeStateTo(new ArticlesNotLoadedState(swipeFragment));
+            changeStateTo(new InitialState(swipeFragment));
             swipeFragment.loadArticles(swipeFragment.liveUserPreferences);
         }
     }
 
     @Override
     public void loadArticlesFromApi(List<UserPreferenceRoomModel> preferencesInDb) {
+
+    }
+
+    @Override
+    public void loadArticlesFromDB() {
 
     }
 

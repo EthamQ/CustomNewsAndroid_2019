@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.generalServices;
 
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;

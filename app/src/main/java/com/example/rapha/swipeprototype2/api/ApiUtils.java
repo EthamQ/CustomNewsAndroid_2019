@@ -7,7 +7,7 @@ import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsServic
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.generalServices.DateUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
 

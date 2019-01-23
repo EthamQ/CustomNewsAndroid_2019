@@ -3,7 +3,7 @@ package com.example.rapha.swipeprototype2;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 
 import org.junit.Before;

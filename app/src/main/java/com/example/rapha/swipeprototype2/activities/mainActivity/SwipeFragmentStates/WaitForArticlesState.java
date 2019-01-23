@@ -2,11 +2,11 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.List;
 
-public class WaitForArticlesState extends MainActivityState implements IMainActivityState {
+public class WaitForArticlesState extends MainActivityState implements ISwipeFragmentState {
 
     public WaitForArticlesState(SwipeFragment swipeFragment) {
         super(swipeFragment);
@@ -14,11 +14,19 @@ public class WaitForArticlesState extends MainActivityState implements IMainActi
 
     @Override
     public void articlesAreLoaded() {
-        changeStateTo(new ArticlesAreLoadedState(swipeFragment));
+        // add them to db
+        swipeFragment.newsArticleDbService.deleteAll();
+        swipeFragment.newsArticleDbService.insertNewsArticles(swipeFragment.newsArticlesToSwipe);
+        changeStateTo(new ArticlesAreLoadedApiState(swipeFragment));
     }
 
     @Override
     public void loadArticlesFromApi(List<UserPreferenceRoomModel> preferencesInDb) {
+
+    }
+
+    @Override
+    public void loadArticlesFromDB() {
 
     }
 
