@@ -21,11 +21,14 @@ import com.example.rapha.swipeprototype2.activities.articleDetailActivity.Articl
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ArticlesNotLoadedState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.IMainActivityState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.ISwipeFragmentState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.SwipeFragmentState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.utils.Logging;
@@ -63,11 +66,15 @@ public class SwipeFragment extends Fragment {
     // before they are added to "articlesArrayList"
     public LinkedList<NewsArticle> newsArticlesToSwipe;
 
+    public LinkedList<NewsArticle> dbArticlesToAdd;
+
     // Contains all the user preferences fetched from the database (news category and its rating).
     public List<UserPreferenceRoomModel> liveUserPreferences;
 
     public RatingDbService dbService;
+    public NewsArticleDbService newsArticleDbService;
     public IMainActivityState swipeActivityState;
+    public ISwipeFragmentState swipeFragmentState;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -179,6 +186,12 @@ public class SwipeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
+    public void setCardsVisibility(boolean visible){
+        int visibility = visible ? View.VISIBLE : View.INVISIBLE;
+        view.findViewById(R.id.frame).setVisibility(visibility);
+        view.findViewById(R.id.button_languages).setVisibility(visibility);
+    }
+
         public void init(){
         articlesArrayList = new ArrayList<>();
         // Add empty article to show while real articles are being requested from the api.
@@ -188,6 +201,7 @@ public class SwipeFragment extends Fragment {
         articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
+        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
     }
 
 
