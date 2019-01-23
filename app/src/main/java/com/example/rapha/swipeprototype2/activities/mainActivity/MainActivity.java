@@ -87,19 +87,13 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view swipe_card clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.nav_statistics) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new StatisticFragment());
+            ft.commit();
+        } else if(id == R.id.nav_home){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.your_placeholder, new SwipeFragment());
             ft.commit();
         }
 

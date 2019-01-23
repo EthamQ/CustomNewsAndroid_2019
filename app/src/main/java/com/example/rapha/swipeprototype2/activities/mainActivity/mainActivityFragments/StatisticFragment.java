@@ -1,14 +1,30 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
+import android.arch.lifecycle.Observer;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.roomDatabase.DbService;
+import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +39,8 @@ public class StatisticFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    View view;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -65,7 +83,9 @@ public class StatisticFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_statistic, container, false);
+        view = inflater.inflate(R.layout.fragment_statistic, container, false);
+        initGraph();
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +125,57 @@ public class StatisticFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    public void initGraph(){
+        // Get user preferences from database.
+        DbService dbService = DbService.getInstance(getActivity().getApplication());
+        dbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
+                // Set the values in the graph.
+                GraphView graph = view.findViewById(R.id.graph);
+                DataPoint[] datapoints = new DataPoint[userPreferenceRoomModels.size()];
+                for(int i = 0; i < datapoints.length; i++){
+                    UserPreferenceRoomModel currentEntry = userPreferenceRoomModels.get(i);
+                    datapoints[i] = new DataPoint(currentEntry.getNewsCategoryId(), currentEntry.getRating());
+                }
+                BarGraphSeries<DataPoint> series = new BarGraphSeries<>(datapoints);
+
+                // Additional graph styling.
+                series.setSpacing(10);
+                graph.setTitle("Your news preferences");
+                graph.addSeries(series);
+
+                // Convert the x axis values to strings representing its news category.
+                graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                    @Override
+                    public String formatLabel(double value, boolean isValueX) {
+                        if (isValueX) {
+                            final NewsCategoryContainer categories = new NewsCategoryContainer();
+                            // TODO: move this logic and store the strings somewhere else!
+                            if(value == categories.finance.getCategoryID()){
+                                return "Finance";
+                            }
+                            if(value == categories.politics.getCategoryID()){
+                                return "Politics";
+                            }
+                            if(value == categories.food.getCategoryID()){
+                                return "Food";
+                            }
+                            if(value == categories.technology.getCategoryID()){
+                                return "Technology";
+                            }
+                            if(value == categories.movie.getCategoryID()){
+                                return "Movies";
+                            }
+                            return super.formatLabel(value, isValueX);
+                        } else {
+                            return super.formatLabel(value, isValueX);
+                        }
+                    }
+                });
+            }
+        });
     }
 }
