@@ -2,7 +2,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.List;
 

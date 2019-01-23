@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
-import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
@@ -129,7 +129,7 @@ public class StatisticFragment extends Fragment {
 
     public void initGraph(){
         // Get user preferences from database.
-        DbService dbService = DbService.getInstance(getActivity().getApplication());
+        RatingDbService dbService = RatingDbService.getInstance(getActivity().getApplication());
         dbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {

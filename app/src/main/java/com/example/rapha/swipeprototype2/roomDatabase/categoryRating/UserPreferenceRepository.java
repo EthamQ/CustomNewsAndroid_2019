@@ -1,9 +1,11 @@
-package com.example.rapha.swipeprototype2.roomDatabase;
+package com.example.rapha.swipeprototype2.roomDatabase.categoryRating;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import com.example.rapha.swipeprototype2.roomDatabase.AppDatabase;
 
 import java.util.List;
 
@@ -75,7 +77,6 @@ public class UserPreferenceRepository {
         }
         @Override
         protected Void doInBackground(UserPreferenceRoomModel... preferences) {
-            Log.d("RIGHTEXIT", "doInBackground");
             dao.updateUserPreference(preferences[0]);
             return null;
         }

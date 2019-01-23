@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.roomDatabase;
+package com.example.rapha.swipeprototype2.roomDatabase.categoryRating;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -15,7 +15,7 @@ public interface IUserPreferenceDao {
     @Query("SELECT * FROM UserPreference WHERE newsCategoryId = :newsCategoryId")
     UserPreferenceRoomModel getOne(int newsCategoryId);
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertOneNewsCategory (UserPreferenceRoomModel userPreferenceRoomModel);
+    void insertOneNewsCategory(UserPreferenceRoomModel userPreferenceRoomModel);
     @Query("SELECT * FROM UserPreference")
     LiveData<List<UserPreferenceRoomModel>> getAllUserPreferences();
     @Query("DELETE FROM UserPreference")

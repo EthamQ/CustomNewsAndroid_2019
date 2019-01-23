@@ -1,6 +1,7 @@
 package com.example.rapha.swipeprototype2.categoryDistribution;
 
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.LinkedList;
 import java.util.List;

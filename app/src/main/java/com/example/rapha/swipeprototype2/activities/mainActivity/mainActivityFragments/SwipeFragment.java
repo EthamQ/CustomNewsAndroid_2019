@@ -26,8 +26,8 @@ import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingServ
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.roomDatabase.DbService;
-import com.example.rapha.swipeprototype2.roomDatabase.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
@@ -66,7 +66,7 @@ public class SwipeFragment extends Fragment {
     // Contains all the user preferences fetched from the database (news category and its rating).
     public List<UserPreferenceRoomModel> liveUserPreferences;
 
-    public DbService dbService;
+    public RatingDbService dbService;
     public IMainActivityState swipeActivityState;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -187,7 +187,7 @@ public class SwipeFragment extends Fragment {
         firstCard.isDefault = true;
         articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
-        dbService = DbService.getInstance(getActivity().getApplication());
+        dbService = RatingDbService.getInstance(getActivity().getApplication());
     }
 
 

@@ -2,25 +2,26 @@ package com.example.rapha.swipeprototype2.roomDatabase;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Room;
-import android.content.Context;
 import android.util.Log;
+
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
+import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 import java.util.List;
 
-public class DbService {
+public class RatingDbService {
 
-    private static DbService instance;
+    private static RatingDbService instance;
     UserPreferenceRepository repository;
 
-    private DbService(Application application){
+    private RatingDbService(Application application){
         this.repository = new UserPreferenceRepository(application);
         FillDatabase.fillDatabase(repository);
     }
 
-    public static synchronized DbService getInstance(Application application){
+    public static synchronized RatingDbService getInstance(Application application){
         if(instance == null){
-            instance = new DbService(application);
+            instance = new RatingDbService(application);
         }
         return instance;
     }

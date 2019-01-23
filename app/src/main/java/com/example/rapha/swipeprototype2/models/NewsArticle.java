@@ -10,9 +10,9 @@ import org.json.JSONObject;
 
 public class NewsArticle implements Parcelable {
 
-	String sourceId;
-	String sourceName;
-	String author;
+    public String sourceId;
+    public String sourceName;
+    public String author;
 	public String title;
     public String description;
     public String url;
