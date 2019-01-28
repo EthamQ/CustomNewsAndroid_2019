@@ -20,6 +20,7 @@ import com.example.rapha.swipeprototype2.activities.articleDetailActivity.Articl
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.UserChangedLanguageState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
@@ -46,7 +47,7 @@ import java.util.List;
  */
 public class SwipeFragment extends Fragment {
 
-    MainActivity mainActivity;
+    public MainActivity mainActivity;
     View view;
 
     // When this amount of articles is left in
@@ -235,6 +236,8 @@ public class SwipeFragment extends Fragment {
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
+                                swipeFragmentState.loadArticles();
                                 dialog.cancel();
                             }
                         });
@@ -285,15 +288,17 @@ public class SwipeFragment extends Fragment {
         thread.start();
     }
 
+
     /**
      * Adds news articles from the list "apiArticlesToAdd" to the "articlesArrayList"
      * which is displayed on the cards in the view.
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
         // Remove the default card at the beginning.
-        if(articlesArrayList.get(0).isDefault){
-            articlesArrayList.remove(0);
-        }
+            if(articlesArrayList.get(0).isDefault) {
+                articlesArrayList.remove(0);
+            }
+
         articlesArrayList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();

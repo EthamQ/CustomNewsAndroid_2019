@@ -3,20 +3,18 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.api.ApiService;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
-public class ApiArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
-    public ApiArticlesAddedToViewState(SwipeFragment swipeFragment) {
+public class UserChangedLanguageState extends SwipeFragmentState implements ISwipeFragmentState {
+    public UserChangedLanguageState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
-
     @Override
     public void setCardsVisibility() {
-
+        swipeFragment.setCardsVisibility(true);
+        changeStateTo(new ApiArticlesAddedToViewState(swipeFragment));
     }
 
     @Override
@@ -36,7 +34,7 @@ public class ApiArticlesAddedToViewState extends SwipeFragmentState implements I
 
     @Override
     public void addArticlesToView() {
-
+        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
     }
 
     @Override
@@ -50,5 +48,10 @@ public class ApiArticlesAddedToViewState extends SwipeFragmentState implements I
 
     @Override
     public void loadArticles() {
+        swipeFragment.setCardsVisibility(false);
+        for(int i = swipeFragment.articlesArrayList.size() - 1; i > 1; i--){
+            swipeFragment.articlesArrayList.remove(i);
+        }
+        swipeFragment.loadArticlesFromApi();
     }
 }
