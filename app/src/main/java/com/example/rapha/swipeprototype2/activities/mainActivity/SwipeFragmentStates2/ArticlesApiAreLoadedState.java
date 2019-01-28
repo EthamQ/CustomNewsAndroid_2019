@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 
 import java.util.LinkedList;
 
@@ -33,7 +34,9 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
 
     @Override
     public void saveArticlesInDb() {
-
+        NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAll();
+        NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication())
+                .insertNewsArticles(swipeFragment.apiArticlesToAdd);
     }
 
     @Override
@@ -48,6 +51,11 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
 
     @Override
     public void handleArticlesOnEmpty() {
+
+    }
+
+    @Override
+    public void loadArticles() {
 
     }
 }

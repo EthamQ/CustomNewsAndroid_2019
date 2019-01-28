@@ -1,10 +1,5 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
-
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ArticlesAreLoadedState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
-
-import java.util.LinkedList;
 
 public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
     public WaitForApiArticlesState(SwipeFragment swipeFragment) {
@@ -43,6 +38,11 @@ public class WaitForApiArticlesState extends SwipeFragmentState implements ISwip
 
     @Override
     public void handleArticlesOnEmpty() {
+
+    }
+
+    @Override
+    public void loadArticles() {
 
     }
 }

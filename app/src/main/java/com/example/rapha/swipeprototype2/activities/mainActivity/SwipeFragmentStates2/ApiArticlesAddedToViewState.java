@@ -2,11 +2,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ArticlesNotLoadedState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
-
-import java.util.LinkedList;
 
 public class ApiArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
     public ApiArticlesAddedToViewState(SwipeFragment swipeFragment) {
@@ -49,7 +45,12 @@ public class ApiArticlesAddedToViewState extends SwipeFragmentState implements I
         if(swipeFragment.articlesArrayList.size() < SwipeFragment.articlesAmountReload){
             Log.d("AMOUNT", "Reload now");
             changeStateTo(new WaitForApiArticlesState(swipeFragment));
-            swipeFragment.loadArticles(swipeFragment.liveCategoryRatings);
+            swipeFragment.loadArticlesFromApi();
         }
+    }
+
+    @Override
+    public void loadArticles() {
+
     }
 }

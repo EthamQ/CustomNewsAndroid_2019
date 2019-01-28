@@ -15,6 +15,7 @@ public class DBArticlesAddedToViewState extends SwipeFragmentState implements IS
     public void setCardsVisibility() {
         swipeFragment.setCardsVisibility(true);
         changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+        swipeFragment.swipeFragmentState.loadArticlesFromApi();
     }
 
     @Override
@@ -44,6 +45,11 @@ public class DBArticlesAddedToViewState extends SwipeFragmentState implements IS
 
     @Override
     public void handleArticlesOnEmpty() {
+
+    }
+
+    @Override
+    public void loadArticles() {
 
     }
 }

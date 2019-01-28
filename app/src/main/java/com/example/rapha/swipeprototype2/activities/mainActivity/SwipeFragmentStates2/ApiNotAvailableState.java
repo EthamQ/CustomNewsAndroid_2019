@@ -44,4 +44,9 @@ public class ApiNotAvailableState extends SwipeFragmentState implements ISwipeFr
     public void handleArticlesOnEmpty() {
 
     }
+
+    @Override
+    public void loadArticles() {
+
+    }
 }

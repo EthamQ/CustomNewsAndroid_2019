@@ -1,6 +1,4 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
-
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.IMainActivityState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class SwipeFragmentState {

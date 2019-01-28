@@ -24,7 +24,7 @@ public interface INewsArticleDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOneNewsArticle(NewsArticleRoomModel newsArticleRoomModel);
 
-    @Query("DELETE FROM UserPreference")
+    @Query("DELETE FROM NewsArticles")
     void deleteAllNewsArticles();
 
     @Update

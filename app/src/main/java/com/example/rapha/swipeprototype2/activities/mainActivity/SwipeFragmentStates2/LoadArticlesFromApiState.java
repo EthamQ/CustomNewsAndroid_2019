@@ -1,9 +1,8 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
+import android.util.Log;
 
-import java.util.LinkedList;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwipeFragmentState {
 
@@ -23,7 +22,8 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void loadArticlesFromApi() {
-        swipeFragment.loadArticles(swipeFragment.liveCategoryRatings);
+        Log.d("newstate", "LoadArticlesFromApiState: loadArticlesFromApi()");
+        swipeFragment.loadArticlesFromApi();
         changeStateTo(new WaitForApiArticlesState(swipeFragment));
     }
 
@@ -44,6 +44,11 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void handleArticlesOnEmpty() {
+
+    }
+
+    @Override
+    public void loadArticles() {
 
     }
 }

@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 
@@ -34,13 +36,14 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
 
     @Override
     public void addArticlesToView() {
-
+        Log.d("newstate", "AddDbArticlesToViewState: addArticlesToView(), amount of db articles: " + swipeFragment.dbArticlesToAdd.size());
         if(swipeFragment.dbArticlesToAdd.size() > 0){
             changeStateTo(new DBArticlesAddedToViewState(swipeFragment));
             swipeFragment.addArticlesToView(swipeFragment.dbArticlesToAdd);
         }
         else{
             changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+            swipeFragment.swipeFragmentState.loadArticlesFromApi();
         }
     }
 
@@ -51,6 +54,11 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
 
     @Override
     public void handleArticlesOnEmpty() {
+
+    }
+
+    @Override
+    public void loadArticles() {
 
     }
 

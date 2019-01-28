@@ -171,7 +171,7 @@ public class StatisticFragment extends Fragment {
                             }
                             return super.formatLabel(value, isValueX);
                         } else {
-                            return super.formatLabel(value, isValueX);
+                            return "";
                         }
                     }
                 });

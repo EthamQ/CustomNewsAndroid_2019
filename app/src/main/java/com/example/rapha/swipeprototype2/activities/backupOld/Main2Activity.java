@@ -208,7 +208,7 @@
 ////     * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
 ////     * which shows them on the cards to the user.
 ////     */
-////    public void loadArticles(final List<UserPreferenceRoomModel> userPreferenceRoomModels){
+////    public void loadArticlesFromApi(final List<UserPreferenceRoomModel> userPreferenceRoomModels){
 ////        Thread thread = new Thread(new Runnable() {
 ////            @Override
 ////            public void run() {

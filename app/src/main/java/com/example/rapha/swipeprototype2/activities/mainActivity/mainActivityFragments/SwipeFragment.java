@@ -18,10 +18,9 @@ import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ArticlesNotLoadedState;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.IMainActivityState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.ISwipeFragmentState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.NoArticlesState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
@@ -72,7 +71,6 @@ public class SwipeFragment extends Fragment {
 
     public RatingDbService dbService;
     public NewsArticleDbService newsArticleDbService;
-    public IMainActivityState swipeActivityState;
     public ISwipeFragmentState swipeFragmentState;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -123,23 +121,17 @@ public class SwipeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
-        this.swipeActivityState = new ArticlesNotLoadedState(this);
         init();
         setLanguageDialog();
         setSwipeFunctionality();
-
-        // Set visible when article data is here
-        view.findViewById(R.id.frame).setVisibility(View.INVISIBLE);
-        view.findViewById(R.id.button_languages).setVisibility(View.INVISIBLE);
+        swipeFragmentState = new NoArticlesState(this);
+        swipeFragmentState.setCardsVisibility();
 
         dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> dbCategoryRatings) {
                 liveCategoryRatings = dbCategoryRatings;
-                for(int i = 0; i < dbCategoryRatings.size(); i++){
-                    Log.d("RATINGLIVE", dbCategoryRatings.get(i).toString());
-                }
-                swipeActivityState.loadArticlesFromApi(dbCategoryRatings);
+                swipeFragmentState.loadArticles();
             }
         });
 
@@ -197,6 +189,9 @@ public class SwipeFragment extends Fragment {
         // TODO: wait until real articles are loaded / use caching
         NewsArticle firstCard = new NewsArticle();
         firstCard.isDefault = true;
+        firstCard.title = "Start swiping to read articles!\n\n " +
+                "Swipe interesting articles to the right\n\n " +
+                "Swipe articles that aren'actionBarDrawerToggle interesting to the left";
         articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
@@ -250,7 +245,7 @@ public class SwipeFragment extends Fragment {
      * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
      * which shows them on the cards to the user.
      */
-    public void loadArticles(final List<UserPreferenceRoomModel> categoryRatings){
+    public void loadArticlesFromApi(){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -258,17 +253,17 @@ public class SwipeFragment extends Fragment {
                     // Clean previous data if it exists.
                     apiArticlesToAdd = new LinkedList<>();
                     // Load articles.
-                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(mainActivity, categoryRatings);
+                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(mainActivity, liveCategoryRatings);
                     Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            swipeActivityState.articlesAreLoaded();
-                            addArticlesToView(apiArticlesToAdd);
+                            swipeFragmentState.articlesFromApiAreLoaded();
+                            swipeFragmentState.saveArticlesInDb();
+                            swipeFragmentState.addArticlesToView();
                         }
                     });
                 } catch (Exception e) {
-                    Log.d("RESTRUCTURE", "inside catch thread");
                     e.printStackTrace();
                     Log.e("HTTPERROR", e.toString());
                 }
@@ -282,18 +277,9 @@ public class SwipeFragment extends Fragment {
      * which is displayed on the cards in the view.
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
-        Log.d("RESTRUCTURE", "addArticlesToView");
         articlesArrayList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
-        if(articlesArrayList.size() > 1){
-            setCardsVisibility(true);
-            // Pseudo functionality to show when the articles are loaded.
-            TextView textView = view.findViewById(R.id.itemText);
-            textView.setText("Start swiping to read articles!\n\n " +
-                    "Swipe interesting articles to the right\n\n " +
-                    "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
-        }
-
+        swipeFragmentState.setCardsVisibility();
         Logging.logAmountOfArticles(mainActivity);
     }
 
@@ -309,7 +295,8 @@ public class SwipeFragment extends Fragment {
             public void removeFirstObjectInAdapter() {
                 articlesArrayList.remove(0);
                 // Handled here because every swiped card is removed here.
-                swipeActivityState.handleArticlesOnEmpty();
+                // swipeActivityState.handleArticlesOnEmpty();
+                swipeFragmentState.handleArticlesOnEmpty();
                 articlesArrayAdapter.notifyDataSetChanged();
             }
 

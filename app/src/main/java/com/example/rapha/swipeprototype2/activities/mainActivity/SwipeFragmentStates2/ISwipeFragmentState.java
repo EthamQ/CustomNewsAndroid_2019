@@ -13,5 +13,6 @@ public interface ISwipeFragmentState {
     void addArticlesToView();
     void articlesFromApiAreLoaded();
     void handleArticlesOnEmpty();
+    void loadArticles();
 
 }
