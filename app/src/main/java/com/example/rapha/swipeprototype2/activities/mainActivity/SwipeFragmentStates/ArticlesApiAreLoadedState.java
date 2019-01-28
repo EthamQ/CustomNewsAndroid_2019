@@ -1,14 +1,10 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 
-import java.util.LinkedList;
-
-public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
-
-    public ArticlesDbAreLoadedState(SwipeFragment swipeFragment) {
+public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
+    public ArticlesApiAreLoadedState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
@@ -16,8 +12,11 @@ public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwi
     public void setCardsVisibility() {
         if(swipeFragment.apiArticlesToAdd.size() > 0){
             swipeFragment.setCardsVisibility(true);
+            changeStateTo(new ApiArticlesAddedToViewState(swipeFragment));
         }
-
+        else{
+            changeStateTo(new ApiNotAvailableState(swipeFragment));
+        }
     }
 
     @Override
@@ -32,6 +31,13 @@ public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwi
 
     @Override
     public void saveArticlesInDb() {
+        if(swipeFragment != null){
+            if(swipeFragment.getActivity() != null){
+                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAll();
+                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication())
+                        .insertNewsArticles(swipeFragment.apiArticlesToAdd);
+            }
+        }
     }
 
     @Override

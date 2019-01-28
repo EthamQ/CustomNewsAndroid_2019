@@ -1,8 +1,4 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
-
-import com.example.rapha.swipeprototype2.models.NewsArticle;
-
-import java.util.LinkedList;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 public interface ISwipeFragmentState {
 

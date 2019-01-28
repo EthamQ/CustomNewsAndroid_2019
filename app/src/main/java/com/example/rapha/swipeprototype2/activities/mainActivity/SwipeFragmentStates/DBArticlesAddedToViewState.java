@@ -1,18 +1,18 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
 
-import java.util.LinkedList;
+public class DBArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
-public class ApiNotAvailableState extends SwipeFragmentState implements ISwipeFragmentState {
-    public ApiNotAvailableState(SwipeFragment swipeFragment) {
+    public DBArticlesAddedToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
     @Override
     public void setCardsVisibility() {
-
+        swipeFragment.setCardsVisibility(true);
+        changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+        swipeFragment.swipeFragmentState.loadArticlesFromApi();
     }
 
     @Override

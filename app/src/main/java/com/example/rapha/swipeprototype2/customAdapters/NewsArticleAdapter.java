@@ -1,6 +1,7 @@
 package com.example.rapha.swipeprototype2.customAdapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,9 @@ public class NewsArticleAdapter extends ArrayAdapter{
         // News Headline
         TextView textView = convertView.findViewById(R.id.itemText);
         textView.setText(newsArticle.title);
+        if(newsArticle.isDefault){
+            textView.setTextColor(Color.BLACK);
+        }
 
         // News image
         ImageView imageView = convertView.findViewById(R.id.news_card_image);

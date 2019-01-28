@@ -1,13 +1,18 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
-public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
-    public WaitForApiArticlesState(SwipeFragment swipeFragment) {
+public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
+
+    public ArticlesDbAreLoadedState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
     @Override
     public void setCardsVisibility() {
+        if(swipeFragment.apiArticlesToAdd.size() > 0){
+            swipeFragment.setCardsVisibility(true);
+        }
 
     }
 
@@ -23,17 +28,16 @@ public class WaitForApiArticlesState extends SwipeFragmentState implements ISwip
 
     @Override
     public void saveArticlesInDb() {
-
     }
 
     @Override
     public void addArticlesToView() {
-
+        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
     }
 
     @Override
     public void articlesFromApiAreLoaded() {
-        changeStateTo(new ArticlesApiAreLoadedState(swipeFragment));
+
     }
 
     @Override

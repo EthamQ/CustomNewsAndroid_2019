@@ -1,12 +1,8 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
-
-import android.util.Log;
-
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
-public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwipeFragmentState {
-
-    public LoadArticlesFromApiState(SwipeFragment swipeFragment) {
+public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
+    public WaitForApiArticlesState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
@@ -22,9 +18,7 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void loadArticlesFromApi() {
-        Log.d("newstate", "LoadArticlesFromApiState: loadArticlesFromApi()");
-        swipeFragment.loadArticlesFromApi();
-        changeStateTo(new WaitForApiArticlesState(swipeFragment));
+
     }
 
     @Override
@@ -39,7 +33,7 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void articlesFromApiAreLoaded() {
-
+        changeStateTo(new ArticlesApiAreLoadedState(swipeFragment));
     }
 
     @Override

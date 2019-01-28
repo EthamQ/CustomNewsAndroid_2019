@@ -14,16 +14,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.ISwipeFragmentState;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.NoArticlesState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
+import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
@@ -49,9 +49,15 @@ public class SwipeFragment extends Fragment {
     MainActivity mainActivity;
     View view;
 
-    // When "articlesAmountReload" articles are left in
+    // When this amount of articles is left in
     // articlesArrayList we load new articles from the api
     public static final int articlesAmountReload = 10;
+
+    // How many articles to load in the beginning from the db.
+    public static final int articlesAmountLoadFromDb = 5;
+
+    // If we have more than this amount of articles left we don't need to load new ones.
+    public static final int articlesAmountNoNeedToLoad = 10;
 
     // Adapter for the fling Container (swipe functionality)
     public NewsArticleAdapter articlesArrayAdapter;
@@ -160,6 +166,7 @@ public class SwipeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        ArticleDataStorage.storeArticlesTemporarily(this.articlesArrayList);
     }
 
     /**
@@ -189,9 +196,10 @@ public class SwipeFragment extends Fragment {
         // TODO: wait until real articles are loaded / use caching
         NewsArticle firstCard = new NewsArticle();
         firstCard.isDefault = true;
-        firstCard.title = "Start swiping to read articles!\n\n " +
-                "Swipe interesting articles to the right\n\n " +
-                "Swipe articles that aren'actionBarDrawerToggle interesting to the left";
+        firstCard.title =
+                "Swipe interesting articles to the right.\n\n " +
+                "Swipe articles that aren't interesting to the left.\n\n" +
+                "Swipe in any direction to start reading articles.";
         articlesArrayList.add(firstCard);
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
@@ -220,6 +228,7 @@ public class SwipeFragment extends Fragment {
                     public void onClick(DialogInterface var1, int which, boolean isChecked){
                         checkedItems[which] = isChecked;
                         LanguageSettingsService.saveChecked(mainActivity, checkedItems);
+                        // TODO: reload articles
                     }
                 });
                 dialog.setPositiveButton("Confirm choice", new
@@ -246,6 +255,7 @@ public class SwipeFragment extends Fragment {
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
+        Log.d("LOADD", "loadArticlesFromApi()");
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -258,7 +268,10 @@ public class SwipeFragment extends Fragment {
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            // Tell the state that data is ready, save the data in the
                             swipeFragmentState.articlesFromApiAreLoaded();
+                            // Store them to have cached data
+                            // when the user opens the application the next time.
                             swipeFragmentState.saveArticlesInDb();
                             swipeFragmentState.addArticlesToView();
                         }
@@ -277,6 +290,10 @@ public class SwipeFragment extends Fragment {
      * which is displayed on the cards in the view.
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
+        // Remove the default card at the beginning.
+        if(articlesArrayList.get(0).isDefault){
+            articlesArrayList.remove(0);
+        }
         articlesArrayList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();
@@ -294,8 +311,7 @@ public class SwipeFragment extends Fragment {
             @Override
             public void removeFirstObjectInAdapter() {
                 articlesArrayList.remove(0);
-                // Handled here because every swiped card is removed here.
-                // swipeActivityState.handleArticlesOnEmpty();
+                // Handled here because left and right swiped cards are removed here.
                 swipeFragmentState.handleArticlesOnEmpty();
                 articlesArrayAdapter.notifyDataSetChanged();
             }
@@ -322,7 +338,7 @@ public class SwipeFragment extends Fragment {
 
             @Override
             public void onAdapterAboutToEmpty(int itemsInAdapter) {
-                // didn'actionBarDrawerToggle always work so implemented elsewhere
+                // didn't always work so implemented elsewhere
             }
 
             @Override

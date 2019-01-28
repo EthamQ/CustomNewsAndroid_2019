@@ -1,11 +1,8 @@
-package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2;
+package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
-
-import java.util.LinkedList;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 

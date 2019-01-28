@@ -25,12 +25,26 @@ public class LanguageSettingsService {
 
     public static boolean[] loadChecked(MainActivity mainActivity) {
         SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
-        boolean [] reChecked = new boolean[languageItems.length];
+        boolean [] languageCheckboxes = new boolean[languageItems.length];
         for(Integer i = 0; i < languageItems.length; i++)
         {
-            reChecked[i] = sharedPreferences.getBoolean(i.toString(), false);
+            languageCheckboxes[i] = sharedPreferences.getBoolean(i.toString(), false);
         }
-        return reChecked;
+        setDefaultEnglish(languageCheckboxes);
+        return languageCheckboxes;
+    }
+
+    private static void setDefaultEnglish(boolean [] languages){
+        boolean languageSet = false;
+        for(int i = 0; i < languages.length; i++){
+            if(languages[i]){
+                languageSet = true;
+                break;
+            }
+        }
+        if(!languageSet){
+            languages[LanguageSettingsService.INDEX_ENGLISH] = true;
+        }
     }
 
 }
