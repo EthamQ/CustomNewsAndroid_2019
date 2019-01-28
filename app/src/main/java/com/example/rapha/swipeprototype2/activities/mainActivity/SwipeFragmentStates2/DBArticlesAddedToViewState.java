@@ -5,15 +5,16 @@ import com.example.rapha.swipeprototype2.models.NewsArticle;
 
 import java.util.LinkedList;
 
-public class ArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
+public class DBArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
-    public ArticlesAddedToViewState(SwipeFragment swipeFragment) {
+    public DBArticlesAddedToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
     @Override
     public void setCardsVisibility() {
-
+        swipeFragment.setCardsVisibility(true);
+        changeStateTo(new LoadArticlesFromApiState(swipeFragment));
     }
 
     @Override
@@ -32,7 +33,17 @@ public class ArticlesAddedToViewState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
+    public void addArticlesToView() {
+
+    }
+
+    @Override
+    public void articlesFromApiAreLoaded() {
+
+    }
+
+    @Override
+    public void handleArticlesOnEmpty() {
 
     }
 }

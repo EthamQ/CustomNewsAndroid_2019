@@ -5,9 +5,8 @@ import com.example.rapha.swipeprototype2.models.NewsArticle;
 
 import java.util.LinkedList;
 
-public class LoadArticlesFromDbState extends SwipeFragmentState implements ISwipeFragmentState {
-
-    public LoadArticlesFromDbState(SwipeFragment swipeFragment) {
+public class ApiNotAvailableState extends SwipeFragmentState implements ISwipeFragmentState {
+    public ApiNotAvailableState(SwipeFragment swipeFragment) {
         super(swipeFragment);
     }
 
@@ -32,7 +31,17 @@ public class LoadArticlesFromDbState extends SwipeFragmentState implements ISwip
     }
 
     @Override
-    public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
+    public void addArticlesToView() {
+
+    }
+
+    @Override
+    public void articlesFromApiAreLoaded() {
+
+    }
+
+    @Override
+    public void handleArticlesOnEmpty() {
 
     }
 }

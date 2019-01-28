@@ -10,6 +10,8 @@ public interface ISwipeFragmentState {
     void loadArticlesFromDb();
     void loadArticlesFromApi();
     void saveArticlesInDb();
-    void addArticlesToView(LinkedList<NewsArticle> articlesToAdd);
+    void addArticlesToView();
+    void articlesFromApiAreLoaded();
+    void handleArticlesOnEmpty();
 
 }

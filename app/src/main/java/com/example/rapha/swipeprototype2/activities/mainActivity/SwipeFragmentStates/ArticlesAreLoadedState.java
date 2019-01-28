@@ -13,7 +13,7 @@ public class ArticlesAreLoadedState extends MainActivityState implements IMainAc
 
     @Override
     public void addArticlesToView() {
-        swipeFragment.addArticlesToView();
+        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
         changeStateTo(new ArticlesAreAddedToViewState(swipeFragment));
     }
 

@@ -25,7 +25,7 @@ public class ArticlesAreAddedToViewState extends MainActivityState implements IM
         if(swipeFragment.articlesArrayList.size() < SwipeFragment.articlesAmountReload){
             Log.d("AMOUNT", "Reload now");
             changeStateTo(new ArticlesNotLoadedState(swipeFragment));
-            swipeFragment.loadArticles(swipeFragment.liveUserPreferences);
+            swipeFragment.loadArticles(swipeFragment.liveCategoryRatings);
         }
     }
 

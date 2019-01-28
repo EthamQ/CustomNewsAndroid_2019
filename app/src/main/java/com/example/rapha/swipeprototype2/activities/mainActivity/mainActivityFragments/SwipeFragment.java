@@ -22,7 +22,6 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentSt
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.IMainActivityState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.ISwipeFragmentState;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates2.SwipeFragmentState;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
@@ -62,14 +61,14 @@ public class SwipeFragment extends Fragment {
     // the news articles to be displayed
     public ArrayList<NewsArticle> articlesArrayList;
 
-    // Temporary store newly loaded articles in "newsArticlesToSwipe"
+    // Temporary store newly loaded articles in "apiArticlesToAdd"
     // before they are added to "articlesArrayList"
-    public LinkedList<NewsArticle> newsArticlesToSwipe;
+    public LinkedList<NewsArticle> apiArticlesToAdd;
 
     public LinkedList<NewsArticle> dbArticlesToAdd;
 
     // Contains all the user preferences fetched from the database (news category and its rating).
-    public List<UserPreferenceRoomModel> liveUserPreferences;
+    public List<UserPreferenceRoomModel> liveCategoryRatings;
 
     public RatingDbService dbService;
     public NewsArticleDbService newsArticleDbService;
@@ -135,12 +134,12 @@ public class SwipeFragment extends Fragment {
 
         dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
-                liveUserPreferences = userPreferenceRoomModels;
-                for(int i = 0; i < userPreferenceRoomModels.size(); i++){
-                    Log.d("RATINGLIVE", userPreferenceRoomModels.get(i).toString());
+            public void onChanged(@Nullable List<UserPreferenceRoomModel> dbCategoryRatings) {
+                liveCategoryRatings = dbCategoryRatings;
+                for(int i = 0; i < dbCategoryRatings.size(); i++){
+                    Log.d("RATINGLIVE", dbCategoryRatings.get(i).toString());
                 }
-                swipeActivityState.loadArticlesFromApi(userPreferenceRoomModels);
+                swipeActivityState.loadArticlesFromApi(dbCategoryRatings);
             }
         });
 
@@ -202,6 +201,7 @@ public class SwipeFragment extends Fragment {
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
+        dbArticlesToAdd = new LinkedList<>();
     }
 
 
@@ -250,29 +250,21 @@ public class SwipeFragment extends Fragment {
      * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
      * which shows them on the cards to the user.
      */
-    public void loadArticles(final List<UserPreferenceRoomModel> userPreferenceRoomModels){
-        Log.d("RESTRUCTURE", "beginning load articles");
+    public void loadArticles(final List<UserPreferenceRoomModel> categoryRatings){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    Log.d("RESTRUCTURE", "inside thread");
                     // Clean previous data if it exists.
-                    newsArticlesToSwipe = new LinkedList<>();
+                    apiArticlesToAdd = new LinkedList<>();
                     // Load articles.
-                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(mainActivity, userPreferenceRoomModels);
-                    // TODO: don'actionBarDrawerToggle load all images at once, the application can'actionBarDrawerToggle handle it!
-                    // ArticleImageService.setImagesForTextView(newsArticlesToSwipe, 0);
-                    Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
+                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(mainActivity, categoryRatings);
+                    Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.d("RESTRUCTURE", "inside runOnUiThread 1");
                             swipeActivityState.articlesAreLoaded();
-                            addArticlesToView();
-                            view.findViewById(R.id.frame).setVisibility(View.VISIBLE);
-                            view.findViewById(R.id.button_languages).setVisibility(View.VISIBLE);
-                            Log.d("RESTRUCTURE", "inside runOnUiThread 2");
+                            addArticlesToView(apiArticlesToAdd);
                         }
                     });
                 } catch (Exception e) {
@@ -286,19 +278,22 @@ public class SwipeFragment extends Fragment {
     }
 
     /**
-     * Adds news articles from the list "newsArticlesToSwipe" to the "articlesArrayList"
+     * Adds news articles from the list "apiArticlesToAdd" to the "articlesArrayList"
      * which is displayed on the cards in the view.
      */
-    public void addArticlesToView() {
+    public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
         Log.d("RESTRUCTURE", "addArticlesToView");
-        articlesArrayList.addAll(newsArticlesToSwipe);
+        articlesArrayList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
+        if(articlesArrayList.size() > 1){
+            setCardsVisibility(true);
+            // Pseudo functionality to show when the articles are loaded.
+            TextView textView = view.findViewById(R.id.itemText);
+            textView.setText("Start swiping to read articles!\n\n " +
+                    "Swipe interesting articles to the right\n\n " +
+                    "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
+        }
 
-        // Pseudo functionality to show when the articles are loaded.
-        TextView textView = view.findViewById(R.id.itemText);
-        textView.setText("Start swiping to read articles!\n\n " +
-                "Swipe interesting articles to the right\n\n " +
-                "Swipe articles that aren'actionBarDrawerToggle interesting to the left");
         Logging.logAmountOfArticles(mainActivity);
     }
 
@@ -325,7 +320,7 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onLeftCardExit(Object dataObject) {
                 NewsArticle swipedArticle = (NewsArticle)dataObject;
-                CategoryRatingService.rateAsNotInteresting(liveUserPreferences, SwipeFragment.this, swipedArticle);
+                CategoryRatingService.rateAsNotInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
             }
 
             /**
@@ -335,7 +330,7 @@ public class SwipeFragment extends Fragment {
             @Override
             public void onRightCardExit(Object dataObject) {
                 final NewsArticle swipedArticle = (NewsArticle)dataObject;
-                CategoryRatingService.rateAsInteresting(liveUserPreferences, SwipeFragment.this, swipedArticle);
+                CategoryRatingService.rateAsInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
             }
 
             @Override

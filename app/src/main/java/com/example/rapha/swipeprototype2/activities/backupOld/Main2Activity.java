@@ -64,12 +64,12 @@
 ////    // the news articles to be displayed
 ////    public ArrayList<NewsArticle> articlesArrayList;
 ////
-////    // Temporary store newly loaded articles in "newsArticlesToSwipe"
+////    // Temporary store newly loaded articles in "apiArticlesToAdd"
 ////    // before they are added to "articlesArrayList"
-////    public LinkedList<NewsArticle> newsArticlesToSwipe;
+////    public LinkedList<NewsArticle> apiArticlesToAdd;
 ////
 ////    // Contains all the user preferences fetched from the database (news category and its rating).
-////    public List<UserPreferenceRoomModel> liveUserPreferences;
+////    public List<UserPreferenceRoomModel> liveCategoryRatings;
 ////
 ////    public DbService dbService;
 ////    public IMainActivityState swipeActivityState;
@@ -95,7 +95,7 @@
 ////        dbService.getAllUserPreferences().observe(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, new Observer<List<UserPreferenceRoomModel>>() {
 ////            @Override
 ////            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
-////                liveUserPreferences = userPreferenceRoomModels;
+////                liveCategoryRatings = userPreferenceRoomModels;
 ////                for(int i = 0; i < userPreferenceRoomModels.size(); i++){
 ////                    Log.d("RATINGLIVE", userPreferenceRoomModels.get(i).toString());
 ////                }
@@ -214,12 +214,12 @@
 ////            public void run() {
 ////                try {
 ////                    // Clean previous data if it exists.
-////                    newsArticlesToSwipe = new LinkedList<>();
+////                    apiArticlesToAdd = new LinkedList<>();
 ////                    // Load articles.
-////                    newsArticlesToSwipe = ApiService.getAllArticlesNewsApi(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, userPreferenceRoomModels);
+////                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, userPreferenceRoomModels);
 ////                    // TODO: don'actionBarDrawerToggle load all images at once, the application can'actionBarDrawerToggle handle it!
-////                    // ArticleImageService.setImagesForTextView(newsArticlesToSwipe, 0);
-////                    Log.d("AMOUNT", "news articles loaded: " + newsArticlesToSwipe.size());
+////                    // ArticleImageService.setImagesForTextView(apiArticlesToAdd, 0);
+////                    Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
 ////                    runOnUiThread(new Runnable() {
 ////                        @Override
 ////                        public void run() {
@@ -239,11 +239,11 @@
 ////    }
 ////
 ////    /**
-////     * Adds news articles from the list "newsArticlesToSwipe" to the "articlesArrayList"
+////     * Adds news articles from the list "apiArticlesToAdd" to the "articlesArrayList"
 ////     * which is displayed on the cards in the view.
 ////     */
 ////    public void addArticlesToView() {
-////        articlesArrayList.addAll(newsArticlesToSwipe);
+////        articlesArrayList.addAll(apiArticlesToAdd);
 ////        articlesArrayAdapter.notifyDataSetChanged();
 ////
 ////        // Pseudo functionality to show when the articles are loaded.
@@ -277,7 +277,7 @@
 ////            @Override
 ////            public void onLeftCardExit(Object dataObject) {
 ////                NewsArticle swipedArticle = (NewsArticle)dataObject;
-////                CategoryRatingService.rateAsNotInteresting(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this.liveUserPreferences, com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, swipedArticle);
+////                CategoryRatingService.rateAsNotInteresting(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this.liveCategoryRatings, com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, swipedArticle);
 ////            }
 ////
 ////            /**
@@ -287,7 +287,7 @@
 ////            @Override
 ////            public void onRightCardExit(Object dataObject) {
 ////                final NewsArticle swipedArticle = (NewsArticle)dataObject;
-////                CategoryRatingService.rateAsInteresting(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this.liveUserPreferences, com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, swipedArticle);
+////                CategoryRatingService.rateAsInteresting(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this.liveCategoryRatings, com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, swipedArticle);
 ////            }
 ////
 ////            @Override

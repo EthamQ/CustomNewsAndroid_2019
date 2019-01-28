@@ -16,21 +16,21 @@ public class Logging {
 //        int amount2 = 0;
 //        int amount3 = 0;
 //        int amount4 = 0;
-//        for(int i = 0; i< swipeFragment.newsArticlesToSwipe.size(); i++){
-//            Log.d("§§§", swipeFragment.newsArticlesToSwipe.get(i).toString());
-//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 0){
+//        for(int i = 0; i< swipeFragment.apiArticlesToAdd.size(); i++){
+//            Log.d("§§§", swipeFragment.apiArticlesToAdd.get(i).toString());
+//            if(swipeFragment.apiArticlesToAdd.get(i).newsCategory == 0){
 //                amount0++;
 //            }
-//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 1){
+//            if(swipeFragment.apiArticlesToAdd.get(i).newsCategory == 1){
 //                amount1++;
 //            }
-//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 2){
+//            if(swipeFragment.apiArticlesToAdd.get(i).newsCategory == 2){
 //                amount2++;
 //            }
-//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 3){
+//            if(swipeFragment.apiArticlesToAdd.get(i).newsCategory == 3){
 //                amount3++;
 //            }
-//            if(swipeFragment.newsArticlesToSwipe.get(i).newsCategory == 4){
+//            if(swipeFragment.apiArticlesToAdd.get(i).newsCategory == 4){
 //                amount4++;
 //            }
 //        }

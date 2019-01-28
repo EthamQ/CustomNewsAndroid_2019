@@ -13,6 +13,9 @@ public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwi
 
     @Override
     public void setCardsVisibility() {
+        if(swipeFragment.apiArticlesToAdd.size() > 0){
+            swipeFragment.setCardsVisibility(true);
+        }
 
     }
 
@@ -32,7 +35,17 @@ public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
+    public void addArticlesToView() {
+        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
+    }
+
+    @Override
+    public void articlesFromApiAreLoaded() {
+
+    }
+
+    @Override
+    public void handleArticlesOnEmpty() {
 
     }
 }
