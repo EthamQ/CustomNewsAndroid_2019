@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Custom News</string>
+    <string name="app_name">MY News</string>
     <string name="title_activity_article_detail_scrolling">ArticleDetailScrollingActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
@@ -99,7 +99,7 @@
     <string name="title_activity_main2">Main2Activity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title">MY News</string>
+    <string name="nav_header_subtitle">Menu</string>
     <string name="nav_header_desc">Navigation header</string>
 </resources>
