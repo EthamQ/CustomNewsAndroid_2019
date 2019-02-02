@@ -51,11 +51,11 @@ public class NewsCategoryContainer {
         Distribution technology = new Distribution(this.technology.getCategoryID());
 
         // Set the correct amount to be requested for every Distribution object.
-        finance.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.finance, totalRating);
-        food .amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.food , totalRating);
-        movie.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.movie, totalRating);
-        politics.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.politics, totalRating);
-        technology.amountToFetchFromApi = NewsCategoryUtils.calculateDistribution(this.technology, totalRating);
+        finance.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.finance, totalRating);
+        food .amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.food , totalRating);
+        movie.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.movie, totalRating);
+        politics.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.politics, totalRating);
+        technology.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.technology, totalRating);
 
         // Add every distribution object to the LinkedList.
         distributionList.add(finance);

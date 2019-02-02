@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.models.NewsArticleUtils;
 
 public class ArticleDetailScrollingActivity extends AppCompatActivity {
 
@@ -25,7 +26,11 @@ public class ArticleDetailScrollingActivity extends AppCompatActivity {
         NewsArticle article = getIntent().getParcelableExtra("clickedArticle");
         CollapsingToolbarLayout toolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         toolbarLayout.setTitle("Read the Article");
-        ((TextView)findViewById(R.id.articleContent)).setText(article.title + "\n\n" + article.content + "\n\n" + article.url);
+        ((TextView)findViewById(R.id.articleTitle)).setText(article.title);
+        ((TextView)findViewById(R.id.articleContent)).setText(
+                NewsArticleUtils.removeCharInformation(article.content)
+        );
+        ((TextView)findViewById(R.id.articleLink)).setText(article.url);
 
     }
 }

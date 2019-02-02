@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -192,6 +193,7 @@ public class SwipeFragment extends Fragment {
     }
 
         public void init(){
+        ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Home");
         articlesArrayList = new ArrayList<>();
         // Add empty article to show while real articles are being requested from the api.
         // TODO: wait until real articles are loaded / use caching

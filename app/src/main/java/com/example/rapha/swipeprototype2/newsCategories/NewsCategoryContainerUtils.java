@@ -3,7 +3,7 @@ package com.example.rapha.swipeprototype2.newsCategories;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 
-public class NewsCategoryUtils {
+public class NewsCategoryContainerUtils {
 
     /**
      * Calculates how many news articles for the news category should be requested

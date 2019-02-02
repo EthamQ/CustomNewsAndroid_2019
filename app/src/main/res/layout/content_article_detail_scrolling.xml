@@ -4,16 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/news_card_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".activities.articleDetailActivity.ArticleDetailScrollingActivity"
     tools:showIn="@layout/activity_article_detail_scrolling">
 
-    <TextView
-        android:id="@+id/articleContent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textColor="@color/news_card_text"
-        android:text="Example 123 LoremIpsum"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/articleTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="Title"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/titleText" />
+
+        <TextView
+            android:id="@+id/articleContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:text="Example 123 LoremIpsum"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="0dp"
+            android:text="Read the entire article"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/subTitleText" />
+
+        <TextView
+            android:id="@+id/articleLink"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:layout_marginTop="5dp"
+            android:autoLink="web"
+            android:text="Link"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
 
 </android.support.v4.widget.NestedScrollView>
