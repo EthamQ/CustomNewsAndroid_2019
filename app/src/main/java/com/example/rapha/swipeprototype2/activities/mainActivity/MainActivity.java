@@ -18,12 +18,16 @@ import android.view.MenuItem;
 
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, SwipeFragment.OnFragmentInteractionListener, StatisticFragment.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        SwipeFragment.OnFragmentInteractionListener,
+        StatisticFragment.OnFragmentInteractionListener,
+        SettingsFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +99,11 @@ public class MainActivity extends AppCompatActivity
         } else if(id == R.id.nav_home){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new SwipeFragment());
+            ft.commit();
+        }
+        else if(id == R.id.nav_settings){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.your_placeholder, new SettingsFragment());
             ft.commit();
         }
 

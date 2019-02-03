@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -148,13 +149,13 @@ public class StatisticFragment extends Fragment {
                 // Additional graph styling.
                 series.setSpacing(10);
                 graph.setTitle("Your news preferences");
-                graph.setTitleColor(Color.WHITE);
+//                graph.setTitleColor(Color.BLACK);
                 graph.addSeries(series);
-                graph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-                graph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-                graph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
-                graph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
-                graph.getGridLabelRenderer().reloadStyles();
+//                graph.getGridLabelRenderer().setVerticalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
+//                graph.getGridLabelRenderer().setHorizontalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
+//                graph.getGridLabelRenderer().setVerticalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
+//                graph.getGridLabelRenderer().setHorizontalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
+//                graph.getGridLabelRenderer().reloadStyles();
 
                 // Convert the x axis values to strings representing its news category.
                 graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
@@ -189,7 +190,7 @@ public class StatisticFragment extends Fragment {
                 series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
                     @Override
                     public int get(DataPoint data) {
-                        return Color.WHITE;
+                        return ContextCompat.getColor(getContext(), R.color.turquis_dark);
                     }
                 });
             }
