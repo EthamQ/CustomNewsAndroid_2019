@@ -2,7 +2,7 @@ package com.example.rapha.swipeprototype2.newsCategories;
 
 public class NewsCategory {
 
-    private int rating = 1;
+    private int rating = 3;
     private int categoryID;
     public String[] QUERY_STRINGS_EN;
     public String[] QUERY_STRINGS_GER;

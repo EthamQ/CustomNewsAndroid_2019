@@ -102,4 +102,40 @@
     <string name="nav_header_title">MY News</string>
     <string name="nav_header_subtitle">Menu</string>
     <string name="nav_header_desc">Navigation header</string>
+    <string name="how_it_works_text">
+        When you go to home you can see a card which shows you a news article.
+        You can also click on the article to get to the entire article.
+        If you\'re interested in the article you can swipe the article to the right,
+        if not swipe it to the left.
+        This app will remember what kind of topics you\'re interested in and show
+        you more articles related to that topic.
+        If you want to know what kind of data the app collects about you just go to
+        My Statistics.
+    </string>
+
+    <string name="known_problems_text">
+        I\'m just a small developer and I use a free source for the news articles I\'m showing to you.
+        That\'s why I can request news articles only up to 1000 times a month.
+        Furthermore I don\'t get the entire article content, that\'s why I link to
+        the entire article.
+        So for now the usage of this app is limited but if I\'m able to generate any kind of revenue
+        with this app I\'ll be able to pay for an upgrade of my news source.
+    </string>
+
+    <string name="credit_text">
+        I\'m getting my news from NewsAPI.org.\n\n
+
+        The icons in this app:\n
+        Icon made by Gregor Cresnar from www.flaticon.com\n
+        https://www.flaticon.com/authors/gregor-cresnar\n\n
+
+        Icon made by Gregor Good Ware from www.flaticon.com\n
+        https://www.flaticon.com/authors/good-ware\n\n
+
+        Icons made by Gregor freepik from www.flaticon.com\n
+        https://www.flaticon.com/authors/freepik\n\n
+
+        Free icon from www.fontawesome.com\n
+        https://fontawesome.com/icons/chart-bar\n\n
+    </string>
 </resources>

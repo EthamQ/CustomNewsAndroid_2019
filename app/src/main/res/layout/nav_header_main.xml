@@ -20,14 +20,14 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.192"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="43dp"
-            android:layout_height="61dp"
+            android:layout_width="64dp"
+            android:layout_height="65dp"
             android:layout_marginTop="6dp"
             android:contentDescription="@string/nav_header_desc"
             android:paddingTop="@dimen/nav_header_vertical_spacing"
@@ -38,11 +38,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:fontFamily="@font/sharkready"
             android:text="MY News"
             android:textColor="@color/news_card_background"
-            android:textSize="50dp" />
+            android:textSize="40dp" />
 
     </LinearLayout>
 

@@ -9,4 +9,5 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="titleText">25dp</dimen>
     <dimen name="subTitleText">18dp</dimen>
+    <dimen name="fragment_top_margin">70dp</dimen>
 </resources>

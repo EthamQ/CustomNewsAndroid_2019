@@ -18,6 +18,7 @@ import android.view.MenuItem;
 
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.InfoFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
@@ -27,7 +28,8 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         SwipeFragment.OnFragmentInteractionListener,
         StatisticFragment.OnFragmentInteractionListener,
-        SettingsFragment.OnFragmentInteractionListener {
+        SettingsFragment.OnFragmentInteractionListener,
+        InfoFragment.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +102,13 @@ public class MainActivity extends AppCompatActivity
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new SwipeFragment());
             ft.commit();
-        }
-        else if(id == R.id.nav_settings){
+        } else if(id == R.id.nav_settings){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new SettingsFragment());
+            ft.commit();
+        } else if(id == R.id.nav_info){
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.your_placeholder, new InfoFragment());
             ft.commit();
         }
 

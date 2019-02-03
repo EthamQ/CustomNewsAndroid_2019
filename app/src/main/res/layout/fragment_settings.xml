@@ -4,7 +4,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="@dimen/fragment_top_margin"
         android:background="@drawable/background">
 
 
@@ -34,6 +34,7 @@
         </LinearLayout>
 
     <Button
+        android:id="@+id/statistic_reset_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/btn_rounded"

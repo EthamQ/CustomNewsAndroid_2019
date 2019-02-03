@@ -1,32 +1,25 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SettingsFragment.OnFragmentInteractionListener} interface
+ * {@link InfoFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SettingsFragment#newInstance} factory method to
+ * Use the {@link InfoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
-
-    View view;
-
+public class InfoFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,7 +31,7 @@ public class SettingsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public SettingsFragment() {
+    public InfoFragment() {
         // Required empty public constructor
     }
 
@@ -48,11 +41,11 @@ public class SettingsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
+     * @return A new instance of fragment InfoFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SettingsFragment newInstance(String param1, String param2) {
-        SettingsFragment fragment = new SettingsFragment();
+    public static InfoFragment newInstance(String param1, String param2) {
+        InfoFragment fragment = new InfoFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,11 +66,10 @@ public class SettingsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
+        toolbar.setTitle("Info");
+
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_settings, container, false);
-        initButtons();
-        return view;
+        return inflater.inflate(R.layout.fragment_info, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -117,33 +109,5 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void initButtons(){
-        Button statisticReset = view.findViewById(R.id.statistic_reset_button);
-        statisticReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(getActivity())
-                .setTitle("Confirm")
-                .setMessage("Do you really want to reset all of your news preferences? " +
-                        "You can't reverse this decision.")
-                .setPositiveButton("Yes reset", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
-                        ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
-                        dialogInterface.cancel();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                })
-                .create().show();
-            }
-        });
     }
 }

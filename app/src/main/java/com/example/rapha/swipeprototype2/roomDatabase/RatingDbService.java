@@ -28,6 +28,7 @@ public class RatingDbService {
 
     public void deleteAllUserPreferences(Application application){
         repository.deleteAll();
+        FillDatabase.fillDatabase(repository);
     }
 
     public void updateUserPreference(UserPreferenceRoomModel preference){
