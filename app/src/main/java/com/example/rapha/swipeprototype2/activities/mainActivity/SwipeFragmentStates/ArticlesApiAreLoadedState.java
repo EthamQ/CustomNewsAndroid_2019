@@ -6,33 +6,35 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 
 public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
+
     public ArticlesApiAreLoadedState(SwipeFragment swipeFragment) {
         super(swipeFragment);
         Log.d("statehistory", "ArticlesApiAreLoadedState");
     }
 
     @Override
+    public void handleAfterAddedToView() {
+        if(swipeFragment.apiArticlesHaveBeenLoaded()){
+            changeStateTo(new UserCanSwipeState(swipeFragment));
+        }
+    }
+
+    @Override
     public void setCardsVisibility() {
-        if(swipeFragment.apiArticlesToAdd.size() > 0){
+        if(swipeFragment.apiArticlesHaveBeenLoaded()){
             swipeFragment.setCardsVisibility(true);
-            changeStateTo(new ApiArticlesAddedToViewState(swipeFragment));
-        }
-        else{
-            changeStateTo(new ApiNotAvailableState(swipeFragment));
         }
     }
 
     @Override
-    public void loadArticlesFromDb() {
-
+    public void addArticlesToView() {
+        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
     }
 
     @Override
-    public void loadArticlesFromApi() {
-
-    }
-
-    @Override
+    /**
+     * Save all articles we just loaded from the api in the database.
+     */
     public void saveArticlesInDb() {
         if(swipeFragment != null){
             if(swipeFragment.getActivity() != null){
@@ -44,22 +46,11 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
     }
 
     @Override
-    public void addArticlesToView() {
-        swipeFragment.addArticlesToView(swipeFragment.apiArticlesToAdd);
-    }
-
+    public void articlesFromApiAreLoaded() { }
     @Override
-    public void articlesFromApiAreLoaded() {
-
-    }
-
+    public void handleArticlesOnEmpty() { }
     @Override
-    public void handleArticlesOnEmpty() {
-
-    }
-
+    public void loadArticles() { }
     @Override
-    public void loadArticles() {
-
-    }
+    public void loadArticlesFromApi() { }
 }

@@ -11,12 +11,26 @@ import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRo
 import java.util.List;
 
 public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
+
     public NoArticlesState(SwipeFragment swipeFragment) {
         super(swipeFragment);
         Log.d("statehistory", "NoArticlesState");
     }
 
     @Override
+    /**
+     * No data. Make contentof view invisible.
+     */
+    public void setCardsVisibility() {
+        swipeFragment.setCardsVisibility(false);
+    }
+
+    @Override
+    /**
+     * If an user switches between fragments the articles are temporarily
+     * stored to immediately display them again when going back to the swipe view.
+     * If we have temporary data load it, if not use articles from the database.
+     */
     public void loadArticles() {
         if(ArticleDataStorage.temporaryArticlesExist()){
             loadTemporarilyStoredCards();
@@ -27,11 +41,15 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
     }
 
     private void loadTemporarilyStoredCards(){
-        swipeFragment.articlesArrayList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
+        swipeFragment.swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
         swipeFragment.setCardsVisibility(true);
         changeStateTo(new LoadArticlesFromApiState(swipeFragment));
     }
 
+    /**
+     * Get all news articles from the database. Add a certain amount of them to a list in SwipeFragment.
+     * Switch the state to AddDbArticlesToViewState and let it add them to view.
+     */
     private void loadDatabaseCards(){
         final NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication());
         newsArticleDbService.getAllArticles().observe(
@@ -39,6 +57,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
                 new Observer<List<NewsArticleRoomModel>>() {
                     @Override
                     public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
+
                             swipeFragment.dbArticlesToAdd.addAll(
                                     newsArticleDbService.createNewsArticleList(
                                             articleModels,
@@ -55,39 +74,16 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
     }
 
     @Override
-    public void setCardsVisibility() {
-        swipeFragment.setCardsVisibility(false);
-    }
-
+    public void handleAfterAddedToView() { }
     @Override
-    public void loadArticlesFromDb() {
-
-
-    }
-
+    public void loadArticlesFromApi() { }
     @Override
-    public void loadArticlesFromApi() {
-
-    }
-
+    public void saveArticlesInDb() { }
     @Override
-    public void saveArticlesInDb() {
-
-    }
-
+    public void addArticlesToView() { }
     @Override
-    public void addArticlesToView() {
-
-    }
-
+    public void articlesFromApiAreLoaded() { }
     @Override
-    public void articlesFromApiAreLoaded() {
-
-    }
-
-    @Override
-    public void handleArticlesOnEmpty() {
-
-    }
+    public void handleArticlesOnEmpty() { }
 
 }

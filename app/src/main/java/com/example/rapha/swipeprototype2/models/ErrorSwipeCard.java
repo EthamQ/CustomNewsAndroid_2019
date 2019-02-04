@@ -9,7 +9,7 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 public class ErrorSwipeCard implements ISwipeCard {
 
     String errorText = "It was not possible to load new articles.\n" +
-            "Wait a little bit and try it afgain.";
+            "Wait a little bit and try it again.";
     @Override
     public void onClick(MainActivity mainActivity) {
 

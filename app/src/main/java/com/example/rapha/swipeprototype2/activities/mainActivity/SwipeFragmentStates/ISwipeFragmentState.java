@@ -3,7 +3,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 public interface ISwipeFragmentState {
 
     void setCardsVisibility();
-    void loadArticlesFromDb();
+    void handleAfterAddedToView();
     void loadArticlesFromApi();
     void saveArticlesInDb();
     void addArticlesToView();

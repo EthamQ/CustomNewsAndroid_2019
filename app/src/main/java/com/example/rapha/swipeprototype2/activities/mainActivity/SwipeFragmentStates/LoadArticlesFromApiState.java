@@ -12,57 +12,36 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void setCardsVisibility() {
-
+    public void handleArticlesOnEmpty() {
+        loadArticlesFromApi();
     }
 
     @Override
-    public void loadArticlesFromDb() {
-
-    }
-
-    @Override
+    /**
+     * Check if enough swipe cards are available.
+     * If yes go to the final UserCanSwipeState.
+     * If no load articles from the api and go to the WaitForApiArticlesState.
+     */
     public void loadArticlesFromApi() {
-        Log.d("uuu", "LoadArticlesFromApiState: loadArticlesFromApi()");
-        // No cached articles, send api request.
-        if(shouldRequestArticles()){
-            Log.d("uuu", "LoadArticlesFromApiState: shouldRequestArticles yes");
+        if(swipeFragment.shouldRequestArticles()){
             swipeFragment.loadArticlesFromApi();
             changeStateTo(new WaitForApiArticlesState(swipeFragment));
         }
-        // Enough cached articles go directly to the final state without requesting articles.
         else{
-            Log.d("uuu", "LoadArticlesFromApiState: shouldRequestArticles no");
-            changeStateTo(new ApiArticlesAddedToViewState(swipeFragment));
+            changeStateTo(new UserCanSwipeState(swipeFragment));
         }
     }
 
-    private boolean shouldRequestArticles(){
-        return swipeFragment.articlesArrayList.size() < swipeFragment.articlesAmountNoNeedToLoad;
-    }
-
     @Override
-    public void saveArticlesInDb() {
-
-    }
-
+    public void saveArticlesInDb() { }
     @Override
-    public void addArticlesToView() {
-
-    }
-
+    public void addArticlesToView() { }
     @Override
-    public void articlesFromApiAreLoaded() {
-
-    }
-
+    public void articlesFromApiAreLoaded() { }
     @Override
-    public void handleArticlesOnEmpty() {
-            loadArticlesFromApi();
-    }
-
+    public void loadArticles() { }
     @Override
-    public void loadArticles() {
-
-    }
+    public void setCardsVisibility() { }
+    @Override
+    public void handleAfterAddedToView() { }
 }

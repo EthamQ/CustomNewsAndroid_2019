@@ -12,31 +12,13 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void setCardsVisibility() {
-
-
-    }
-
-    @Override
-    public void loadArticlesFromDb() {
-
-    }
-
-    @Override
-    public void loadArticlesFromApi() {
-
-    }
-
-    @Override
-    public void saveArticlesInDb() {
-
-    }
-
-    @Override
+    /**
+     * If we successfully loaded articles from the database then we add them to the swipe cards.
+     * If not we go to LoadArticlesFromApiState immediately and let it load the articles.
+     *
+     */
     public void addArticlesToView() {
-        Log.d("newstate", "AddDbArticlesToViewState: addArticlesToView(), amount of db articles: " + swipeFragment.dbArticlesToAdd.size());
         if(swipeFragment.dbArticlesToAdd.size() > 0){
-            changeStateTo(new DBArticlesAddedToViewState(swipeFragment));
             swipeFragment.addArticlesToView(swipeFragment.dbArticlesToAdd);
         }
         else{
@@ -46,18 +28,33 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void articlesFromApiAreLoaded() {
+    /**
+     * Only gets called if we have available articles from the database.
+     * Make the articles visible.
+     */
+    public void setCardsVisibility() {
+        swipeFragment.setCardsVisibility(true);
 
+    }
+
+    /**
+     * Load articles from the api after database articles have been added to the view.
+     */
+    @Override
+    public void handleAfterAddedToView() {
+        changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+        swipeFragment.swipeFragmentState.loadArticlesFromApi();
     }
 
     @Override
-    public void handleArticlesOnEmpty() {
-
-    }
-
+    public void articlesFromApiAreLoaded() { }
     @Override
-    public void loadArticles() {
-
-    }
+    public void handleArticlesOnEmpty() { }
+    @Override
+    public void loadArticles() { }
+    @Override
+    public void loadArticlesFromApi() { }
+    @Override
+    public void saveArticlesInDb() { }
 
 }

@@ -53,19 +53,19 @@
 ////    private ActionBarDrawerToggle actionBarDrawerToggle;
 ////    private NavigationView navigationView;
 ////
-////    // When "articlesAmountReload" articles are left in
-////    // articlesArrayList we load new articles from the api
-////    public static final int articlesAmountReload = 10;
+////    // When "articlesAmountLoad" articles are left in
+////    // swipeCardsList we load new articles from the api
+////    public static final int articlesAmountLoad = 10;
 ////
 ////    // Adapter for the fling Container (swipe functionality)
 ////    public NewsArticleAdapter articlesArrayAdapter;
 ////
-////    // "articlesArrayList" is added to the "articlesArrayAdapter" and contains
+////    // "swipeCardsList" is added to the "articlesArrayAdapter" and contains
 ////    // the news articles to be displayed
-////    public ArrayList<NewsArticle> articlesArrayList;
+////    public ArrayList<NewsArticle> swipeCardsList;
 ////
 ////    // Temporary store newly loaded articles in "apiArticlesToAdd"
-////    // before they are added to "articlesArrayList"
+////    // before they are added to "swipeCardsList"
 ////    public LinkedList<NewsArticle> apiArticlesToAdd;
 ////
 ////    // Contains all the user preferences fetched from the database (news category and its rating).
@@ -115,13 +115,13 @@
 ////     * Initialize global objects.
 ////     */
 ////    public void init(){
-////        articlesArrayList = new ArrayList<>();
+////        swipeCardsList = new ArrayList<>();
 ////        // Add empty article to show while real articles are being requested from the api.
 ////        // TODO: wait until real articles are loaded / use caching
 ////        NewsArticle firstCard = new NewsArticle();
 ////        firstCard.isDefault = true;
-////        articlesArrayList.add(firstCard);
-////        articlesArrayAdapter = new NewsArticleAdapter(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, R.layout.swipe_card, articlesArrayList);
+////        swipeCardsList.add(firstCard);
+////        articlesArrayAdapter = new NewsArticleAdapter(com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity.this, R.layout.swipe_card, swipeCardsList);
 ////        dbService = DbService.getInstance(getApplication());
 ////    }
 ////
@@ -205,7 +205,7 @@
 ////    }
 ////
 ////    /**
-////     * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
+////     * Calls the ApiService to receive all news articles and adds them to "swipeCardsList"
 ////     * which shows them on the cards to the user.
 ////     */
 ////    public void loadArticlesFromApi(final List<UserPreferenceRoomModel> userPreferenceRoomModels){
@@ -239,11 +239,11 @@
 ////    }
 ////
 ////    /**
-////     * Adds news articles from the list "apiArticlesToAdd" to the "articlesArrayList"
+////     * Adds news articles from the list "apiArticlesToAdd" to the "swipeCardsList"
 ////     * which is displayed on the cards in the view.
 ////     */
 ////    public void addArticlesToView() {
-////        articlesArrayList.addAll(apiArticlesToAdd);
+////        swipeCardsList.addAll(apiArticlesToAdd);
 ////        articlesArrayAdapter.notifyDataSetChanged();
 ////
 ////        // Pseudo functionality to show when the articles are loaded.
@@ -264,7 +264,7 @@
 ////        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
 ////            @Override
 ////            public void removeFirstObjectInAdapter() {
-////                articlesArrayList.remove(0);
+////                swipeCardsList.remove(0);
 ////                // Handled here because every swiped card is removed here.
 ////                swipeActivityState.handleArticlesOnEmpty();
 ////                articlesArrayAdapter.notifyDataSetChanged();

@@ -42,7 +42,7 @@ public class Logging {
     }
 
     public static void logArticlesLeft(MainActivity mainActivity){
-//        Log.d("AMOUNT", "Articles left: " + swipeFragment.articlesArrayList.size());
+//        Log.d("AMOUNT", "Articles left: " + swipeFragment.swipeCardsList.size());
     }
 
     public static void logAllArticles(LinkedList<NewsArticle> newsArticles, String info){

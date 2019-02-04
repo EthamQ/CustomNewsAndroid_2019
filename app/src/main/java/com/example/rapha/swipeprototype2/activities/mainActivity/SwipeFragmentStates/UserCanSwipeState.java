@@ -1,21 +1,26 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
+
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
-public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
-    public WaitForApiArticlesState(SwipeFragment swipeFragment) {
+public class UserCanSwipeState extends SwipeFragmentState implements ISwipeFragmentState {
+    public UserCanSwipeState(SwipeFragment swipeFragment) {
         super(swipeFragment);
-        Log.d("statehistory", "WaitForApiArticlesState");
+        Log.d("statehistory", "UserCanSwipeState");
     }
 
     @Override
-    public void articlesFromApiAreLoaded() {
-        changeStateTo(new ArticlesApiAreLoadedState(swipeFragment));
+    /**
+     * If we are about to run out of cards switch back to the LoadArticlesFromApiState
+     * and let it handle reloading new cards.
+     */
+    public void handleArticlesOnEmpty() {
+        if(swipeFragment.shouldRequestArticles()){
+            changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+        }
     }
 
-    @Override
-    public void handleArticlesOnEmpty() { }
     @Override
     public void loadArticles() { }
     @Override
@@ -28,4 +33,6 @@ public class WaitForApiArticlesState extends SwipeFragmentState implements ISwip
     public void saveArticlesInDb() { }
     @Override
     public void addArticlesToView() { }
+    @Override
+    public void articlesFromApiAreLoaded() { }
 }

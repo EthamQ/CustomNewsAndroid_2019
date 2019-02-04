@@ -3,7 +3,6 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFr
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
@@ -31,8 +29,6 @@ import com.example.rapha.swipeprototype2.models.ErrorSwipeCard;
 import com.example.rapha.swipeprototype2.models.ISwipeCard;
 import com.example.rapha.swipeprototype2.models.IntroductionSwipeCard;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.models.QuestionSwipeCard;
-import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
@@ -57,24 +53,21 @@ public class SwipeFragment extends Fragment {
     View view;
 
     // When this amount of articles is left in
-    // articlesArrayList we load new articles from the api
-    public static final int articlesAmountReload = 10;
+    // swipeCardsList we load new articles from the api
+    public static final int articlesAmountLoad = 10;
 
     // How many articles to load in the beginning from the db.
     public static final int articlesAmountLoadFromDb = 5;
 
-    // If we have more than this amount of articles left we don't need to load new ones.
-    public static final int articlesAmountNoNeedToLoad = 10;
-
     // Adapter for the fling Container (swipe functionality)
     public NewsArticleAdapter articlesArrayAdapter;
 
-    // "articlesArrayList" is added to the "articlesArrayAdapter" and contains
+    // "swipeCardsList" is added to the "articlesArrayAdapter" and contains
     // the news articles to be displayed
-    public ArrayList<ISwipeCard> articlesArrayList;
+    public ArrayList<ISwipeCard> swipeCardsList;
 
     // Temporary store newly loaded articles in "apiArticlesToAdd"
-    // before they are added to "articlesArrayList"
+    // before they are added to "swipeCardsList"
     public LinkedList<NewsArticle> apiArticlesToAdd;
 
     public LinkedList<NewsArticle> dbArticlesToAdd;
@@ -174,7 +167,7 @@ public class SwipeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        ArticleDataStorage.storeArticlesTemporarily(this.articlesArrayList);
+        ArticleDataStorage.storeArticlesTemporarily(this.swipeCardsList);
     }
 
     /**
@@ -200,14 +193,14 @@ public class SwipeFragment extends Fragment {
 
         public void init(){
         ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Home");
-        articlesArrayList = new ArrayList<>();
+        swipeCardsList = new ArrayList<>();
             // Only add introduction card when the user just started the app.
             // When there is temporary data then the app is/was already in use
         if(ArticleDataStorage.getTemporaryStoredArticles().size() == 0){
-            articlesArrayList.add(new IntroductionSwipeCard());
+            swipeCardsList.add(new IntroductionSwipeCard());
         }
 
-        articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
+        articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         dbArticlesToAdd = new LinkedList<>();
@@ -259,7 +252,7 @@ public class SwipeFragment extends Fragment {
     }
 
     /**
-     * Calls the ApiService to receive all news articles and adds them to "articlesArrayList"
+     * Calls the ApiService to receive all news articles and adds them to "swipeCardsList"
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
@@ -295,15 +288,24 @@ public class SwipeFragment extends Fragment {
 
 
     /**
-     * Adds news articles from the list "apiArticlesToAdd" to the "articlesArrayList"
+     * Adds news articles from the list "apiArticlesToAdd" to the "swipeCardsList"
      * which is displayed on the cards in the view.
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
         // Remove the default card at the beginning.
-        articlesArrayList.addAll(articlesToAdd);
+        swipeCardsList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();
+        swipeFragmentState.handleAfterAddedToView();
         Logging.logAmountOfArticles(mainActivity);
+    }
+
+    public boolean shouldRequestArticles(){
+        return swipeCardsList.size() < articlesAmountLoad;
+    }
+
+    public boolean apiArticlesHaveBeenLoaded(){
+        return apiArticlesToAdd.size() > 0;
     }
 
     /**
@@ -316,9 +318,9 @@ public class SwipeFragment extends Fragment {
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
-                articlesArrayList.remove(0);
-                if(articlesArrayList.size() == 0){
-                    articlesArrayList.add(new ErrorSwipeCard());
+                swipeCardsList.remove(0);
+                if(swipeCardsList.size() == 0){
+                    swipeCardsList.add(new ErrorSwipeCard());
                 }
                 // Handled here because left and right swiped cards are removed here.
                 swipeFragmentState.handleArticlesOnEmpty();
