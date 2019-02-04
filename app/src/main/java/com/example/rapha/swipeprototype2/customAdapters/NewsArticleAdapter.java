@@ -20,13 +20,13 @@ import java.util.ArrayList;
 
 public class NewsArticleAdapter extends ArrayAdapter{
 
-    public NewsArticleAdapter(@NonNull Context context, int resourceID, ArrayList<NewsArticle> newsArticles) {
+    public NewsArticleAdapter(@NonNull Context context, int resourceID, ArrayList<ISwipeCard> newsArticles) {
         super(context, resourceID, newsArticles);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        NewsArticle newsArticle = (NewsArticle) getItem(position);
+        ISwipeCard newsArticle = (ISwipeCard) getItem(position);
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.swipe_card, parent, false);
         }
@@ -38,21 +38,10 @@ public class NewsArticleAdapter extends ArrayAdapter{
 //            textView.setTextColor(Color.BLACK);
 //        }
         // News image
-        ImageView imageView = convertView.findViewById(R.id.news_card_image);
-        try{
-            Picasso.get()
-                    .load(newsArticle.urlToImage)
-                    .error(R.drawable.newsdefault)
-                    .into(imageView);
-        } catch(Exception e){
-            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
-        }
+
 
         // The first default information card doesn't need an image
-        if(newsArticle.isDefault || (newsArticle.urlToImage == null)){
-            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
-            imageView.setVisibility(TextView.INVISIBLE);
-        }
+
 
         return convertView;
     }

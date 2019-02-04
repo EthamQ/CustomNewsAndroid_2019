@@ -8,6 +8,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
 
     public AddDbArticlesToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "AddDbArticlesToViewState");
     }
 
     @Override

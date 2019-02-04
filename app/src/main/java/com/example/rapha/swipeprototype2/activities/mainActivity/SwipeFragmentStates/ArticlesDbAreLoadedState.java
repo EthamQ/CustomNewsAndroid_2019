@@ -1,11 +1,14 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class ArticlesDbAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
 
     public ArticlesDbAreLoadedState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "ArticlesDbAreLoadedState");
     }
 
     @Override

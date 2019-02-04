@@ -27,7 +27,12 @@ import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingServ
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.models.ErrorSwipeCard;
+import com.example.rapha.swipeprototype2.models.ISwipeCard;
+import com.example.rapha.swipeprototype2.models.IntroductionSwipeCard;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.models.QuestionSwipeCard;
+import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
@@ -66,7 +71,7 @@ public class SwipeFragment extends Fragment {
 
     // "articlesArrayList" is added to the "articlesArrayAdapter" and contains
     // the news articles to be displayed
-    public ArrayList<NewsArticle> articlesArrayList;
+    public ArrayList<ISwipeCard> articlesArrayList;
 
     // Temporary store newly loaded articles in "apiArticlesToAdd"
     // before they are added to "articlesArrayList"
@@ -138,6 +143,7 @@ public class SwipeFragment extends Fragment {
         dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> dbCategoryRatings) {
+                Log.d("UUU", "rating changed");
                 liveCategoryRatings = dbCategoryRatings;
                 swipeFragmentState.loadArticles();
             }
@@ -195,15 +201,12 @@ public class SwipeFragment extends Fragment {
         public void init(){
         ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Home");
         articlesArrayList = new ArrayList<>();
-        // Add empty article to show while real articles are being requested from the api.
-        // TODO: wait until real articles are loaded / use caching
-        NewsArticle firstCard = new NewsArticle();
-        firstCard.isDefault = true;
-        firstCard.title =
-                "Swipe interesting articles to the right.\n\n " +
-                "Swipe articles that aren't interesting to the left.\n\n" +
-                "Swipe in any direction to start reading articles.";
-        articlesArrayList.add(firstCard);
+            // Only add introduction card when the user just started the app.
+            // When there is temporary data then the app is/was already in use
+        if(ArticleDataStorage.getTemporaryStoredArticles().size() == 0){
+            articlesArrayList.add(new IntroductionSwipeCard());
+        }
+
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, articlesArrayList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
@@ -297,10 +300,6 @@ public class SwipeFragment extends Fragment {
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
         // Remove the default card at the beginning.
-            if(articlesArrayList.get(0).isDefault) {
-                articlesArrayList.remove(0);
-            }
-
         articlesArrayList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();
@@ -318,6 +317,9 @@ public class SwipeFragment extends Fragment {
             @Override
             public void removeFirstObjectInAdapter() {
                 articlesArrayList.remove(0);
+                if(articlesArrayList.size() == 0){
+                    articlesArrayList.add(new ErrorSwipeCard());
+                }
                 // Handled here because left and right swiped cards are removed here.
                 swipeFragmentState.handleArticlesOnEmpty();
                 articlesArrayAdapter.notifyDataSetChanged();
@@ -329,7 +331,7 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onLeftCardExit(Object dataObject) {
-                NewsArticle swipedArticle = (NewsArticle)dataObject;
+                ISwipeCard swipedArticle = (ISwipeCard)dataObject;
                 CategoryRatingService.rateAsNotInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
             }
 
@@ -339,7 +341,7 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onRightCardExit(Object dataObject) {
-                final NewsArticle swipedArticle = (NewsArticle)dataObject;
+                final ISwipeCard swipedArticle = (ISwipeCard)dataObject;
                 CategoryRatingService.rateAsInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
             }
 

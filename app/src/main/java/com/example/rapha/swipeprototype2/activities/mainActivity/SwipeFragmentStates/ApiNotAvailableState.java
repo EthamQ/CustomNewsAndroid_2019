@@ -1,10 +1,13 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class ApiNotAvailableState extends SwipeFragmentState implements ISwipeFragmentState {
     public ApiNotAvailableState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "ApiNotAvailableState");
     }
 
     @Override

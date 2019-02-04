@@ -1,11 +1,14 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class DBArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
     public DBArticlesAddedToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "DBArticlesAddedToViewState");
     }
 
     @Override

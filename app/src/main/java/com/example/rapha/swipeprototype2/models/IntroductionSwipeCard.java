@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.models;
 
 import android.graphics.Color;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
@@ -24,6 +25,8 @@ public class IntroductionSwipeCard implements ISwipeCard {
     public void setSwipeCardView(View convertView) {
         TextView textView = convertView.findViewById(R.id.card_main_text);
         textView.setText(this.introductionText);
-        textView.setTextColor(Color.BLACK);
+        convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+        ImageView imageView = convertView.findViewById(R.id.news_card_image);
+        imageView.setVisibility(TextView.INVISIBLE);
     }
 }

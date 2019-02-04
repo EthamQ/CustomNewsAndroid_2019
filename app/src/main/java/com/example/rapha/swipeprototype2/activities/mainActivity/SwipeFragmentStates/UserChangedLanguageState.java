@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class UserChangedLanguageState extends SwipeFragmentState implements ISwipeFragmentState {
     public UserChangedLanguageState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "UserChangedLanguageState");
     }
 
     @Override

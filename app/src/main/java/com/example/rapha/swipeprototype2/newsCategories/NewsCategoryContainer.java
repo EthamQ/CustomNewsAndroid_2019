@@ -20,12 +20,20 @@ public class NewsCategoryContainer {
     public final Politics politics;
     public final Technology technology;
 
+    public final LinkedList<NewsCategory> allCategories = new LinkedList<>();
+
     public NewsCategoryContainer(){
         finance = new Finance();
         food = new Food();
         movie = new Movie();
         politics = new Politics();
         technology = new Technology();
+
+        allCategories.add(finance);
+        allCategories.add(food);
+        allCategories.add(movie);
+        allCategories.add(politics);
+        allCategories.add(technology);
     }
 
     /**
@@ -88,6 +96,7 @@ public class NewsCategoryContainer {
 
         public Finance(){
             this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Finance";
             this.QUERY_STRINGS_EN = new String[]{
                     "bank", "money", "economy", "finance", "market",
                     "refund", "fund", "wage", "investment", "jobs", "tax",
@@ -117,6 +126,7 @@ public class NewsCategoryContainer {
 
         public Food(){
             this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Food";
             this.QUERY_STRINGS_EN = new String[] {
                     "pasta", "cook", "food", "meal", "delicious",
                     "recipe", "vegetables", "tomato", "pasta", "dinner"
@@ -142,6 +152,7 @@ public class NewsCategoryContainer {
 
         public Movie(){
             this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Movie";
             this.QUERY_STRINGS_EN = new String[] {
                     "movie", "cinema", "blockbuster", "television", "tv",
             };
@@ -163,6 +174,7 @@ public class NewsCategoryContainer {
 
         public Politics(){
             this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Politics";
             this.QUERY_STRINGS_EN = new String[] {
                     "Trump", "Putin", "Politic", "War", "Troops",
                     "president", "syria", "white house"
@@ -188,6 +200,7 @@ public class NewsCategoryContainer {
 
         public Technology(){
             this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Technology";
             this.QUERY_STRINGS_EN = new String[] {
                     "Apple", "Phone", "technology", "computer", "hacker",
                     "streaming", "app", "mac"

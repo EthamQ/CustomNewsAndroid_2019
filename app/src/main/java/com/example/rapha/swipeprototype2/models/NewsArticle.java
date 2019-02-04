@@ -5,12 +5,14 @@ import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -63,6 +65,15 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     public void setSwipeCardView(View convertView){
         TextView mainText = convertView.findViewById(R.id.card_main_text);
         mainText.setText(this.title);
+        ImageView imageView = convertView.findViewById(R.id.news_card_image);
+        try{
+            Picasso.get()
+                    .load(this.urlToImage)
+                    .error(R.drawable.newsdefault)
+                    .into(imageView);
+        } catch(Exception e){
+            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+        }
     }
 
     /**

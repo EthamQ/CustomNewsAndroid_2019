@@ -8,6 +8,7 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     public LoadArticlesFromApiState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "LoadArticlesFromApiState");
     }
 
     @Override
@@ -22,14 +23,16 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void loadArticlesFromApi() {
-        Log.d("newstate", "LoadArticlesFromApiState: loadArticlesFromApi()");
+        Log.d("uuu", "LoadArticlesFromApiState: loadArticlesFromApi()");
         // No cached articles, send api request.
         if(shouldRequestArticles()){
+            Log.d("uuu", "LoadArticlesFromApiState: shouldRequestArticles yes");
             swipeFragment.loadArticlesFromApi();
             changeStateTo(new WaitForApiArticlesState(swipeFragment));
         }
         // Enough cached articles go directly to the final state without requesting articles.
         else{
+            Log.d("uuu", "LoadArticlesFromApiState: shouldRequestArticles no");
             changeStateTo(new ApiArticlesAddedToViewState(swipeFragment));
         }
     }
@@ -55,7 +58,7 @@ public class LoadArticlesFromApiState extends SwipeFragmentState implements ISwi
 
     @Override
     public void handleArticlesOnEmpty() {
-
+            loadArticlesFromApi();
     }
 
     @Override

@@ -1,9 +1,12 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
     public WaitForApiArticlesState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "WaitForApiArticlesState");
     }
 
     @Override

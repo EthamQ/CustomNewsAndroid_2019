@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.models.ISwipeCard;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
@@ -20,17 +21,22 @@ public class CategoryRatingService {
      * Increments the rating value of the category of swipedArticle by 1 in the database.
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
-    public static void rateAsInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final NewsArticle swipedArticle){
+    public static void rateAsInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
         Log.d("RIGHTEXIT", "in rateAsInteresting ");
-        rate(liveUserPreferences, swipeFragment, swipedArticle, true);
+        if(swipedArticle instanceof NewsArticle){
+            rate(liveUserPreferences, swipeFragment, (NewsArticle)swipedArticle, true);
+        }
+
     }
 
     /**
      * Decrements the rating value of the category of swipedArticle by 1 in the database.
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
-    public static void rateAsNotInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final NewsArticle swipedArticle){
-        rate(liveUserPreferences, swipeFragment, swipedArticle, false);
+    public static void rateAsNotInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
+        if(swipedArticle instanceof NewsArticle){
+            rate(liveUserPreferences, swipeFragment, (NewsArticle)swipedArticle, false);
+        }
     }
 
     /**

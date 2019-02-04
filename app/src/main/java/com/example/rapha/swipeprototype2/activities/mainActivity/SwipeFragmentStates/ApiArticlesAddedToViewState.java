@@ -11,6 +11,7 @@ import java.util.LinkedList;
 public class ApiArticlesAddedToViewState extends SwipeFragmentState implements ISwipeFragmentState {
     public ApiArticlesAddedToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        Log.d("statehistory", "ApiArticlesAddedToViewState");
     }
 
 
@@ -46,6 +47,9 @@ public class ApiArticlesAddedToViewState extends SwipeFragmentState implements I
 
     @Override
     public void handleArticlesOnEmpty() {
+        if(swipeFragment.articlesArrayList.size() < swipeFragment.articlesAmountReload){
+            changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+        }
     }
 
     @Override

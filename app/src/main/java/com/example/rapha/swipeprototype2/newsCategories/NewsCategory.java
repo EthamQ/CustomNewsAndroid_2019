@@ -8,6 +8,7 @@ public class NewsCategory {
     public String[] QUERY_STRINGS_GER;
     public String[] QUERY_STRINGS_FR;
     public String[] QUERY_STRINGS_RU;
+    public String displayName;
 
 
     public NewsCategory(){}
