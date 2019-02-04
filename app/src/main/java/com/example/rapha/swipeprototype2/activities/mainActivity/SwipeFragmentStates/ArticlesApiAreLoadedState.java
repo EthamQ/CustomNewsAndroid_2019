@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 
 public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
@@ -15,6 +16,8 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
     @Override
     public void handleAfterAddedToView() {
         if(swipeFragment.apiArticlesHaveBeenLoaded()){
+            QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList);
+            swipeFragment.articlesArrayAdapter.notifyDataSetChanged();
             changeStateTo(new UserCanSwipeState(swipeFragment));
         }
     }

@@ -23,10 +23,7 @@ public class CategoryRatingService {
      */
     public static void rateAsInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
         Log.d("RIGHTEXIT", "in rateAsInteresting ");
-        if(swipedArticle instanceof NewsArticle){
-            rate(liveUserPreferences, swipeFragment, (NewsArticle)swipedArticle, true);
-        }
-
+            rate(liveUserPreferences, swipeFragment, swipedArticle, true);
     }
 
     /**
@@ -34,9 +31,7 @@ public class CategoryRatingService {
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
     public static void rateAsNotInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
-        if(swipedArticle instanceof NewsArticle){
-            rate(liveUserPreferences, swipeFragment, (NewsArticle)swipedArticle, false);
-        }
+            rate(liveUserPreferences, swipeFragment, swipedArticle, false);
     }
 
     /**
@@ -46,10 +41,10 @@ public class CategoryRatingService {
      * @param swipedArticle
      * @param interesting
      */
-    private static void rate(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final NewsArticle swipedArticle, final boolean interesting){
+    private static void rate(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle, final boolean interesting){
         // Get previous ratings to calculate the new one.
                 for(int i = 0; i < liveUserPreferences.size(); i++){
-                    if(liveUserPreferences.get(i).getNewsCategoryId() == swipedArticle.newsCategory){
+                    if(liveUserPreferences.get(i).getNewsCategoryId() == swipedArticle.getNewsCategory()){
                         int newRating = liveUserPreferences.get(i).getRating();
                         if(interesting && (newRating < MAX_RATING)){
                             newRating++;
@@ -59,7 +54,7 @@ public class CategoryRatingService {
                         }
                         // Update in database.
                         swipeFragment.dbService.updateUserPreference(new UserPreferenceRoomModel(
-                                swipedArticle.newsCategory,
+                                swipedArticle.getNewsCategory(),
                                 newRating
                         ));
                     }

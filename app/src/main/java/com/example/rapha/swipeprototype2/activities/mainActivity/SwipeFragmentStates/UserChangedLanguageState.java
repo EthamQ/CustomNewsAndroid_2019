@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 
 public class UserChangedLanguageState extends SwipeFragmentState implements ISwipeFragmentState {
     public UserChangedLanguageState(SwipeFragment swipeFragment) {
@@ -36,7 +37,10 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
     }
 
     @Override
-    public void handleAfterAddedToView() { }
+    public void handleAfterAddedToView() {
+        QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList);
+    }
+
     @Override
     public void loadArticlesFromApi() { }
     @Override

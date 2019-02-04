@@ -19,4 +19,9 @@ public class ErrorSwipeCard implements ISwipeCard {
     public void setSwipeCardView(View convertView) {
         ((TextView) convertView.findViewById(R.id.card_main_text)).setText(errorText);
     }
+
+    @Override
+    public int getNewsCategory() {
+        return -1;
+    }
 }

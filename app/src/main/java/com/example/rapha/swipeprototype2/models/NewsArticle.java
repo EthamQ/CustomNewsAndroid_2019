@@ -76,6 +76,11 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         }
     }
 
+    @Override
+    public int getNewsCategory() {
+        return newsCategory;
+    }
+
     /**
      * Reads the values whose keys correspond to the properties of this
      * class from the JSON object and assigns them to this NewsArticle object.

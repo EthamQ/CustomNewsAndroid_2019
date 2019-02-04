@@ -12,7 +12,8 @@ public class IntroductionSwipeCard implements ISwipeCard {
 
     String introductionText  = "Swipe interesting articles to the right.\n\n " +
                     "Swipe articles that aren't interesting to the left.\n\n" +
-                    "Swipe in any direction to start reading articles.";
+                    "Swipe in any direction to start reading articles.\n\n" +
+                    "More information under the info menu";
 
     public IntroductionSwipeCard() { }
 
@@ -28,5 +29,10 @@ public class IntroductionSwipeCard implements ISwipeCard {
         convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
         ImageView imageView = convertView.findViewById(R.id.news_card_image);
         imageView.setVisibility(TextView.INVISIBLE);
+    }
+
+    @Override
+    public int getNewsCategory() {
+        return -1;
     }
 }

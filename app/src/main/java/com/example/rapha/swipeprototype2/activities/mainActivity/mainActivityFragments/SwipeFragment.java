@@ -136,7 +136,7 @@ public class SwipeFragment extends Fragment {
         dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> dbCategoryRatings) {
-                Log.d("UUU", "rating changed");
+                Log.d("rating", "rating changed");
                 liveCategoryRatings = dbCategoryRatings;
                 swipeFragmentState.loadArticles();
             }
@@ -192,7 +192,7 @@ public class SwipeFragment extends Fragment {
     }
 
         public void init(){
-        ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Home");
+        ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Swipe");
         swipeCardsList = new ArrayList<>();
             // Only add introduction card when the user just started the app.
             // When there is temporary data then the app is/was already in use
@@ -292,7 +292,6 @@ public class SwipeFragment extends Fragment {
      * which is displayed on the cards in the view.
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
-        // Remove the default card at the beginning.
         swipeCardsList.addAll(articlesToAdd);
         articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();
@@ -343,6 +342,7 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onRightCardExit(Object dataObject) {
+                Log.d("question", "current Articles: " + swipeCardsList.size());
                 final ISwipeCard swipedArticle = (ISwipeCard)dataObject;
                 CategoryRatingService.rateAsInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
             }
@@ -368,7 +368,7 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                NewsArticle clickedArticle = (NewsArticle)dataObject;
+                ISwipeCard clickedArticle = (ISwipeCard)dataObject;
                 clickedArticle.onClick(mainActivity);
             }
         });

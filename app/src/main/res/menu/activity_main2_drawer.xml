@@ -7,7 +7,7 @@
         <item
             android:id="@+id/nav_home"
             android:icon="@drawable/ic_newspaper_"
-            android:title="Home"
+            android:title="Swipe"
             android:iconTint="@color/news_card_text"/>
         <item
             android:id="@+id/nav_info"

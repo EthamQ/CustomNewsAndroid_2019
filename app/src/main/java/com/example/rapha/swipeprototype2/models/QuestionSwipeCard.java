@@ -11,9 +11,11 @@ public class QuestionSwipeCard implements ISwipeCard {
 
     String questionText = "Are you interested in...";
     String questionKeyword;
+    private int newsCategory;
 
-    public QuestionSwipeCard(String questionKeyword){
+    public QuestionSwipeCard(String questionKeyword, int newsCategory){
         this.questionKeyword = questionKeyword;
+        this.newsCategory = newsCategory;
     }
 
     @Override
@@ -29,5 +31,10 @@ public class QuestionSwipeCard implements ISwipeCard {
         questionKeyword.setText(this.questionKeyword + " ?");
         ImageView imageView = convertView.findViewById(R.id.news_card_image);
         imageView.setImageResource(R.drawable.newsdefault);
+    }
+
+    @Override
+    public int getNewsCategory() {
+        return newsCategory;
     }
 }

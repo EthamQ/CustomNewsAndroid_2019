@@ -8,4 +8,5 @@ public interface ISwipeCard {
 
     public void onClick(MainActivity mainActivity);
     public void setSwipeCardView(View convertView);
+    public int getNewsCategory();
 }
