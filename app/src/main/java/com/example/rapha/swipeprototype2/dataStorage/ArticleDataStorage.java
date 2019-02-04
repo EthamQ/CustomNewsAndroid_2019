@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.dataStorage;
 
+import com.example.rapha.swipeprototype2.models.ISwipeCard;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 
 import java.util.ArrayList;

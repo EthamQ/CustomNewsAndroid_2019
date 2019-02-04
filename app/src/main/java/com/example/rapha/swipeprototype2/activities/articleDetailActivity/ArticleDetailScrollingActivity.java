@@ -8,11 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.models.NewsArticleUtils;
+import com.squareup.picasso.Picasso;
 
 public class ArticleDetailScrollingActivity extends AppCompatActivity {
 
@@ -31,6 +33,15 @@ public class ArticleDetailScrollingActivity extends AppCompatActivity {
                 NewsArticleUtils.removeCharInformation(article.content)
         );
         ((TextView)findViewById(R.id.articleLink)).setText(article.url);
+        ImageView imageView = findViewById(R.id.articleImage);
+        try{
+            Picasso.get()
+                    .load(article.urlToImage)
+                    .error(R.drawable.newsdefault)
+                    .into(imageView);
+        } catch(Exception e){
+            //convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+        }
 
     }
 }

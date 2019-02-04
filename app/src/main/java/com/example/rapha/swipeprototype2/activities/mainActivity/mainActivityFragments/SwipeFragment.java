@@ -364,9 +364,8 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                Intent intent = new Intent(mainActivity, ArticleDetailScrollingActivity.class);
-                intent.putExtra("clickedArticle", (NewsArticle)dataObject);
-                startActivity(intent);
+                NewsArticle clickedArticle = (NewsArticle)dataObject;
+                clickedArticle.onClick(mainActivity);
             }
         });
     }

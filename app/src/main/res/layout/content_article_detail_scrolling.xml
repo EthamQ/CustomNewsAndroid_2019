@@ -23,6 +23,25 @@
             android:textColor="@color/news_card_text"
             android:textSize="@dimen/titleText" />
 
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/articleBackground"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:background="@color/black" />
+
+            <ImageView
+                android:id="@+id/articleImage"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                app:srcCompat="@drawable/newsdefault" />
+        </android.support.constraint.ConstraintLayout>
+
+
+
         <TextView
             android:id="@+id/articleContent"
             android:layout_width="wrap_content"

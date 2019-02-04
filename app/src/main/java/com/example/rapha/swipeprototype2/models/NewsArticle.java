@@ -1,14 +1,20 @@
 package com.example.rapha.swipeprototype2.models;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.view.View;
+import android.widget.TextView;
 
+import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 
 import org.json.JSONObject;
 
-public class NewsArticle implements Parcelable {
+public class NewsArticle implements Parcelable, ISwipeCard {
 
     public String sourceId;
     public String sourceName;
@@ -41,6 +47,23 @@ public class NewsArticle implements Parcelable {
 		this.newsCategory = 0;
 		this.totalAmountInThisQuery = 0;
 	}
+
+    /**
+     * Open the entire article in ArticleDetailScrollingActivity.
+     * @param mainActivity
+     */
+	@Override
+    public void onClick(MainActivity mainActivity){
+        Intent intent = new Intent(mainActivity, ArticleDetailScrollingActivity.class);
+        intent.putExtra("clickedArticle", this);
+        mainActivity.startActivity(intent);
+    }
+
+    @Override
+    public void setSwipeCardView(View convertView){
+        TextView mainText = convertView.findViewById(R.id.card_main_text);
+        mainText.setText(this.title);
+    }
 
     /**
      * Reads the values whose keys correspond to the properties of this

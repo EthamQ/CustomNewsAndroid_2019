@@ -30,7 +30,6 @@
         android:layout_marginRight="@dimen/text_margin"
         android:layout_marginBottom="@dimen/text_margin"
         android:text="@string/how_it_works_text"
-        android:textColor="@color/news_card_text"
         android:textSize="16dp" />
 
     <TextView
@@ -46,7 +45,6 @@
         android:layout_height="wrap_content"
         android:maxWidth="270dp"
         android:text="@string/known_problems_text"
-        android:textColor="@color/news_card_text"
         android:textSize="16dp"
         android:layout_marginLeft="@dimen/text_margin"
         android:layout_marginTop="0dp"
@@ -67,12 +65,12 @@
         android:layout_height="wrap_content"
         android:maxWidth="270dp"
         android:text="@string/credit_text"
-        android:textColor="@color/news_card_text"
         android:textSize="16dp"
         android:layout_marginLeft="@dimen/text_margin"
         android:layout_marginTop="0dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="@dimen/text_margin" />
+
 
 </LinearLayout>
 
