@@ -6,6 +6,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPrefere
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class ListService {
 
@@ -16,5 +17,25 @@ public class ListService {
             ratingAsHashMap.put(currentCategory, ratings.get(i));
         }
         return ratingAsHashMap;
+    }
+
+    public static LinkedList orderListRandomly(LinkedList list){
+        LinkedList listCopy = new LinkedList();
+        listCopy.addAll(list);
+        LinkedList random = new LinkedList();
+        int originalSize = listCopy.size();
+        for(int i = 0; i < originalSize; i++){
+            int randomIndex = RandomService.getRandomNumber(0, listCopy.size());
+            random.add(listCopy.get(randomIndex));
+            listCopy.remove(randomIndex);
+        }
+        return random;
+    }
+
+    public static LinkedList removeAllEntriesFrom(LinkedList list, int from){
+        for(int i = list.size() - 1; i > from; i--){
+            list.remove(i);
+        }
+        return list;
     }
 }

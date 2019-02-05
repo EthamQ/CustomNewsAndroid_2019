@@ -1,9 +1,12 @@
 package com.example.rapha.swipeprototype2.questionCards;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.QuestionSwipeCard;
+import com.example.rapha.swipeprototype2.utils.ListService;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -12,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class QuestionCardService {
 
-    final private int AMOUNT_QUESTIONS = ApiService.MAX_NUMBER_OF_ARTICLES / 5;
+    final static private int AMOUNT_QUESTIONS = ApiService.MAX_NUMBER_OF_ARTICLES / 5;
 
     /**
      * Add question swipe cards at random indices to the list of swipe cards.
@@ -42,7 +45,9 @@ public class QuestionCardService {
                     );
                     questionCards.add(questionCard);
                 }
-        return questionCards;
+                questionCards = ListService.orderListRandomly(questionCards);
+                questionCards = ListService.removeAllEntriesFrom(questionCards, AMOUNT_QUESTIONS);
+                return questionCards;
     }
 }
 
