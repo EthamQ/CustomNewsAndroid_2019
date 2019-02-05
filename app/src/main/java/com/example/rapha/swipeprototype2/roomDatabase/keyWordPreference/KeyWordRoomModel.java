@@ -30,4 +30,19 @@ public class KeyWordRoomModel {
         this.categoryId = categoryId;
         status= UNSET;
     }
+
+    @Override
+    public String toString(){
+        String string = "Keyword: " + keyWord + "\n";
+        string += "categoryId: " + categoryId + "\n";
+        string += "status: " + status + "\n";
+        if(shownToUser != null){
+            string += "shownToUser: " + shownToUser.toString() + "\n";
+        }
+        else{
+            string += "shownToUser: " + shownToUser + "\n";
+        }
+
+        return string;
+    }
 }

@@ -7,6 +7,8 @@ import android.widget.TextView;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
+import com.example.rapha.swipeprototype2.questionCards.QuestionCardRatingService;
 
 public class QuestionSwipeCard implements ISwipeCard {
 
@@ -40,7 +42,13 @@ public class QuestionSwipeCard implements ISwipeCard {
     }
 
     @Override
-    public void like(SwipeFragment swipeFragment) { }
+    public void like(SwipeFragment swipeFragment) {
+        CategoryRatingService.rateAsInteresting(swipeFragment, this);
+        QuestionCardRatingService.likeKeyWord(swipeFragment, this);
+    }
     @Override
-    public void dislike(SwipeFragment swipeFragment) { }
+    public void dislike(SwipeFragment swipeFragment) {
+        CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
+        QuestionCardRatingService.dislikeKeyWord(swipeFragment, this);
+    }
 }

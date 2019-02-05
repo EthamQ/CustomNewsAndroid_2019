@@ -218,8 +218,9 @@ public class SwipeFragment extends Fragment {
     public void getKeyWordsFromDb(){
         keyWordDbService.getAllKeyWords().observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> dbCategoryRatings) {
-                livekeyWords = dbCategoryRatings;
+            public void onChanged(@Nullable List<KeyWordRoomModel> keyWords) {
+                livekeyWords = keyWords;
+                Logging.logKeyWordsFromDb(keyWords);
             }
         });
     }

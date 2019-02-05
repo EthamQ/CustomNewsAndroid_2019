@@ -3,9 +3,11 @@ package com.example.rapha.swipeprototype2.utils;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class Logging {
 
@@ -48,6 +50,12 @@ public class Logging {
     public static void logAllArticles(LinkedList<NewsArticle> newsArticles, String info){
         for (int i = 0; i < newsArticles.size(); i++){
             Log.d("ARTICLES", info + newsArticles.get(i).toString());
+        }
+    }
+
+    public static void logKeyWordsFromDb(List<KeyWordRoomModel> keyWords){
+        for(int i = 0; i < keyWords.size(); i++){
+            Log.d("keywords", keyWords.get(i).toString());
         }
     }
 
