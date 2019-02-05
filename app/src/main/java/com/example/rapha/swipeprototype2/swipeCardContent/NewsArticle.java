@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.models;
+package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

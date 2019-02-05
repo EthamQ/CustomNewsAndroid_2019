@@ -1,7 +1,7 @@
 package com.example.rapha.swipeprototype2.api;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 

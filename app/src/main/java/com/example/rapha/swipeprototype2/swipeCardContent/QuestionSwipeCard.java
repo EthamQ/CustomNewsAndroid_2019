@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.models;
+package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +30,7 @@ public class QuestionSwipeCard implements ISwipeCard {
         question.setText(this.questionText);
         questionKeyword.setText(this.questionKeyword + " ?");
         ImageView imageView = convertView.findViewById(R.id.news_card_image);
-        imageView.setImageResource(R.drawable.newsdefault);
+        imageView.setImageResource(R.drawable.frage);
     }
 
     @Override

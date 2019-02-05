@@ -176,7 +176,7 @@ public class NewsCategoryContainer {
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Politics";
             this.QUERY_STRINGS_EN = new String[] {
-                    "Trump", "Putin", "Politic", "War", "Troops",
+                    "trump", "putin", "politic", "war", "troops",
                     "president", "syria", "white house"
             };
             this.QUERY_STRINGS_GER = new String[] {

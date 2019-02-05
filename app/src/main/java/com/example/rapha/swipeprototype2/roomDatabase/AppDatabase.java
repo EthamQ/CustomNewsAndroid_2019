@@ -10,15 +10,22 @@ import android.support.annotation.NonNull;
 
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.IUserPreferenceDao;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.IKeyWordDao;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.INewsArticleDao;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 
-@Database(entities = {UserPreferenceRoomModel.class, NewsArticleRoomModel.class}, version = 3, exportSchema = false)
+@Database(entities = {
+        UserPreferenceRoomModel.class,
+        NewsArticleRoomModel.class,
+        KeyWordRoomModel.class
+}, version = 5, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase{
 
         private static AppDatabase instance;
         public abstract IUserPreferenceDao dao();
         public abstract INewsArticleDao newsArticleDao();
+        public abstract IKeyWordDao keyWordDaoDao();
 
         public static synchronized AppDatabase getInstance(Context context){
                 if(instance == null){

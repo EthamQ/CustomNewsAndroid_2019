@@ -16,7 +16,7 @@ public class RatingDbService {
 
     private RatingDbService(Application application){
         this.repository = new UserPreferenceRepository(application);
-        FillDatabase.fillDatabase(repository);
+        FillDatabase.fillCategories(repository);
     }
 
     public static synchronized RatingDbService getInstance(Application application){
@@ -28,7 +28,7 @@ public class RatingDbService {
 
     public void deleteAllUserPreferences(Application application){
         repository.deleteAll();
-        FillDatabase.fillDatabase(repository);
+        FillDatabase.fillCategories(repository);
     }
 
     public void updateUserPreference(UserPreferenceRoomModel preference){

@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.models;
+package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.view.View;
 import android.widget.TextView;

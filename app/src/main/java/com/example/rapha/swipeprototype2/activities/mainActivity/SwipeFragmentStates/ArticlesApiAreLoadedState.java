@@ -16,7 +16,7 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
     @Override
     public void handleAfterAddedToView() {
         if(swipeFragment.apiArticlesHaveBeenLoaded()){
-            QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList);
+            QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
             swipeFragment.articlesArrayAdapter.notifyDataSetChanged();
             changeStateTo(new UserCanSwipeState(swipeFragment));
         }

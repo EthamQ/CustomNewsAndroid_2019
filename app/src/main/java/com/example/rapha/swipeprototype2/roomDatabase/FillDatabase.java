@@ -1,15 +1,14 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 
 public class FillDatabase {
-
-    public static void fillDatabase(UserPreferenceRepository repository){
-        fillCategories(repository);
-    }
 
     /**
      * Fill the table that contains the categories with its corresponding ratings
@@ -33,5 +32,19 @@ public class FillDatabase {
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.technology.getCategoryID(),
                 newsNewsCategoryContainer.technology.getRating()));
+    }
+
+
+    static String[] politicQueryWords = new String[] {
+            "Trump", "Putin", "Merkel", "Macron", "Russia",
+            "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
+    };
+    public static void fillKeyWords(KeyWordRepository repository){
+        for(int i = 0; i < politicQueryWords.length; i++){
+            repository.insert(new KeyWordRoomModel(
+                    politicQueryWords[i],
+                    NewsCategoryContainer.Politics.CATEGORY_ID)
+            );
+        }
     }
 }

@@ -3,8 +3,7 @@ package com.example.rapha.swipeprototype2.roomDatabase;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 
-import com.example.rapha.swipeprototype2.models.NewsArticle;
-import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 

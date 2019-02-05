@@ -1,6 +1,5 @@
-package com.example.rapha.swipeprototype2.models;
+package com.example.rapha.swipeprototype2.swipeCardContent;
 
-import android.graphics.Color;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

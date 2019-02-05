@@ -38,7 +38,7 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
 
     @Override
     public void handleAfterAddedToView() {
-        QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList);
+        QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
     }
 
     @Override

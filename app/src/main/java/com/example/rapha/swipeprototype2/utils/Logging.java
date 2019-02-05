@@ -3,7 +3,7 @@ package com.example.rapha.swipeprototype2.utils;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
 

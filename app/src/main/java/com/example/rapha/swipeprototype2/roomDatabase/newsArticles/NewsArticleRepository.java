@@ -4,13 +4,8 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
-import com.example.rapha.swipeprototype2.models.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.AppDatabase;
-import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.IUserPreferenceDao;
-import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
-import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class NewsArticleRepository {

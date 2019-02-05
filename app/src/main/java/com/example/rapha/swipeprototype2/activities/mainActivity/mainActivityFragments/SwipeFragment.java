@@ -25,10 +25,13 @@ import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingServ
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.models.ErrorSwipeCard;
-import com.example.rapha.swipeprototype2.models.ISwipeCard;
-import com.example.rapha.swipeprototype2.models.IntroductionSwipeCard;
-import com.example.rapha.swipeprototype2.models.NewsArticle;
+import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
+import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
+import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
@@ -75,8 +78,11 @@ public class SwipeFragment extends Fragment {
     // Contains all the user preferences fetched from the database (news category and its rating).
     public List<UserPreferenceRoomModel> liveCategoryRatings;
 
+    public List<KeyWordRoomModel> livekeyWords;
+
     public RatingDbService dbService;
     public NewsArticleDbService newsArticleDbService;
+    public KeyWordDbService keyWordDbService;
     public ISwipeFragmentState swipeFragmentState;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -142,6 +148,8 @@ public class SwipeFragment extends Fragment {
             }
         });
 
+        getKeyWordsFromDb();
+
         return view;
     }
 
@@ -203,7 +211,17 @@ public class SwipeFragment extends Fragment {
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         dbService = RatingDbService.getInstance(getActivity().getApplication());
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
+        keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         dbArticlesToAdd = new LinkedList<>();
+    }
+
+    public void getKeyWordsFromDb(){
+        keyWordDbService.getAllKeyWords().observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> dbCategoryRatings) {
+                livekeyWords = dbCategoryRatings;
+            }
+        });
     }
 
 
