@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class IntroductionSwipeCard implements ISwipeCard {
 
@@ -34,4 +35,11 @@ public class IntroductionSwipeCard implements ISwipeCard {
     public int getNewsCategory() {
         return -1;
     }
+
+    @Override
+    public void like(SwipeFragment swipeFragment) { }
+    @Override
+    public void dislike(SwipeFragment swipeFragment) { }
+
+
 }

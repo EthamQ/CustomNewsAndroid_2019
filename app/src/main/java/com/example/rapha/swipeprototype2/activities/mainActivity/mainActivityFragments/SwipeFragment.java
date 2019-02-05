@@ -245,7 +245,6 @@ public class SwipeFragment extends Fragment {
                     public void onClick(DialogInterface var1, int which, boolean isChecked){
                         checkedItems[which] = isChecked;
                         LanguageSettingsService.saveChecked(mainActivity, checkedItems);
-                        // TODO: reload articles
                     }
                 });
                 dialog.setPositiveButton("Confirm choice", new
@@ -350,8 +349,8 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onLeftCardExit(Object dataObject) {
-                ISwipeCard swipedArticle = (ISwipeCard)dataObject;
-                CategoryRatingService.rateAsNotInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
+                final ISwipeCard swipedCard = (ISwipeCard)dataObject;
+                swipedCard.dislike(SwipeFragment.this);
             }
 
             /**
@@ -360,9 +359,8 @@ public class SwipeFragment extends Fragment {
              */
             @Override
             public void onRightCardExit(Object dataObject) {
-                Log.d("question", "current Articles: " + swipeCardsList.size());
-                final ISwipeCard swipedArticle = (ISwipeCard)dataObject;
-                CategoryRatingService.rateAsInteresting(liveCategoryRatings, SwipeFragment.this, swipedArticle);
+                final ISwipeCard swipedCard = (ISwipeCard)dataObject;
+                swipedCard.like(SwipeFragment.this);
             }
 
             @Override

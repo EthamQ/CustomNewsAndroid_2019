@@ -40,6 +40,7 @@ public class FillDatabase {
             "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
     };
     public static void fillKeyWords(KeyWordRepository repository){
+        // repository.deleteAll();
         for(int i = 0; i < politicQueryWords.length; i++){
             repository.insert(new KeyWordRoomModel(
                     politicQueryWords[i],

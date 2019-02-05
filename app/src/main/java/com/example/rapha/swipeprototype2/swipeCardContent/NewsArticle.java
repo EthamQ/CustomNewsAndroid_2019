@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.articleDetailActivity.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
@@ -74,6 +76,15 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         } catch(Exception e){
             convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
         }
+    }
+
+    @Override
+    public void like(SwipeFragment swipeFragment) {
+        CategoryRatingService.rateAsInteresting(swipeFragment, this);
+    }
+    @Override
+    public void dislike(SwipeFragment swipeFragment) {
+        CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
     }
 
     @Override

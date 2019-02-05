@@ -17,8 +17,8 @@ public interface IKeyWordDao {
     @Query("SELECT * FROM KeyWordPreference")
     LiveData<List<KeyWordRoomModel>> getAllKeyWords();
 
-    @Query("SELECT * FROM KeyWordPreference WHERE liked = :liked")
-    LiveData<List<KeyWordRoomModel>> getLikedKeyWords(boolean liked);
+    @Query("SELECT * FROM KeyWordPreference WHERE status = :status")
+    LiveData<List<KeyWordRoomModel>> getKeyWordsByStatus(int status);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOneKeyWord(KeyWordRoomModel keyWordRoomModel);

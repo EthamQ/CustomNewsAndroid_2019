@@ -5,7 +5,6 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.rapha.swipeprototype2.roomDatabase.AppDatabase;
-import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class KeyWordRepository {
         AppDatabase database = AppDatabase.getInstance(application);
         dao = database.keyWordDaoDao();
         allKeyWords = dao.getAllKeyWords();
-        allLikedKeyWords = dao.getLikedKeyWords(true);
+        allLikedKeyWords = dao.getKeyWordsByStatus(KeyWordRoomModel.LIKED);
     }
 
     public void insert(KeyWordRoomModel keyWordRoomModel){

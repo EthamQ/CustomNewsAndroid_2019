@@ -4,6 +4,7 @@ import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.TypeConverters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
@@ -19,7 +20,8 @@ import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRo
         UserPreferenceRoomModel.class,
         NewsArticleRoomModel.class,
         KeyWordRoomModel.class
-}, version = 5, exportSchema = false)
+}, version = 7, exportSchema = false)
+@TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 
         private static AppDatabase instance;

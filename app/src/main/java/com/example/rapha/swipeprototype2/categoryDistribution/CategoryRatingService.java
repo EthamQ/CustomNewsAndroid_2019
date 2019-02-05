@@ -19,17 +19,17 @@ public class CategoryRatingService {
      * Increments the rating value of the category of swipedArticle by 1 in the database.
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
-    public static void rateAsInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
+    public static void rateAsInteresting(SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
         Log.d("RIGHTEXIT", "in rateAsInteresting ");
-            rate(liveUserPreferences, swipeFragment, swipedArticle, true);
+            rate(swipeFragment, swipedArticle, true);
     }
 
     /**
      * Decrements the rating value of the category of swipedArticle by 1 in the database.
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
-    public static void rateAsNotInteresting(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
-            rate(liveUserPreferences, swipeFragment, swipedArticle, false);
+    public static void rateAsNotInteresting(SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
+            rate(swipeFragment, swipedArticle, false);
     }
 
     /**
@@ -39,11 +39,11 @@ public class CategoryRatingService {
      * @param swipedArticle
      * @param interesting
      */
-    private static void rate(List<UserPreferenceRoomModel> liveUserPreferences, SwipeFragment swipeFragment, final ISwipeCard swipedArticle, final boolean interesting){
+    private static void rate(SwipeFragment swipeFragment, final ISwipeCard swipedArticle, final boolean interesting){
         // Get previous ratings to calculate the new one.
-                for(int i = 0; i < liveUserPreferences.size(); i++){
-                    if(liveUserPreferences.get(i).getNewsCategoryId() == swipedArticle.getNewsCategory()){
-                        int newRating = liveUserPreferences.get(i).getRating();
+                for(int i = 0; i < swipeFragment.liveCategoryRatings.size(); i++){
+                    if(swipeFragment.liveCategoryRatings.get(i).getNewsCategoryId() == swipedArticle.getNewsCategory()){
+                        int newRating = swipeFragment.liveCategoryRatings.get(i).getRating();
                         if(interesting && (newRating < MAX_RATING)){
                             newRating++;
                         }
@@ -57,8 +57,5 @@ public class CategoryRatingService {
                         ));
                     }
                 }
-
-
-
     }
 }

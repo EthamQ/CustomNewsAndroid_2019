@@ -6,11 +6,12 @@ import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class QuestionSwipeCard implements ISwipeCard {
 
-    String questionText = "Are you interested in...";
-    String questionKeyword;
+    private String questionText = "Are you interested in...";
+    public String questionKeyword;
     private int newsCategory;
 
     public QuestionSwipeCard(String questionKeyword, int newsCategory){
@@ -37,4 +38,9 @@ public class QuestionSwipeCard implements ISwipeCard {
     public int getNewsCategory() {
         return newsCategory;
     }
+
+    @Override
+    public void like(SwipeFragment swipeFragment) { }
+    @Override
+    public void dislike(SwipeFragment swipeFragment) { }
 }
