@@ -99,11 +99,11 @@ public class NewsCategoryContainer {
         public Finance(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Finance";
-            this.QUERY_STRINGS_EN = new String[]{
-                    "bank", "money", "economy", "finance", "market",
-                    "refund", "fund", "wage", "investment", "jobs", "tax",
-                    "bills", "customer", "employer", "employee", "insurance"
+            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
+                    "bank", "money", "market",
+                    "refund", "fund", "bills", "customer", "employer", "employee"
             };
+
             this.QUERY_STRINGS_GER = new String[]{
                     "bank", "money", "economy", "finance", "market",
                     "refund", "fund", "wage", "investment", "jobs", "tax",
@@ -119,6 +119,11 @@ public class NewsCategoryContainer {
                     "refund", "fund", "wage", "investment", "jobs", "tax",
                     "bills", "customer", "employer", "employee", "insurance"
             };
+        }
+
+        @Override
+        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
+            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
         }
     }
 

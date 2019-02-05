@@ -44,6 +44,11 @@ public class FillDatabase {
             "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
             "AI Artificial Intelligence"
     };
+
+    static String[] financeQueryWords = new String[]{
+        "Economy", "finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
+            "insurance"
+    };
     public static void fillKeyWords(KeyWordRepository repository){
         // repository.deleteAll();
 
@@ -60,6 +65,14 @@ public class FillDatabase {
             repository.insert(new KeyWordRoomModel(
                     technologyQueryWords[i],
                     NewsCategoryContainer.Technology.CATEGORY_ID)
+            );
+        }
+
+        // Finance
+        for(int i = 0; i < financeQueryWords.length; i++){
+            repository.insert(new KeyWordRoomModel(
+                    financeQueryWords[i],
+                    NewsCategoryContainer.Finance.CATEGORY_ID)
             );
         }
     }
