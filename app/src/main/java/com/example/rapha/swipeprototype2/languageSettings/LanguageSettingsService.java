@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class LanguageSettingsService {
 
@@ -23,8 +24,8 @@ public class LanguageSettingsService {
         editor.commit();
     }
 
-    public static boolean[] loadChecked(MainActivity mainActivity) {
-        SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
+    public static boolean[] loadChecked(SwipeFragment swipeFragment) {
+        SharedPreferences sharedPreferences = swipeFragment.mainActivity.getPreferences(Context.MODE_PRIVATE);
         boolean [] languageCheckboxes = new boolean[languageItems.length];
         for(Integer i = 0; i < languageItems.length; i++)
         {

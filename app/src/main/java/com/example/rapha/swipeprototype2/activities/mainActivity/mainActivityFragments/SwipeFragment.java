@@ -83,6 +83,7 @@ public class SwipeFragment extends Fragment {
     public RatingDbService dbService;
     public NewsArticleDbService newsArticleDbService;
     public KeyWordDbService keyWordDbService;
+
     public ISwipeFragmentState swipeFragmentState;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -142,7 +143,6 @@ public class SwipeFragment extends Fragment {
         dbService.getAllUserPreferences().observe(mainActivity, new Observer<List<UserPreferenceRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<UserPreferenceRoomModel> dbCategoryRatings) {
-                Log.d("rating", "rating changed");
                 liveCategoryRatings = dbCategoryRatings;
                 swipeFragmentState.loadArticles();
             }
@@ -240,7 +240,7 @@ public class SwipeFragment extends Fragment {
                         AlertDialog.Builder(mainActivity);
                 dialog.setTitle("Select languages");
                 final String[] languageItems = LanguageSettingsService.languageItems;
-                final boolean[] checkedItems = LanguageSettingsService.loadChecked(mainActivity);
+                final boolean[] checkedItems = LanguageSettingsService.loadChecked(SwipeFragment.this);
                 dialog.setMultiChoiceItems(languageItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener()  {
                     @Override
                     public void onClick(DialogInterface var1, int which, boolean isChecked){
@@ -282,7 +282,7 @@ public class SwipeFragment extends Fragment {
                     // Clean previous data if it exists.
                     apiArticlesToAdd = new LinkedList<>();
                     // Load articles.
-                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(mainActivity, liveCategoryRatings);
+                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
                     Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
                     mainActivity.runOnUiThread(new Runnable() {
                         @Override

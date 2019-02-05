@@ -2,7 +2,9 @@ package com.example.rapha.swipeprototype2.newsCategories;
 
 import android.util.Log;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 import java.util.LinkedList;
 
@@ -175,10 +177,10 @@ public class NewsCategoryContainer {
         public Politics(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Politics";
-            this.QUERY_STRINGS_EN = new String[] {
-                    "trump", "putin", "politic", "war", "troops",
-                    "president", "syria", "white house"
+            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
+                    "politic", "war", "president", "white house"
             };
+
             this.QUERY_STRINGS_GER = new String[] {
                     "Trump", "Putin", "Politic", "War", "Troops",
                     "president", "syria", "white house"
@@ -192,6 +194,11 @@ public class NewsCategoryContainer {
                     "president", "syria", "white house"
             };
         }
+
+        @Override
+        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
+            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
+        }
     }
 
     public static class Technology extends NewsCategory{
@@ -201,9 +208,8 @@ public class NewsCategoryContainer {
         public Technology(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Technology";
-            this.QUERY_STRINGS_EN = new String[] {
-                    "Apple", "Phone", "technology", "computer", "hacker",
-                    "streaming", "app", "mac"
+            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
+                    "technology", "computer", "hacker", "mac"
             };
             this.QUERY_STRINGS_GER = new String[] {
                     "Apple", "Phone", "technology", "computer", "hacker",
@@ -217,6 +223,11 @@ public class NewsCategoryContainer {
                     "Apple", "Phone", "technology", "computer", "hacker",
                     "streaming", "app", "mac"
             };
+        }
+
+        @Override
+        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
+            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
         }
     }
 }

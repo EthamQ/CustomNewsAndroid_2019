@@ -1,11 +1,15 @@
 package com.example.rapha.swipeprototype2.api.apiQuery;
 
+import android.util.Log;
+
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.CategoryUtils;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 public class NewsApiQueryBuilder {
 
+    SwipeFragment swipeFragment;
     QueryCategoryContainer categoryContainer;
     private String finalQuery = "";
     private int newsCategory;
@@ -15,8 +19,9 @@ public class NewsApiQueryBuilder {
     public final static String RUSSIAN = "ru";
     public final static String FRENCH = "fr";
 
-    public NewsApiQueryBuilder(int languageId){
+    public NewsApiQueryBuilder(SwipeFragment swipeFragment, int languageId){
         categoryContainer = new QueryCategoryContainer();
+        this.swipeFragment = swipeFragment;
         this.setLanguage(languageId);
     }
 
@@ -28,14 +33,13 @@ public class NewsApiQueryBuilder {
     public void setQueryCategory(int newsCategory){
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
-        String hashMapKeyLanguage = QueryCategoryContainer.Language.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
         //QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
-        String[] queryWords = CategoryUtils.getQueryWords(newsCategory, this.languageId);
+        String[] queryWords = CategoryUtils.getQueryWords(swipeFragment, newsCategory, this.languageId);
         for (int i = 0; i < queryWords.length; i++){
             queryCategory.queryString += queryWords[i];
             if(!(i == queryWords.length - 1)){
-                queryCategory.queryString += " OR ";
+                    queryCategory.queryString += " OR ";
             }
         }
     }
@@ -115,6 +119,7 @@ public class NewsApiQueryBuilder {
 
         String query = sb.toString();
         // remove the last "&"
+        Log.d("query", "finalQuery: " + query.substring(0, query.length()-1));
         this.finalQuery = query.substring(0, query.length()-1);
     }
 

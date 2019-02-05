@@ -39,12 +39,27 @@ public class FillDatabase {
             "Trump", "Putin", "Merkel", "Macron", "Russia",
             "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
     };
+
+    static String[] technologyQueryWords = new String[] {
+            "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
+            "AI Artificial Intelligence"
+    };
     public static void fillKeyWords(KeyWordRepository repository){
         // repository.deleteAll();
+
+        // Politics
         for(int i = 0; i < politicQueryWords.length; i++){
             repository.insert(new KeyWordRoomModel(
                     politicQueryWords[i],
                     NewsCategoryContainer.Politics.CATEGORY_ID)
+            );
+        }
+
+        // Technology
+        for(int i = 0; i < technologyQueryWords.length; i++){
+            repository.insert(new KeyWordRoomModel(
+                    technologyQueryWords[i],
+                    NewsCategoryContainer.Technology.CATEGORY_ID)
             );
         }
     }

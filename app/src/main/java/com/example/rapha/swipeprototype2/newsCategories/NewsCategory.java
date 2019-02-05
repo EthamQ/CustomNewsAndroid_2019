@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.newsCategories;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+
 public class NewsCategory {
 
     private int rating = 3;
@@ -8,6 +10,7 @@ public class NewsCategory {
     public String[] QUERY_STRINGS_GER;
     public String[] QUERY_STRINGS_FR;
     public String[] QUERY_STRINGS_RU;
+    public String[] DEFAULT_QUERY_STRINGS_EN;
     public String displayName;
 
 
@@ -24,6 +27,9 @@ public class NewsCategory {
     public int getRating() {
         return this.rating;
     }
+
+    public String[] getQueryStrings_EN(SwipeFragment swipeFragment){ return QUERY_STRINGS_EN;}
+
 
 
 
