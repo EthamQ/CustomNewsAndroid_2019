@@ -8,12 +8,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.customAdapters.TopicRowAdapter;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
@@ -25,6 +29,7 @@ import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,6 +45,8 @@ public class StatisticFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    public static int ROW_LENGTH = 3;
 
     View view;
 
@@ -132,24 +139,106 @@ public class StatisticFragment extends Fragment {
     }
 
     public void setLikedTopics(){
+        ArrayList<String[]> topicSets = new ArrayList<>();
+        Log.d("topicc", "now add to list: " + topicSets.size());
+        ListView listView = view.findViewById(R.id.list);
+        TopicRowAdapter topicRowAdapter = new TopicRowAdapter(
+                getActivity().getApplicationContext(),
+                R.id.list,
+                topicSets);
+        listView.setAdapter(topicRowAdapter);
+        topicRowAdapter.notifyDataSetChanged();
+
         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         keyWordDbService.getAllLikedKeyWords().observe(getActivity(), new Observer<List<KeyWordRoomModel>>(){
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> likedKeyWords) {
-                TextView likedTopics = view.findViewById(R.id.liked_topics);
-                String newText = "";
-                for(int i = 0; i < likedKeyWords.size(); i++){
-                        newText += likedKeyWords.get(i).keyWord;
-                        if(i > 0 || i < (likedKeyWords.size() - 1)){
-                            newText += ", ";
+                // Just for testing
+//                TextView likedTopics = view.findViewById(R.id.liked_topics);
+//                String newText = "";
+//                for(int i = 0; i < likedKeyWords.size(); i++){
+//                    newText += likedKeyWords.get(i).keyWord;
+//                    if(i > 0 || i < (likedKeyWords.size() - 1)){
+//                        newText += ", ";
+//                    }
+//                }
+//                if(!newText.isEmpty()){
+//                    likedTopics.setText(newText);
+//                }
+                //
+                String[] topicSet = new String[]{"", "", ""};
+                boolean firstSetFull = !(likedKeyWords.size() < ROW_LENGTH);
+                if(!firstSetFull){
+                    for(int i = 0; i < likedKeyWords.size(); i++){
+                        topicSet[i] = likedKeyWords.get(i).keyWord;
+                    }
+                    topicSets.add(topicSet);
+                    topicRowAdapter.notifyDataSetChanged();
+                } else{
+                    for(int i = 0; i < likedKeyWords.size(); i++){
+                        topicSet[i % ROW_LENGTH] = likedKeyWords.get(i).keyWord;
+                        boolean endOfCurrentSet = (i + 1) % ROW_LENGTH  == 0;
+                        if(endOfCurrentSet){
+                            topicSets.add(topicSet);
+                            topicSet = new String[]{"", "", ""};
                         }
+                        boolean isLastIteration = i == likedKeyWords.size() - 1;
+                        boolean lastSetFull = likedKeyWords.size() % ROW_LENGTH == 0;
+                        if(isLastIteration && !lastSetFull){
+                            topicSets.add(topicSet);
+                        }
+                    }
                 }
-                if(!newText.isEmpty()){
-                    likedTopics.setText(newText);
+                topicRowAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnItems(listView);
+                if(topicSets.size() > 0){
+                    TextView likedTopics = view.findViewById(R.id.liked_topics);
+                    likedTopics.setText("");
                 }
+
             }
         });
     }
+
+    /**
+     * Sets ListView height dynamically based on the height of the items.
+     *
+     * @param listView to be resized
+     * @return true if the listView is successfully resized, false otherwise
+     */
+    public static boolean setListViewHeightBasedOnItems(ListView listView) {
+
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                item.measure(0, 0);
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() *
+                    (numberOfItems - 1);
+
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalItemsHeight + totalDividersHeight;
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+
+            return true;
+
+        } else {
+            return false;
+        }
+
+    }
+
 
     public void setGraph(){
         // Get user preferences from database.
@@ -210,7 +299,7 @@ public class StatisticFragment extends Fragment {
                 series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
                     @Override
                     public int get(DataPoint data) {
-                        return ContextCompat.getColor(getContext(), R.color.turquis_dark);
+                        return ContextCompat.getColor(getContext(), R.color.news_card_text);
                     }
                 });
             }

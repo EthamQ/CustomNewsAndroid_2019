@@ -24,19 +24,7 @@ public class NewsArticleAdapter extends ArrayAdapter{
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.swipe_card, parent, false);
         }
-
-        // News Headline
         newsArticle.setSwipeCardView(convertView);
-//        TextView textView = convertView.findViewById(R.id.card_main_text);
-//        if(newsArticle.isDefault){
-//            textView.setTextColor(Color.BLACK);
-//        }
-        // News image
-
-
-        // The first default information card doesn't need an image
-
-
         return convertView;
     }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_rounded"
+        android:backgroundTint="@color/news_card_text"
+        android:text="Button"
+        android:textColor="@color/news_card_background"
+        android:textSize="10dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_rounded"
+        android:backgroundTint="@color/news_card_text"
+        android:text="Button"
+        android:textColor="@color/news_card_background"
+        android:textSize="10dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@drawable/btn_rounded"
+        android:backgroundTint="@color/news_card_text"
+        android:text="Button"
+        android:textColor="@color/news_card_background"
+        android:textSize="10dp" />
+
+</LinearLayout>

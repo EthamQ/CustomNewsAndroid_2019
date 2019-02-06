@@ -5,8 +5,6 @@ import android.arch.lifecycle.LiveData;
 
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
-import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRepository;
-import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 
 import java.util.List;
 
