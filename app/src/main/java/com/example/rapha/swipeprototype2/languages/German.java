@@ -13,7 +13,7 @@ public class German {
     public String[] translateToGerman(String[] english){
         String[] translationArray = new String[english.length];
         for(int i = 0; i < english.length; i++){
-            String translation = translateWordToGerman(english[i]);
+            String translation = translateWordToGerman(english[i].toUpperCase());
             translationArray[i] = translation.length() > 0 ? translation : english[i];
         }
         return translationArray;
@@ -64,6 +64,7 @@ public class German {
         dictionary.put("politic".toUpperCase(), "Politik");
         dictionary.put("president".toUpperCase(), "President");
         dictionary.put("white house".toUpperCase(), "Weißes Haus");
+        dictionary.put("foreign policy".toUpperCase(), "Außenpolitik");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "Film");

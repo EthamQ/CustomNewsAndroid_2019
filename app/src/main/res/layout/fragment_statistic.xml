@@ -8,24 +8,63 @@
     tools:context=".activities.mainActivity.mainActivityFragments.StatisticFragment"
     android:background="@drawable/background">
 
-    <android.support.constraint.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin_big">
+
+            <ImageView
+                android:layout_width="@dimen/icon_width"
+                android:layout_height="@dimen/icon_height"
+                android:src="@drawable/chart" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Categories"
+                android:textSize="@dimen/titleText"
+                android:textColor="@color/turquis_dark"/>
+        </LinearLayout>
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
             android:layout_width="360dp"
             android:layout_height="150dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.056" />
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
 
-    </android.support.constraint.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin_big">
+
+            <ImageView
+                android:layout_width="@dimen/icon_width"
+                android:layout_height="@dimen/icon_height"
+                android:src="@drawable/ic_love" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Topics you like"
+                android:textSize="@dimen/titleText"
+                android:textColor="@color/turquis_dark"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/liked_topics"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nothing set yet. Swipe to save your preferences!"
+            android:textColor="@color/black"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+
+    </LinearLayout>
 
 
 </FrameLayout>

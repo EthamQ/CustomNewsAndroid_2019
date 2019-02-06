@@ -2,30 +2,29 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFr
 
 import android.arch.lifecycle.Observer;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -88,7 +87,8 @@ public class StatisticFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_statistic, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Your Statistics");
-        initGraph();
+        setGraph();
+        setLikedTopics();
         return view;
     }
 
@@ -131,7 +131,27 @@ public class StatisticFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void initGraph(){
+    public void setLikedTopics(){
+        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), new Observer<List<KeyWordRoomModel>>(){
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> likedKeyWords) {
+                TextView likedTopics = view.findViewById(R.id.liked_topics);
+                String newText = "";
+                for(int i = 0; i < likedKeyWords.size(); i++){
+                        newText += likedKeyWords.get(i).keyWord;
+                        if(i > 0 || i < (likedKeyWords.size() - 1)){
+                            newText += ", ";
+                        }
+                }
+                if(!newText.isEmpty()){
+                    likedTopics.setText(newText);
+                }
+            }
+        });
+    }
+
+    public void setGraph(){
         // Get user preferences from database.
         RatingDbService dbService = RatingDbService.getInstance(getActivity().getApplication());
         dbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {

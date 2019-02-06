@@ -1,6 +1,7 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
@@ -9,12 +10,14 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 
 public class ErrorSwipeCard implements ISwipeCard {
 
-    String errorText = "It was not possible to load new articles.\n" +
-            "Wait a little bit and try it again.";
+    String errorText = "It was not possible to load new articles from the server.\n\n" +
+            "Check your internet connection or wait a little bit and try it again.";
 
     @Override
     public void setSwipeCardView(View convertView) {
         ((TextView) convertView.findViewById(R.id.card_main_text)).setText(errorText);
+        ImageView imageView = convertView.findViewById(R.id.news_card_image);
+        imageView.setImageResource(R.drawable.oops);
     }
 
     @Override

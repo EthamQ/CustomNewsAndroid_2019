@@ -37,11 +37,8 @@ public class FillDatabase {
     }
 
     public static void fillKeyWords(KeyWordRepository repository){
-        //repository.deleteAll();
-
         NewsCategoryContainer categoryContainer = new NewsCategoryContainer();
         LinkedList<NewsCategory> allCategories = categoryContainer.allCategories;
-
         for(int i = 0; i < allCategories.size(); i++){
             for(int j = 0; j < allCategories.get(i).USER_DETERMINED_QUERY_STRINGS_EN.length; j++){
                 repository.insert(new KeyWordRoomModel(

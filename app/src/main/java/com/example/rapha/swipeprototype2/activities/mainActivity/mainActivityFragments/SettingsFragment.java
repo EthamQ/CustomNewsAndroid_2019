@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 
 /**
@@ -133,6 +134,8 @@ public class SettingsFragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
                         ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
+                        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+                        keyWordDbService.deleteAll();
                         dialogInterface.cancel();
                     }
                 })

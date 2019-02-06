@@ -131,7 +131,7 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 3;
 
         public static final String[] MOVIE_QUERY_STRINGS_EN = new String[] {
-                "movie", "cinema", "television"
+                "Movie", "Cinema", "Television"
         };
 
         public static final String[] MOVIE_DEFAULT_QUERY_STRINGS_EN = new String[] {
@@ -152,7 +152,7 @@ public class NewsCategoryContainer {
 
         public static final String[] POLITIC_QUERY_STRINGS_EN = new String[] {
                 "Trump", "Putin", "Merkel", "Macron", "Russia",
-                "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
+                "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy"
         };
         public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
             "politic", "president", "white house"
