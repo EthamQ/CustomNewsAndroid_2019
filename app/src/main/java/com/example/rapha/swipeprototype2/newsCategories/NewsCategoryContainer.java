@@ -92,7 +92,7 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 2;
 
         public static final String[] FINANCE_QUERY_STRINGS_EN = new String[]{
-                "Economy", "finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
+                "Economy", "Finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
                 "insurance"
         };
 
@@ -115,7 +115,7 @@ public class NewsCategoryContainer {
 
         public static final String[] FOOD_DEFAULT_QUERY_STRINGS_EN = new String[] {
             "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "pasta", "dinner", "pan"
+                    "recipe", "vegetables", "tomato", "dinner", "pan"
         };
 
         public Food(){
@@ -155,7 +155,7 @@ public class NewsCategoryContainer {
                 "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
         };
         public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "politic", "war", "president", "white house"
+            "politic", "president", "white house"
         };
 
         public Politics(){

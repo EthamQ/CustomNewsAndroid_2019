@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.utils;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.languages.TranslationService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 
@@ -17,7 +18,9 @@ public class CategoryUtils {
             case LanguageSettingsService
                     .INDEX_ENGLISH: return newsCategory.getQueryStrings_EN(swipeFragment);
             case LanguageSettingsService
-                    .INDEX_GERMAN: return newsCategory.getQueryStrings_EN(swipeFragment);
+                    .INDEX_GERMAN: return TranslationService.translateToGerman(
+                            newsCategory.getQueryStrings_EN(swipeFragment)
+            );
             case LanguageSettingsService
                     .INDEX_FRENCH: return newsCategory.getQueryStrings_EN(swipeFragment);
             case LanguageSettingsService
