@@ -21,12 +21,10 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentSt
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.UserChangedLanguageState;
 import com.example.rapha.swipeprototype2.api.ApiService;
-import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
-import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;

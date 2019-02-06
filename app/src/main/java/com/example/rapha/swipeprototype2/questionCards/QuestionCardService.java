@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.questionCards;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
@@ -45,6 +47,7 @@ public class QuestionCardService {
                 }
                 questionCards = ListService.orderListRandomly(questionCards);
                 questionCards = ListService.removeAllEntriesStartingAt(questionCards, AMOUNT_QUESTIONS);
+                Log.d("questioncard", "Number of cards: " + questionCards.size());
                 return questionCards;
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.languageSettings;
+package com.example.rapha.swipeprototype2.languages;
 
 public class Language {
 

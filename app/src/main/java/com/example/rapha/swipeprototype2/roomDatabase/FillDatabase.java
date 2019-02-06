@@ -7,6 +7,8 @@ import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPrefere
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
+import java.util.LinkedList;
+
 
 public class FillDatabase {
 
@@ -34,46 +36,19 @@ public class FillDatabase {
                 newsNewsCategoryContainer.technology.getRating()));
     }
 
-
-    static String[] politicQueryWords = new String[] {
-            "Trump", "Putin", "Merkel", "Macron", "Russia",
-            "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
-    };
-
-    static String[] technologyQueryWords = new String[] {
-            "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
-            "AI Artificial Intelligence"
-    };
-
-    static String[] financeQueryWords = new String[]{
-        "Economy", "finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
-            "insurance"
-    };
     public static void fillKeyWords(KeyWordRepository repository){
-        // repository.deleteAll();
+        //repository.deleteAll();
 
-        // Politics
-        for(int i = 0; i < politicQueryWords.length; i++){
-            repository.insert(new KeyWordRoomModel(
-                    politicQueryWords[i],
-                    NewsCategoryContainer.Politics.CATEGORY_ID)
-            );
-        }
+        NewsCategoryContainer categoryContainer = new NewsCategoryContainer();
+        LinkedList<NewsCategory> allCategories = categoryContainer.allCategories;
 
-        // Technology
-        for(int i = 0; i < technologyQueryWords.length; i++){
-            repository.insert(new KeyWordRoomModel(
-                    technologyQueryWords[i],
-                    NewsCategoryContainer.Technology.CATEGORY_ID)
-            );
-        }
-
-        // Finance
-        for(int i = 0; i < financeQueryWords.length; i++){
-            repository.insert(new KeyWordRoomModel(
-                    financeQueryWords[i],
-                    NewsCategoryContainer.Finance.CATEGORY_ID)
-            );
+        for(int i = 0; i < allCategories.size(); i++){
+            for(int j = 0; j < allCategories.get(i).USER_DETERMINED_QUERY_STRINGS_EN.length; j++){
+                repository.insert(new KeyWordRoomModel(
+                        allCategories.get(i).USER_DETERMINED_QUERY_STRINGS_EN[j],
+                        allCategories.get(i).getCategoryID())
+                );
+            }
         }
     }
 }

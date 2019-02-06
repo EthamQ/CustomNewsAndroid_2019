@@ -3,7 +3,7 @@ package com.example.rapha.swipeprototype2.api.apiQuery;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.utils.CategoryUtils;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 

@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.languageSettings;
+package com.example.rapha.swipeprototype2.languages;
 
 import android.content.Context;
 import android.content.SharedPreferences;

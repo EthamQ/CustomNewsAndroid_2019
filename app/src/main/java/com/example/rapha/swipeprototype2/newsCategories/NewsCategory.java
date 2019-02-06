@@ -6,11 +6,10 @@ public class NewsCategory {
 
     private int rating = 3;
     private int categoryID;
-    public String[] QUERY_STRINGS_EN;
-    public String[] QUERY_STRINGS_GER;
-    public String[] QUERY_STRINGS_FR;
-    public String[] QUERY_STRINGS_RU;
+
     public String[] DEFAULT_QUERY_STRINGS_EN;
+    public String[] USER_DETERMINED_QUERY_STRINGS_EN;
+
     public String displayName;
 
 
@@ -28,7 +27,9 @@ public class NewsCategory {
         return this.rating;
     }
 
-    public String[] getQueryStrings_EN(SwipeFragment swipeFragment){ return QUERY_STRINGS_EN;}
+    public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
+        return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
+    }
 
 
 

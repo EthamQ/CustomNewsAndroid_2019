@@ -2,9 +2,7 @@ package com.example.rapha.swipeprototype2.newsCategories;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
-import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 import java.util.LinkedList;
 
@@ -86,44 +84,28 @@ public class NewsCategoryContainer {
                 case Technology.CATEGORY_ID: return new Technology();
                 default: return new NewsCategory();
             }
-
     }
-
 
     //Below all the different news categories as classes
     public static class Finance extends NewsCategory {
 
         public static final int CATEGORY_ID = 2;
 
+        public static final String[] FINANCE_QUERY_STRINGS_EN = new String[]{
+                "Economy", "finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
+                "insurance"
+        };
+
+        public static final String[] FINANCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
+            "bank", "money", "market", "refund", "fund",
+                "bills", "customer", "employer", "employee"
+        };
 
         public Finance(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Finance";
-            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
-                    "bank", "money", "market",
-                    "refund", "fund", "bills", "customer", "employer", "employee"
-            };
-
-            this.QUERY_STRINGS_GER = new String[]{
-                    "bank", "money", "economy", "finance", "market",
-                    "refund", "fund", "wage", "investment", "jobs", "tax",
-                    "bills", "customer", "employer", "employee", "insurance"
-            };
-            this.QUERY_STRINGS_FR = new String[]{
-                    "bank", "money", "economy", "finance", "market",
-                    "refund", "fund", "wage", "investment", "jobs", "tax",
-                    "bills", "customer", "employer", "employee", "insurance"
-            };
-            this.QUERY_STRINGS_RU = new String[]{
-                    "bank", "money", "economy", "finance", "market",
-                    "refund", "fund", "wage", "investment", "jobs", "tax",
-                    "bills", "customer", "employer", "employee", "insurance"
-            };
-        }
-
-        @Override
-        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
-            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
+            this.DEFAULT_QUERY_STRINGS_EN = FINANCE_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = FINANCE_QUERY_STRINGS_EN;
         }
     }
 
@@ -131,25 +113,16 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 4;
 
+        public static final String[] FOOD_DEFAULT_QUERY_STRINGS_EN = new String[] {
+            "pasta", "cook", "food", "meal", "delicious",
+                    "recipe", "vegetables", "tomato", "pasta", "dinner", "pan"
+        };
+
         public Food(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Food";
-            this.QUERY_STRINGS_EN = new String[] {
-                    "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "pasta", "dinner"
-            };
-            this.QUERY_STRINGS_GER = new String[] {
-                    "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "pasta", "dinner"
-            };
-            this.QUERY_STRINGS_FR = new String[] {
-                    "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "pasta", "dinner"
-            };
-            this.QUERY_STRINGS_RU = new String[] {
-                    "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "pasta", "dinner"
-            };
+            this.DEFAULT_QUERY_STRINGS_EN = FOOD_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = new String[0];
         }
     }
 
@@ -157,21 +130,19 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 3;
 
+        public static final String[] MOVIE_QUERY_STRINGS_EN = new String[] {
+                "movie", "cinema", "television"
+        };
+
+        public static final String[] MOVIE_DEFAULT_QUERY_STRINGS_EN = new String[] {
+            "blockbuster", "tv", "actor"
+        };
+
         public Movie(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Movie";
-            this.QUERY_STRINGS_EN = new String[] {
-                    "movie", "cinema", "blockbuster", "television", "tv",
-            };
-            this.QUERY_STRINGS_GER = new String[] {
-                    "movie", "cinema", "blockbuster", "television", "tv",
-            };
-            this.QUERY_STRINGS_FR = new String[] {
-                    "movie", "cinema", "blockbuster", "television", "tv",
-            };
-            this.QUERY_STRINGS_RU = new String[] {
-                    "movie", "cinema", "blockbuster", "television", "tv",
-            };
+            this.USER_DETERMINED_QUERY_STRINGS_EN = MOVIE_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = MOVIE_DEFAULT_QUERY_STRINGS_EN;
         }
     }
 
@@ -179,30 +150,19 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 0;
 
+        public static final String[] POLITIC_QUERY_STRINGS_EN = new String[] {
+                "Trump", "Putin", "Merkel", "Macron", "Russia",
+                "USA", "Syria", "ISIS", "war", "weapons", "Erdogan"
+        };
+        public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
+            "politic", "war", "president", "white house"
+        };
+
         public Politics(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Politics";
-            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
-                    "politic", "war", "president", "white house"
-            };
-
-            this.QUERY_STRINGS_GER = new String[] {
-                    "Trump", "Putin", "Politic", "War", "Troops",
-                    "president", "syria", "white house"
-            };
-            this.QUERY_STRINGS_FR = new String[] {
-                    "Trump", "Putin", "Politic", "War", "Troops",
-                    "president", "syria", "white house"
-            };
-            this.QUERY_STRINGS_RU = new String[] {
-                    "Trump", "Putin", "Politic", "War", "Troops",
-                    "president", "syria", "white house"
-            };
-        }
-
-        @Override
-        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
-            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
+            this.USER_DETERMINED_QUERY_STRINGS_EN = POLITIC_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = POLITIC_DEFAULT_QUERY_STRINGS_EN;
         }
     }
 
@@ -210,29 +170,21 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 1;
 
+        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
+                "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
+                "AI Artificial Intelligence", "Google", "Java", "C++", "Python", "Webdesign"
+        };
+
+        public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
+            "technology", "computer", "hacker", "mac"
+        };
+
         public Technology(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Technology";
-            this.DEFAULT_QUERY_STRINGS_EN = new String[] {
-                    "technology", "computer", "hacker", "mac"
-            };
-            this.QUERY_STRINGS_GER = new String[] {
-                    "Apple", "Phone", "technology", "computer", "hacker",
-                    "streaming", "app", "mac"
-            };
-            this.QUERY_STRINGS_RU = new String[] {
-                    "Apple", "Phone", "technology", "computer", "hacker",
-                    "streaming", "app", "mac"
-            };
-            this.QUERY_STRINGS_FR = new String[] {
-                    "Apple", "Phone", "technology", "computer", "hacker",
-                    "streaming", "app", "mac"
-            };
+            this.USER_DETERMINED_QUERY_STRINGS_EN = TECHNOLOGY_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
         }
 
-        @Override
-        public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
-            return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
-        }
     }
 }

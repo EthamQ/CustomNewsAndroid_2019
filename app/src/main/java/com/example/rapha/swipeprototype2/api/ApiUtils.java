@@ -1,10 +1,9 @@
 package com.example.rapha.swipeprototype2.api;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
-import com.example.rapha.swipeprototype2.languageSettings.Language;
-import com.example.rapha.swipeprototype2.languageSettings.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.languages.Language;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
