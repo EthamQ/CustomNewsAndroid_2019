@@ -14,7 +14,6 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
     @Override
     public void setCardsVisibility() {
         swipeFragment.setCardsVisibility(true);
-        changeStateTo(new UserCanSwipeState(swipeFragment));
     }
 
     @Override
@@ -38,7 +37,9 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
 
     @Override
     public void handleAfterAddedToView() {
+        Log.d("questioncard", "UserChangedLanguageState handleAfterAddedToView()");
         QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
+        changeStateTo(new UserCanSwipeState(swipeFragment));
     }
 
     @Override

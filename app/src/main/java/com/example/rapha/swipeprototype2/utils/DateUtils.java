@@ -1,5 +1,8 @@
 package com.example.rapha.swipeprototype2.utils;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -43,5 +46,11 @@ public class DateUtils {
         c.setTime(date);
         c.add(Calendar.DATE, days);
         date.setTime( c.getTime().getTime() );
+    }
+
+    public static int daysBetween(Date date1, Date date2){
+        DateTime dateJoda1 = new DateTime(date1);
+        DateTime dateJoda2 = new DateTime(date2);
+        return Days.daysBetween(dateJoda1, dateJoda2).getDays();
     }
 }

@@ -34,7 +34,9 @@ public class ListService {
 
     public static LinkedList removeAllEntriesStartingAt(LinkedList list, int startIndex){
         for(int i = list.size() - 1; i > startIndex; i--){
-            list.remove(i);
+            if(i >= 0){
+                list.remove(i);
+            }
         }
         return list;
     }

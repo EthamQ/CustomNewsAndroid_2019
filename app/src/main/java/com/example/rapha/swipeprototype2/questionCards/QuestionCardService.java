@@ -6,9 +6,16 @@ import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.QuestionSwipeCard;
+import com.example.rapha.swipeprototype2.utils.DateUtils;
 import com.example.rapha.swipeprototype2.utils.ListService;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Interval;
+
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
@@ -22,6 +29,7 @@ public class QuestionCardService {
      * @param swipeCardsList
      */
     public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<KeyWordRoomModel> keyWords){
+        Log.d("questioncard", "mixQuestionCardsIntoSwipeCards");
         LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords);
         // Generate random indices.
         int[] randomIndices = new int[questionSwipeCards.size()];
@@ -39,16 +47,30 @@ public class QuestionCardService {
     private static LinkedList<QuestionSwipeCard> generateQuestionCards(List<KeyWordRoomModel> keyWords){
         LinkedList<QuestionSwipeCard> questionCards = new LinkedList();
                 for(int i = 0; i < keyWords.size(); i++){
-                    QuestionSwipeCard questionCard = new QuestionSwipeCard(
-                            keyWords.get(i).keyWord,
-                            keyWords.get(i).categoryId
-                    );
-                    questionCards.add(questionCard);
+                    if(questionShouldBeAsked(keyWords.get(i))){
+                        QuestionSwipeCard questionCard = new QuestionSwipeCard(
+                                keyWords.get(i).keyWord,
+                                keyWords.get(i).categoryId
+                        );
+                        questionCards.add(questionCard);
+                    }
                 }
                 questionCards = ListService.orderListRandomly(questionCards);
                 questionCards = ListService.removeAllEntriesStartingAt(questionCards, AMOUNT_QUESTIONS);
                 Log.d("questioncard", "Number of cards: " + questionCards.size());
                 return questionCards;
     }
+
+    private static boolean questionShouldBeAsked(KeyWordRoomModel keyWordRoomModel){
+        if(keyWordRoomModel.shownToUser == null){
+            return true;
+        }
+        Date today = new Date();
+        Date lastShown = keyWordRoomModel.shownToUser;
+        int dayDifference = DateUtils.daysBetween(lastShown, today);
+        Log.d("daydifference", "Today: " + today.toString() + "Shown: " + lastShown.toString() + "Difference: " + dayDifference);
+        return dayDifference >= 7;
+    }
+
 }
 

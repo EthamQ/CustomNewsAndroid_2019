@@ -309,9 +309,9 @@ public class SwipeFragment extends Fragment {
      */
     public void addArticlesToView(LinkedList<NewsArticle> articlesToAdd) {
         swipeCardsList.addAll(articlesToAdd);
-        articlesArrayAdapter.notifyDataSetChanged();
         swipeFragmentState.setCardsVisibility();
         swipeFragmentState.handleAfterAddedToView();
+        articlesArrayAdapter.notifyDataSetChanged();
         Logging.logAmountOfArticles(mainActivity);
     }
 
