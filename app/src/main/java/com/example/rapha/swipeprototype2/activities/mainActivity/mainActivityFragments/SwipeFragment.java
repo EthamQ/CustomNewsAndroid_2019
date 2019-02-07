@@ -51,7 +51,7 @@ import java.util.List;
 public class SwipeFragment extends Fragment {
 
     public MainActivity mainActivity;
-    View view;
+    public View view;
 
     // When this amount of articles is left in
     // swipeCardsList we load new articles from the api
@@ -334,6 +334,11 @@ public class SwipeFragment extends Fragment {
             @Override
             public void removeFirstObjectInAdapter() {
                 swipeCardsList.remove(0);
+                Log.d("remove", "Card removed");
+                Log.d("remove", "Remaining cards: " + swipeCardsList.size());
+                for(int i = 0; i < swipeCardsList.size(); i++){
+                    Log.d("remove", swipeCardsList.get(i).toString());
+                }
                 if(swipeCardsList.size() == 0){
                     swipeCardsList.add(new ErrorSwipeCard());
                 }

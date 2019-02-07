@@ -116,9 +116,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     @Override
     public String toString(){
         String ret = "";
-        ret += "Hello i'm a news article with the category " + newsCategory;
-        ret += "\n";
-        ret += "My title is: " + this.title;
+        ret += "Title: " + this.title;
         return ret;
     }
 

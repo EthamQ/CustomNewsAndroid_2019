@@ -1,9 +1,14 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import android.util.Log;
+import android.widget.Button;
 
+import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
+import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
+
+import java.util.ArrayList;
 
 public class UserChangedLanguageState extends SwipeFragmentState implements ISwipeFragmentState {
     public UserChangedLanguageState(SwipeFragment swipeFragment) {
@@ -14,6 +19,8 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
     @Override
     public void setCardsVisibility() {
         swipeFragment.setCardsVisibility(true);
+        Button loading = swipeFragment.view.findViewById(R.id.loading);
+        loading.setVisibility(Button.INVISIBLE);
     }
 
     @Override
@@ -29,7 +36,9 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
      */
     public void loadArticles() {
         swipeFragment.setCardsVisibility(false);
-        for(int i = swipeFragment.swipeCardsList.size() - 1; i > 0; i--){
+        Button loading = swipeFragment.view.findViewById(R.id.loading);
+        loading.setVisibility(Button.VISIBLE);
+        for(int i = swipeFragment.swipeCardsList.size() - 1; i >= 0; i--){
             swipeFragment.swipeCardsList.remove(i);
         }
         swipeFragment.loadArticlesFromApi();

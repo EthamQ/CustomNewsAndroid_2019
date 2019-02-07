@@ -12,4 +12,5 @@ public interface ISwipeCard {
     void like(SwipeFragment swipeFragment);
     void dislike(SwipeFragment swipeFragment);
     int getNewsCategory();
+    String toString();
 }

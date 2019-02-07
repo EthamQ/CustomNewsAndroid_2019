@@ -8,6 +8,13 @@
 
 
     <Button
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Loading..."
+        android:visibility="invisible"/>
+
+    <Button
         android:id="@+id/button_languages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

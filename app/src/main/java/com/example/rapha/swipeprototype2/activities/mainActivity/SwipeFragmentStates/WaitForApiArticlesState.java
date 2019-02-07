@@ -1,6 +1,8 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 import android.util.Log;
+import android.widget.Button;
 
+import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class WaitForApiArticlesState extends SwipeFragmentState implements ISwipeFragmentState {
@@ -11,6 +13,8 @@ public class WaitForApiArticlesState extends SwipeFragmentState implements ISwip
 
     @Override
     public void articlesFromApiAreLoaded() {
+        Button loading = swipeFragment.view.findViewById(R.id.loading);
+        loading.setVisibility(Button.INVISIBLE);
         changeStateTo(new ArticlesApiAreLoadedState(swipeFragment));
     }
 
