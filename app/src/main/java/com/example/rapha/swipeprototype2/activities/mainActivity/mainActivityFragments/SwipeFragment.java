@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
@@ -34,10 +33,12 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -206,15 +207,13 @@ public class SwipeFragment extends Fragment {
 
     }
 
-
-
         public void init(){
         ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Swipe");
         swipeCardsList = new ArrayList<>();
             // Only add introduction card when the user just started the app.
-            // When there is temporary data then the app is/was already in use
-        if(ArticleDataStorage.getTemporaryStoredArticles().size() == 0){
+        if(mainActivity.showIntroductionCard()){
             swipeCardsList.add(new IntroductionSwipeCard());
+            mainActivity.introductionCardWasShown();
         }
 
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
@@ -249,20 +248,23 @@ public class SwipeFragment extends Fragment {
                         AlertDialog.Builder(mainActivity);
                 dialog.setTitle("Select languages");
                 final String[] languageItems = LanguageSettingsService.languageItems;
-                final boolean[] checkedItems = LanguageSettingsService.loadChecked(SwipeFragment.this);
-                dialog.setMultiChoiceItems(languageItems, checkedItems, new DialogInterface.OnMultiChoiceClickListener()  {
+                final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+                final boolean[] languageSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+                dialog.setMultiChoiceItems(languageItems, languageSelection, new DialogInterface.OnMultiChoiceClickListener()  {
                     @Override
                     public void onClick(DialogInterface var1, int which, boolean isChecked){
-                        checkedItems[which] = isChecked;
-                        LanguageSettingsService.saveChecked(mainActivity, checkedItems);
+                        languageSelection[which] = isChecked;
+                        LanguageSettingsService.saveChecked(mainActivity, languageSelection);
                     }
                 });
                 dialog.setPositiveButton("Confirm choice", new
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
-                                swipeFragmentState.loadArticles();
+                                if(LanguageSettingsService.userChangedLanguage(initialSelection, languageSelection)){
+                                    swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
+                                    swipeFragmentState.loadArticles();
+                                }
                                 dialog.cancel();
                             }
                         });
@@ -283,7 +285,8 @@ public class SwipeFragment extends Fragment {
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
-        if(shouldRequestArticles()){
+        if(shouldRequestArticles() || ApiRequestTimeService.forceApiReload(mainActivity)){
+            ApiRequestTimeService.saveLastLoaded(mainActivity, new Date());
             Log.d("LOADD", "loadArticlesFromApi()");
             Thread thread = new Thread(new Runnable() {
                 @Override
@@ -326,6 +329,9 @@ public class SwipeFragment extends Fragment {
         swipeFragmentState.handleAfterAddedToView();
         articlesArrayAdapter.notifyDataSetChanged();
         Logging.logAmountOfArticles(mainActivity);
+        for(int i = 0; i < swipeCardsList.size(); i++){
+            Log.d("addedd", swipeCardsList.get(i).toString());
+        }
     }
 
     public boolean shouldRequestArticles(){
@@ -346,6 +352,7 @@ public class SwipeFragment extends Fragment {
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
+                Log.d("addedd", "card remove: " + swipeCardsList.get(0).toString());
                 swipeCardsList.remove(0);
                 Log.d("remove", "Card removed");
                 Log.d("remove", "Remaining cards: " + swipeCardsList.size());

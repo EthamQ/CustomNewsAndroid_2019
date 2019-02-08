@@ -31,6 +31,16 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment.OnFragmentInteractionListener,
         InfoFragment.OnFragmentInteractionListener {
 
+    private boolean shouldShowIntroductionCard = true;
+
+    public void introductionCardWasShown(){
+        this.shouldShowIntroductionCard = false;
+    }
+
+    public boolean showIntroductionCard(){
+        return shouldShowIntroductionCard;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

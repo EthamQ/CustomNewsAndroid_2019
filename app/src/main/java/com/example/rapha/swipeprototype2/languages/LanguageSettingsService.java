@@ -48,4 +48,13 @@ public class LanguageSettingsService {
         }
     }
 
+    public static boolean userChangedLanguage(boolean[] initialSelection, boolean[] newSelection){
+        for(int i = 0; i < initialSelection.length; i++){
+            if(initialSelection[i] != newSelection[i]){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
