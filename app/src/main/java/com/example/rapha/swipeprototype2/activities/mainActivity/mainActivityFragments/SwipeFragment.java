@@ -296,6 +296,13 @@ public class SwipeFragment extends Fragment {
                         apiArticlesToAdd = new LinkedList<>();
                         // Load articles.
                         apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
+                        if(this != null){
+                            if(getActivity() != null){
+                                NewsArticleDbService.getInstance(getActivity().getApplication()).deleteAll();
+                                NewsArticleDbService.getInstance(getActivity().getApplication())
+                                        .insertNewsArticles(apiArticlesToAdd);
+                            }
+                        }
                         Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
                         mainActivity.runOnUiThread(new Runnable() {
                             @Override
