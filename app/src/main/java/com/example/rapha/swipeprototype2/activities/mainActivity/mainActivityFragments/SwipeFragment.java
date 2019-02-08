@@ -248,7 +248,7 @@ public class SwipeFragment extends Fragment {
                         AlertDialog.Builder(mainActivity);
                 dialog.setTitle("Select languages");
                 final String[] languageItems = LanguageSettingsService.languageItems;
-                final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+                // final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
                 final boolean[] languageSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
                 dialog.setMultiChoiceItems(languageItems, languageSelection, new DialogInterface.OnMultiChoiceClickListener()  {
                     @Override
@@ -261,10 +261,10 @@ public class SwipeFragment extends Fragment {
                         DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                if(LanguageSettingsService.userChangedLanguage(initialSelection, languageSelection)){
+                                //if(LanguageSettingsService.userChangedLanguage(initialSelection, languageSelection)){
                                     swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
                                     swipeFragmentState.loadArticles();
-                                }
+                                //}
                                 dialog.cancel();
                             }
                         });
@@ -285,7 +285,7 @@ public class SwipeFragment extends Fragment {
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
-        if(shouldRequestArticles() || ApiRequestTimeService.forceApiReload(mainActivity)){
+        if(shouldRequestArticles()){
             ApiRequestTimeService.saveLastLoaded(mainActivity, new Date());
             Log.d("LOADD", "loadArticlesFromApi()");
             Thread thread = new Thread(new Runnable() {
