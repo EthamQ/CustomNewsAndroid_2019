@@ -52,12 +52,11 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
      */
     private void loadDatabaseCards(){
         final NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication());
-        newsArticleDbService.getAllArticles().observe(
+        newsArticleDbService.getAllUnreadArticles().observe(
                 swipeFragment.getActivity(),
                 new Observer<List<NewsArticleRoomModel>>() {
                     @Override
                     public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
-
                             swipeFragment.dbArticlesToAdd.addAll(
                                     newsArticleDbService.createNewsArticleList(
                                             articleModels,

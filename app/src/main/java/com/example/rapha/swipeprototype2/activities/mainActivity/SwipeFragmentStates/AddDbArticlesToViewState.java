@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
@@ -20,6 +21,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
     public void addArticlesToView() {
         if(swipeFragment.dbArticlesToAdd.size() > 0){
             swipeFragment.addArticlesToView(swipeFragment.dbArticlesToAdd);
+            QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
         }
         else{
             changeStateTo(new LoadArticlesFromApiState(swipeFragment));

@@ -13,6 +13,7 @@ import com.example.rapha.swipeprototype2.activities.articleDetailActivity.Articl
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
@@ -20,6 +21,7 @@ import org.json.JSONObject;
 
 public class NewsArticle implements Parcelable, ISwipeCard {
 
+    public int databaseId = -1;
     public String sourceId;
     public String sourceName;
     public String author;
@@ -81,10 +83,21 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     @Override
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
+        userReadArticle(swipeFragment);
     }
     @Override
     public void dislike(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
+        userReadArticle(swipeFragment);
+    }
+
+    private void userReadArticle(SwipeFragment swipeFragment){
+	    if(this.databaseId != -1){
+            NewsArticleRoomModel readArticle =
+                    swipeFragment.newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
+            readArticle.hasBeenRead = true;
+            swipeFragment.newsArticleDbService.update(readArticle);
+        }
     }
 
     @Override

@@ -30,7 +30,7 @@ public class QuestionCardService {
      */
     public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<KeyWordRoomModel> keyWords){
         Log.d("questioncard", "mixQuestionCardsIntoSwipeCards");
-        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords);
+        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 4));
         // Generate random indices.
         int[] randomIndices = new int[questionSwipeCards.size()];
         for(int i = 0; i < randomIndices.length; i++){
@@ -44,7 +44,7 @@ public class QuestionCardService {
         }
     }
 
-    private static LinkedList<QuestionSwipeCard> generateQuestionCards(List<KeyWordRoomModel> keyWords){
+    private static LinkedList<QuestionSwipeCard> generateQuestionCards(List<KeyWordRoomModel> keyWords, int amount){
         LinkedList<QuestionSwipeCard> questionCards = new LinkedList();
                 for(int i = 0; i < keyWords.size(); i++){
                     if(questionShouldBeAsked(keyWords.get(i))){
@@ -56,7 +56,7 @@ public class QuestionCardService {
                     }
                 }
                 questionCards = ListService.orderListRandomly(questionCards);
-                questionCards = ListService.removeAllEntriesStartingAt(questionCards, AMOUNT_QUESTIONS);
+                questionCards = ListService.removeAllEntriesStartingAt(questionCards, amount);
                 Log.d("questioncard", "Number of cards: " + questionCards.size());
                 return questionCards;
     }

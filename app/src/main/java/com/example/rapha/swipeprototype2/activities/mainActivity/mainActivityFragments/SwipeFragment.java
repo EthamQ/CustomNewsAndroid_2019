@@ -61,7 +61,7 @@ public class SwipeFragment extends Fragment {
     public static final int articlesAmountLoad = 10;
 
     // How many articles to load in the beginning from the db.
-    public static final int articlesAmountLoadFromDb = 5;
+    public static final int articlesAmountLoadFromDb = ApiService.MAX_NUMBER_OF_ARTICLES;
 
     // Adapter for the fling Container (swipe functionality)
     public NewsArticleAdapter articlesArrayAdapter;
@@ -283,34 +283,36 @@ public class SwipeFragment extends Fragment {
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
-        Log.d("LOADD", "loadArticlesFromApi()");
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Clean previous data if it exists.
-                    apiArticlesToAdd = new LinkedList<>();
-                    // Load articles.
-                    apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
-                    Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
-                    mainActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // Tell the state that data is ready, save the data in the
-                            swipeFragmentState.articlesFromApiAreLoaded();
-                            // Store them to have cached data
-                            // when the user opens the application the next time.
-                            swipeFragmentState.saveArticlesInDb();
-                            swipeFragmentState.addArticlesToView();
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("HTTPERROR", e.toString());
+        if(shouldRequestArticles()){
+            Log.d("LOADD", "loadArticlesFromApi()");
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        // Clean previous data if it exists.
+                        apiArticlesToAdd = new LinkedList<>();
+                        // Load articles.
+                        apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
+                        Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
+                        mainActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Tell the state that data is ready, save the data in the
+                                swipeFragmentState.articlesFromApiAreLoaded();
+                                // Store them to have cached data
+                                // when the user opens the application the next time.
+                                swipeFragmentState.saveArticlesInDb();
+                                swipeFragmentState.addArticlesToView();
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("HTTPERROR", e.toString());
+                    }
                 }
-            }
-        });
-        thread.start();
+            });
+            thread.start();
+        }
     }
 
 

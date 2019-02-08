@@ -46,7 +46,7 @@ public class NewsArticleDbService {
         return repository.getAllUnreadArticles();
     }
 
-    public NewsArticleRoomModel createNewsArticleRoomModel(NewsArticle newsArticle){
+    public NewsArticleRoomModel createNewsArticleRoomModelToInsert(NewsArticle newsArticle){
         NewsArticleRoomModel dbModel = new NewsArticleRoomModel();
         dbModel.sourceId = newsArticle.sourceId;
         dbModel.sourceName = newsArticle.sourceName;
@@ -60,8 +60,16 @@ public class NewsArticleDbService {
         return dbModel;
     }
 
+    public NewsArticleRoomModel createNewsArticleRoomModelToUpdate(NewsArticle newsArticle){
+        NewsArticleRoomModel dbModel = new NewsArticleRoomModel();
+        dbModel = createNewsArticleRoomModelToInsert(newsArticle);
+        dbModel.id = newsArticle.databaseId;
+        return dbModel;
+    }
+
     public NewsArticle createNewsArticle(NewsArticleRoomModel dbModel){
         NewsArticle newsArticle = new NewsArticle();
+        newsArticle.databaseId = dbModel.id;
         newsArticle.sourceId = dbModel.sourceId;
         newsArticle.sourceName = dbModel.sourceName;
         newsArticle.title = dbModel.title;
@@ -79,6 +87,7 @@ public class NewsArticleDbService {
             limit = dbModels.size();
         }
         LinkedList<NewsArticle> articleList = new LinkedList<>();
+
         for (int i = 0; i < limit; i++){
             articleList.add(createNewsArticle(dbModels.get(i)));
         }
@@ -87,7 +96,7 @@ public class NewsArticleDbService {
 
     public void insertNewsArticles(LinkedList<NewsArticle> newsArticles){
         for(int i = 0; i < newsArticles.size(); i++){
-            insert(createNewsArticleRoomModel(newsArticles.get(i)));
+            insert(createNewsArticleRoomModelToInsert(newsArticles.get(i)));
         }
     }
 
