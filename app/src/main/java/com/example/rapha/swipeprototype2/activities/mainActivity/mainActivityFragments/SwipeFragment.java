@@ -36,6 +36,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.utils.ListService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
@@ -348,7 +349,7 @@ public class SwipeFragment extends Fragment {
     }
 
     public boolean shouldRequestArticles(){
-        return swipeCardsList.size() < articlesAmountLoad;
+        return swipeCardsList.size() <= articlesAmountLoad;
     }
 
     public boolean apiArticlesHaveBeenLoaded(){

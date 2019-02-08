@@ -4,6 +4,10 @@ import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
+import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.utils.ListService;
+
+import java.util.ArrayList;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
@@ -27,6 +31,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
             changeStateTo(new LoadArticlesFromApiState(swipeFragment));
             swipeFragment.swipeFragmentState.loadArticlesFromApi();
         }
+
     }
 
     @Override

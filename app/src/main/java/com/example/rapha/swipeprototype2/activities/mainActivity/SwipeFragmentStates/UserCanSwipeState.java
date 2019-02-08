@@ -3,6 +3,10 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.utils.ListService;
+
+import java.util.ArrayList;
 
 public class UserCanSwipeState extends SwipeFragmentState implements ISwipeFragmentState {
     public UserCanSwipeState(SwipeFragment swipeFragment) {
@@ -16,7 +20,11 @@ public class UserCanSwipeState extends SwipeFragmentState implements ISwipeFragm
      * and let it handle reloading new cards.
      */
     public void handleArticlesOnEmpty() {
-        if(swipeFragment.shouldRequestArticles()){
+        if(ApiRequestTimeService.forceApiReload(swipeFragment.mainActivity)){
+            swipeFragment.swipeCardsList = (ArrayList)ListService.removeAllEntriesStartingAt(swipeFragment.swipeCardsList, (swipeFragment.articlesAmountLoad + 1));
+            changeStateTo(new LoadArticlesFromApiState(swipeFragment));
+            }
+        else if(swipeFragment.shouldRequestArticles()){
             changeStateTo(new LoadArticlesFromApiState(swipeFragment));
         }
     }

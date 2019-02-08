@@ -56,7 +56,7 @@ public class QuestionCardService {
                     }
                 }
                 questionCards = ListService.orderListRandomly(questionCards);
-                questionCards = ListService.removeAllEntriesStartingAt(questionCards, amount);
+                questionCards = (LinkedList)ListService.removeAllEntriesStartingAt(questionCards, amount);
                 Log.d("questioncard", "Number of cards: " + questionCards.size());
                 return questionCards;
     }

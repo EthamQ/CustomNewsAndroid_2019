@@ -32,7 +32,7 @@ public class ListService {
         return random;
     }
 
-    public static LinkedList removeAllEntriesStartingAt(LinkedList list, int startIndex){
+    public static List removeAllEntriesStartingAt(List list, int startIndex){
         for(int i = list.size() - 1; i > startIndex; i--){
             if(i >= 0){
                 list.remove(i);
