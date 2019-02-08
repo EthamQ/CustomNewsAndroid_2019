@@ -17,6 +17,7 @@ import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.AddDbArticlesToViewState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.UserChangedLanguageState;
@@ -26,6 +27,7 @@ import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
@@ -296,13 +298,7 @@ public class SwipeFragment extends Fragment {
                         apiArticlesToAdd = new LinkedList<>();
                         // Load articles.
                         apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
-                        if(this != null){
-                            if(getActivity() != null){
-                                NewsArticleDbService.getInstance(getActivity().getApplication()).deleteAll();
-                                NewsArticleDbService.getInstance(getActivity().getApplication())
-                                        .insertNewsArticles(apiArticlesToAdd);
-                            }
-                        }
+                        storeArticlesInDatabase(apiArticlesToAdd);
                         Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
                         mainActivity.runOnUiThread(new Runnable() {
                             @Override
@@ -322,6 +318,16 @@ public class SwipeFragment extends Fragment {
                 }
             });
             thread.start();
+        }
+    }
+
+    public void storeArticlesInDatabase(LinkedList<NewsArticle>  articles){
+        if(this != null){
+            if(getActivity() != null){
+                NewsArticleDbService.getInstance(getActivity().getApplication()).deleteAll();
+                NewsArticleDbService.getInstance(getActivity().getApplication())
+                        .insertNewsArticles(articles);
+            }
         }
     }
 

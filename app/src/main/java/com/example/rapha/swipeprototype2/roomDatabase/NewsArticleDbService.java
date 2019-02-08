@@ -63,13 +63,11 @@ public class NewsArticleDbService {
     public NewsArticleRoomModel createNewsArticleRoomModelToUpdate(NewsArticle newsArticle){
         NewsArticleRoomModel dbModel = new NewsArticleRoomModel();
         dbModel = createNewsArticleRoomModelToInsert(newsArticle);
-        dbModel.id = newsArticle.databaseId;
         return dbModel;
     }
 
     public NewsArticle createNewsArticle(NewsArticleRoomModel dbModel){
         NewsArticle newsArticle = new NewsArticle();
-        newsArticle.databaseId = dbModel.id;
         newsArticle.sourceId = dbModel.sourceId;
         newsArticle.sourceName = dbModel.sourceName;
         newsArticle.title = dbModel.title;

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +22,6 @@ import org.json.JSONObject;
 
 public class NewsArticle implements Parcelable, ISwipeCard {
 
-    public int databaseId = -1;
     public String sourceId;
     public String sourceName;
     public String author;
@@ -92,13 +92,12 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     }
 
     private void userReadArticle(SwipeFragment swipeFragment){
-	    if(this.databaseId != -1){
             NewsArticleRoomModel readArticle =
                     swipeFragment.newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
             readArticle.hasBeenRead = true;
             swipeFragment.newsArticleDbService.update(readArticle);
         }
-    }
+
 
     @Override
     public int getNewsCategory() {

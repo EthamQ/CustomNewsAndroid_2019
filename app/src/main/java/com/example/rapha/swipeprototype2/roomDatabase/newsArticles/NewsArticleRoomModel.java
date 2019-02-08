@@ -9,13 +9,11 @@ import android.support.annotation.NonNull;
 public class NewsArticleRoomModel {
 
     @NonNull
-    @PrimaryKey(autoGenerate = true)
-    public int id;
-
+    @PrimaryKey()
+    public String title;
     public String sourceId;
     public String sourceName;
     public String author;
-    public String title;
     public String description;
     public String url;
     public String urlToImage;
