@@ -18,9 +18,7 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
 
     @Override
     public void setCardsVisibility() {
-        swipeFragment.setCardsVisibility(true);
-        Button loading = swipeFragment.view.findViewById(R.id.loading);
-        loading.setVisibility(Button.INVISIBLE);
+        swipeFragment.setCardsVisibility(true, true);
     }
 
     @Override
@@ -35,9 +33,9 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
      * Make the view invisible while loading new data.
      */
     public void loadArticles() {
-        swipeFragment.setCardsVisibility(false);
-        Button loading = swipeFragment.view.findViewById(R.id.loading);
-        loading.setVisibility(Button.VISIBLE);
+        swipeFragment.setCardsVisibility(false, true);
+//        Button loading = swipeFragment.view.findViewById(R.id.loading);
+//        loading.setVisibility(Button.VISIBLE);
         for(int i = swipeFragment.swipeCardsList.size() - 1; i >= 0; i--){
             swipeFragment.swipeCardsList.remove(i);
         }

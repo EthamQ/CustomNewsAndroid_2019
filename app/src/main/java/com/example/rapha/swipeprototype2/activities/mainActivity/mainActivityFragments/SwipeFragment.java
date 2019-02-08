@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
@@ -39,6 +40,8 @@ import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -191,11 +194,19 @@ public class SwipeFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setCardsVisibility(boolean visible){
+    public void setCardsVisibility(boolean visible, boolean loadingIcon){
         int visibility = visible ? View.VISIBLE : View.INVISIBLE;
         view.findViewById(R.id.frame).setVisibility(visibility);
         view.findViewById(R.id.button_languages).setVisibility(visibility);
+        if(loadingIcon){
+            int visibilityLoading = visible ? GifImageView.INVISIBLE : GifImageView.VISIBLE;
+            GifImageView loading = view.findViewById(R.id.loading);
+            loading.setVisibility(visibilityLoading);
+        }
+
     }
+
+
 
         public void init(){
         ((Toolbar) mainActivity.findViewById(R.id.toolbar)).setTitle("Swipe");

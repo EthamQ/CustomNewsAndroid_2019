@@ -33,7 +33,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      * Make the articles visible.
      */
     public void setCardsVisibility() {
-        swipeFragment.setCardsVisibility(true);
+        swipeFragment.setCardsVisibility(true, true);
 
     }
 

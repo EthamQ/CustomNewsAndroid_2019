@@ -25,7 +25,7 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
     @Override
     public void setCardsVisibility() {
         if(swipeFragment.apiArticlesHaveBeenLoaded()){
-            swipeFragment.setCardsVisibility(true);
+            swipeFragment.setCardsVisibility(true, true);
         }
     }
 
