@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.StatisticsIntroSpanService;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,7 +24,7 @@ import com.example.rapha.swipeprototype2.activities.introduction.IntroductionAct
  */
 public class ExplainStatisticsFragment extends Fragment {
 
-    View view;
+    public View view;
     IntroductionActivity introductionActivity;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -75,6 +77,7 @@ public class ExplainStatisticsFragment extends Fragment {
 
         this.introductionActivity = (IntroductionActivity)getActivity();
         initButtons();
+        StatisticsIntroSpanService.statisticFragmentSetColor(this);
         return view;
     }
 

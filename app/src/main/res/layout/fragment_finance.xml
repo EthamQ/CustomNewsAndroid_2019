@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.introduction.IntroductionActivityFragments.ExplainFinanceFragment">
+    tools:context=".activities.introduction.IntroductionActivityFragments.ExplainFinanceFragment"
+    android:padding="10dp">
 
     <!-- TODO: Update blank fragment layout -->
     <!-- TODO: Update blank fragment layout -->
@@ -13,20 +14,37 @@
     <TextView
         android:id="@+id/finance_expl_headline"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:text="@string/finance_expl_headline"
         android:textColor="@color/turquis_dark"
-        android:textSize="@dimen/subTitleText"
+        android:textSize="@dimen/titleText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"/>
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="157dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/point4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.184" />
 
     <Button
         android:id="@+id/introduction_button_3"

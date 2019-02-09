@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.introduction.IntroductionActivityFragments.HowToUseFragment">
+    tools:context=".activities.introduction.IntroductionActivityFragments.HowToUseFragment"
+    android:paddingLeft="30dp"
+    android:paddingRight="30dp"
+    android:paddingTop="10dp">
 
     <ImageView
         android:id="@+id/imageView4"
         android:layout_width="243dp"
-        android:layout_height="261dp"
+        android:layout_height="224dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
@@ -25,14 +28,15 @@
     <TextView
         android:id="@+id/how_to_use_headline"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="28dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:singleLine="false"
         android:text="Reading and Swiping news articles"
         android:textColor="@color/turquis_dark"
-        android:textSize="@dimen/subTitleText"
+        android:textSize="@dimen/titleText"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.505"
@@ -50,10 +54,10 @@
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.79">
+        app:layout_constraintVertical_bias="0.803">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -129,7 +133,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="@string/swipe_right_text5" />
+                android:text="or" />
         </LinearLayout>
 
         <LinearLayout
@@ -170,12 +174,14 @@
                 android:text="@string/swipe_left_text4"
                 android:textColor="@color/turquis_dark" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="@string/swipe_left_text5" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/swipe_left_text5" />
     </LinearLayout>
 
     <Button
@@ -197,6 +203,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.948" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="157dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/point1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.184" />
 
 
 </android.support.constraint.ConstraintLayout>

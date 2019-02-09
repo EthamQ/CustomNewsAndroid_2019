@@ -196,11 +196,26 @@
         it.
     </string>
 
-    <string name="statistics_expl_headline">
-        What happens after you swiped?
-    </string>
-
     <string name="finance_expl_headline">
         Is this app for free?
     </string>
+
+    <string name="statistics_expl_headline">
+        What happens after you swiped?
+    </string>
+    <string name="explain_cat_statistic">
+        By swiping NEWS ARTICLES we know which CATEGORIES you like.
+    </string>
+    <string name="explain_topic_statistic">
+        By answering QUESTIONS we know which TOPICS you like.
+    </string>
+    <string name="explain_statistic_below_text1">
+        Every day we adjust the news we show to you according to your preferred CATEGORIES and TOPICS.
+    </string>
+    <string name="explain_statistic_below_text2">
+        In MY STATISTICS you can always check out the data we collected about you.
+    </string>
+
+
+
 </resources>
