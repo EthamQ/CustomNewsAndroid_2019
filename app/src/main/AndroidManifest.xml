@@ -11,18 +11,22 @@
         android:roundIcon="@mipmap/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.mainActivity.MainActivity" android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".activities.introduction.IntroductionActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activities.articleDetailActivity.ArticleDetailScrollingActivity"
+            android:name=".activities.readArticle.ArticleDetailScrollingActivity"
             android:label="@string/title_activity_article_detail_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".activities.mainActivity.MainActivity"
+            android:label="@string/title_activity_main2"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>
