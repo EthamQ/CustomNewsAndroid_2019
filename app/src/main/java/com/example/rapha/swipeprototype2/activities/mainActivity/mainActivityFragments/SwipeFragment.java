@@ -288,7 +288,7 @@ public class SwipeFragment extends Fragment {
      * which shows them on the cards to the user.
      */
     public void loadArticlesFromApi(){
-        if(shouldRequestArticles() || ApiRequestTimeService.forceApiReload(mainActivity)){
+        if(shouldRequestArticles()){
             ApiRequestTimeService.saveLastLoaded(mainActivity, new Date());
             Log.d("LOADD", "loadArticlesFromApi()");
             Thread thread = new Thread(new Runnable() {

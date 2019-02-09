@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.viewDimension.StatisticsFragmentDimensions;
 import com.example.rapha.swipeprototype2.customAdapters.TopicRowAdapter;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
@@ -49,6 +49,7 @@ public class StatisticFragment extends Fragment {
     public static int ROW_LENGTH = 3;
 
     View view;
+    StatisticsFragmentDimensions statisticsFragmentDimensions;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -94,6 +95,7 @@ public class StatisticFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_statistic, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
         toolbar.setTitle("Your Statistics");
+        statisticsFragmentDimensions = new StatisticsFragmentDimensions(this);
         setGraph();
         setLikedTopics();
         return view;
@@ -190,7 +192,7 @@ public class StatisticFragment extends Fragment {
                     }
                 }
                 topicRowAdapter.notifyDataSetChanged();
-                setListViewHeightBasedOnItems(listView);
+                statisticsFragmentDimensions.setListViewHeightBasedOnItems(listView);
                 if(topicSets.size() > 0){
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");
@@ -198,45 +200,6 @@ public class StatisticFragment extends Fragment {
 
             }
         });
-    }
-
-    /**
-     * Sets ListView height dynamically based on the height of the items.
-     *
-     * @param listView to be resized
-     * @return true if the listView is successfully resized, false otherwise
-     */
-    public static boolean setListViewHeightBasedOnItems(ListView listView) {
-
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter != null) {
-
-            int numberOfItems = listAdapter.getCount();
-
-            // Get total height of all items.
-            int totalItemsHeight = 0;
-            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
-                View item = listAdapter.getView(itemPos, null, listView);
-                item.measure(0, 0);
-                totalItemsHeight += item.getMeasuredHeight();
-            }
-
-            // Get total height of all item dividers.
-            int totalDividersHeight = listView.getDividerHeight() *
-                    (numberOfItems - 1);
-
-            // Set list height.
-            ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = totalItemsHeight + totalDividersHeight;
-            listView.setLayoutParams(params);
-            listView.requestLayout();
-
-            return true;
-
-        } else {
-            return false;
-        }
-
     }
 
 
@@ -248,6 +211,7 @@ public class StatisticFragment extends Fragment {
             public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
                 // Set the values in the graph.
                 GraphView graph = view.findViewById(R.id.graph);
+                statisticsFragmentDimensions.setGraphWidth(graph);
                 DataPoint[] datapoints = new DataPoint[userPreferenceRoomModels.size()];
                 for(int i = 0; i < datapoints.length; i++){
                     UserPreferenceRoomModel currentEntry = userPreferenceRoomModels.get(i);
