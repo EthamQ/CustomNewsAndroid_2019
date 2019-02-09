@@ -138,4 +138,69 @@
         Free icon from www.fontawesome.com\n
         https://fontawesome.com/icons/chart-bar\n\n
     </string>
+
+    <string name="swipe_right_text1">
+        Swipe
+    </string>
+    <string name="swipe_right_text2">
+        RIGHT
+    </string>
+    <string name="swipe_right_text3">
+        if you
+    </string>
+    <string name="swipe_right_text4">
+        LIKE
+    </string>
+    <string name="swipe_right_text5">
+        the article you see.
+    </string>
+
+    <string name="question_right_text1">
+        to answer
+    </string>
+    <string name="question_right_text2">
+        YES.
+    </string>
+
+
+    <string name="swipe_left_text1">
+        Swipe
+    </string>
+    <string name="swipe_left_text2">
+        LEFT
+    </string>
+    <string name="swipe_left_text3">
+        if you
+    </string>
+    <string name="swipe_left_text4">
+        DISLIKE
+    </string>
+    <string name="swipe_left_text5">
+        the article you see.
+    </string>
+
+    <string name="question_left_text1">
+        to answer
+    </string>
+    <string name="question_left_text2">
+        NO.
+    </string>
+
+    <string name="click_text1">
+        Click on the article to
+    </string>
+    <string name="click_text2">
+        READ
+    </string>
+    <string name="click_text3">
+        it.
+    </string>
+
+    <string name="statistics_expl_headline">
+        What happens after you swiped?
+    </string>
+
+    <string name="finance_expl_headline">
+        Is this app for free?
+    </string>
 </resources>

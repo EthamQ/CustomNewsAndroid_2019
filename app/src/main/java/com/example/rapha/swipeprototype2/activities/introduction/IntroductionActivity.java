@@ -7,21 +7,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainQuestionsFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainStatisticsFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainFinanceFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.HowToUseFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class IntroductionActivity extends AppCompatActivity
         implements
         ExplainFinanceFragment.OnFragmentInteractionListener,
         ExplainStatisticsFragment.OnFragmentInteractionListener,
-        HowToUseFragment.OnFragmentInteractionListener{
+        HowToUseFragment.OnFragmentInteractionListener,
+        ExplainQuestionsFragment.OnFragmentInteractionListener{
 
-    public final int HOW_TO_USE = 0;
-    public final int EXPLAIN_STATISTIC = 1;
-    public final int EXPLAIN_FINANCE = 2;
+    public final int EXPLAIN_ARTICLES = 0;
+    public final int EXPLAIN_QUESTIONS = 1;
+    public final int EXPLAIN_STATISTIC = 2;
+    public final int EXPLAIN_FINANCE = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +41,18 @@ public class IntroductionActivity extends AppCompatActivity
     }
 
     public boolean appIsStartedTheFirstTime(){
-        return false;
+        return true;
     }
 
     public void changeToFragment(int fragment){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch(fragment){
-            case HOW_TO_USE:
+            case EXPLAIN_ARTICLES:
                 ft.replace(R.id.introduction_placeholder, new HowToUseFragment());
+                ft.commit();
+                break;
+            case EXPLAIN_QUESTIONS:
+                ft.replace(R.id.introduction_placeholder, new ExplainQuestionsFragment());
                 ft.commit();
                 break;
             case EXPLAIN_STATISTIC:

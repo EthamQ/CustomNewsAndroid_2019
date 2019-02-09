@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
@@ -127,7 +128,7 @@ public class HowToUseFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_STATISTIC);
+                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_QUESTIONS);
             }
         });
     }
