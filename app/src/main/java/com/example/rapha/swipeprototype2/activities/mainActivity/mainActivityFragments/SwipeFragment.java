@@ -54,7 +54,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment {
+public class SwipeFragment extends Fragment implements IKeyWordProvider {
 
     public MainActivity mainActivity;
     public View view;
@@ -180,6 +180,11 @@ public class SwipeFragment extends Fragment {
         super.onDetach();
         mListener = null;
         ArticleDataStorage.storeArticlesTemporarily(this.swipeCardsList);
+    }
+
+    @Override
+    public List<KeyWordRoomModel> getCurrentKeyWords() {
+        return livekeyWords;
     }
 
     /**

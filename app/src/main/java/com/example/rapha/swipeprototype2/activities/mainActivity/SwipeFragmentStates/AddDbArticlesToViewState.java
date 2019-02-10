@@ -11,11 +11,8 @@ import java.util.ArrayList;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
-    boolean articlesAreAdded;
-
     public AddDbArticlesToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
-        articlesAreAdded = false;
         Log.d("statehistory", "AddDbArticlesToViewState");
     }
 
@@ -27,9 +24,8 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      */
     public void addArticlesToView() {
 
-        if(swipeFragment.dbArticlesToAdd.size() > 0 && !articlesAreAdded){
+        if(swipeFragment.dbArticlesToAdd.size() > 0){
             Log.d("questioncard", "AddDbArticlesToViewState addArticlesToView()");
-            articlesAreAdded = true;
             swipeFragment.addArticlesToView(swipeFragment.dbArticlesToAdd);
             QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
         }

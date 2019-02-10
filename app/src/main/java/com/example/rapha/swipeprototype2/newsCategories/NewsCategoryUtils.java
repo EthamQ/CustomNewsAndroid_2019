@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.newsCategories;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.languages.TranslationService;
@@ -9,9 +10,9 @@ import java.util.LinkedList;
 
 public class NewsCategoryUtils {
 
-    public static String[] getQueryStrings(SwipeFragment swipeFragment, int categoryId, int languageId){
+    public static String[] getQueryStrings(IKeyWordProvider keyWordProvider, int categoryId, int languageId){
         NewsCategory categoryToQuery = NewsCategoryContainer.getCategory(categoryId);
-        return getQueryStringsTranslated(swipeFragment, categoryToQuery, languageId);
+        return getQueryStringsTranslated(keyWordProvider, categoryToQuery, languageId);
     }
 
     /**
@@ -19,26 +20,26 @@ public class NewsCategoryUtils {
      * It contains the default query strings for the category and the ones from the database
      * that the user liked or hasn't rated yet.
      * A NewsCategory object uses this logic.
-     * @param swipeFragment
+     * @param keyWordProvider
      * @param newsCategory
      * @return
      */
-    public static String[] getQueryStringsEnglish(SwipeFragment swipeFragment, NewsCategory newsCategory){
+    public static String[] getQueryStringsEnglish(IKeyWordProvider keyWordProvider, NewsCategory newsCategory){
         // Get query strings that the user prefers or hasn't set yet.
         LinkedList<KeyWordRoomModel> keyWords = new LinkedList<>();
-        for(int i = 0; i < swipeFragment.livekeyWords.size(); i++){
-            boolean keyWordBelongsToCategory = swipeFragment.livekeyWords.get(i).categoryId == newsCategory.getCategoryID();
-            boolean keyWordShouldBeAdded = !(swipeFragment.livekeyWords.get(i).status == KeyWordRoomModel.DISLIKED);
+        for(int i = 0; i < keyWordProvider.getCurrentKeyWords().size(); i++){
+            boolean keyWordBelongsToCategory = keyWordProvider.getCurrentKeyWords().get(i).categoryId == newsCategory.getCategoryID();
+            boolean keyWordShouldBeAdded = !(keyWordProvider.getCurrentKeyWords().get(i).status == KeyWordRoomModel.DISLIKED);
             if(keyWordBelongsToCategory && keyWordShouldBeAdded){
-                   transformSingleToMultipleKeyWords(swipeFragment, keyWords, i);
+                   transformSingleToMultipleKeyWords(keyWordProvider, keyWords, i);
             }
         }
         return  combineDefaultAndUserPreferredKeyWords(newsCategory, keyWords);
     }
 
-    private static void transformSingleToMultipleKeyWords(SwipeFragment swipeFragment, LinkedList<KeyWordRoomModel> keyWords, int index){
+    private static void transformSingleToMultipleKeyWords(IKeyWordProvider keyWordProvider, LinkedList<KeyWordRoomModel> keyWords, int index){
         QueryWordTransformation queryWordTransformation = new QueryWordTransformation();
-        KeyWordRoomModel keyWordToAdd = swipeFragment.livekeyWords.get(index);
+        KeyWordRoomModel keyWordToAdd = keyWordProvider.getCurrentKeyWords().get(index);
         LinkedList<KeyWordRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
         for(int k = 0; k < transformedKeyWords.size(); k++){
             keyWords.add(transformedKeyWords.get(k));
@@ -63,24 +64,24 @@ public class NewsCategoryUtils {
 
     /**
      * Returns the query strings for the news category translated to the according language.
-     * @param swipeFragment
+     * @param keyWordProvider
      * @param newsCategory
      * @param languageId
      * @return
      */
-    private static String[] getQueryStringsTranslated(SwipeFragment swipeFragment, NewsCategory newsCategory, int languageId){
+    private static String[] getQueryStringsTranslated(IKeyWordProvider keyWordProvider, NewsCategory newsCategory, int languageId){
         switch(languageId){
             case LanguageSettingsService
-                    .INDEX_ENGLISH: return newsCategory.getQueryStringsEnglish(swipeFragment);
+                    .INDEX_ENGLISH: return newsCategory.getQueryStringsEnglish(keyWordProvider);
             case LanguageSettingsService
                     .INDEX_GERMAN: return TranslationService.translateToGerman(
-                    newsCategory.getQueryStringsEnglish(swipeFragment)
+                    newsCategory.getQueryStringsEnglish(keyWordProvider)
             );
             case LanguageSettingsService
-                    .INDEX_FRENCH: return newsCategory.getQueryStringsEnglish(swipeFragment);
+                    .INDEX_FRENCH: return newsCategory.getQueryStringsEnglish(keyWordProvider);
             case LanguageSettingsService
-                    .INDEX_RUSSIAN: return newsCategory.getQueryStringsEnglish(swipeFragment);
-            default: return newsCategory.getQueryStringsEnglish(swipeFragment);
+                    .INDEX_RUSSIAN: return newsCategory.getQueryStringsEnglish(keyWordProvider);
+            default: return newsCategory.getQueryStringsEnglish(keyWordProvider);
         }
     }
 

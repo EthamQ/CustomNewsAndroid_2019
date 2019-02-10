@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.api.apiQuery;
 
 import android.util.Log;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryUtils;
@@ -9,7 +10,7 @@ import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 public class NewsApiQueryBuilder {
 
-    SwipeFragment swipeFragment;
+    IKeyWordProvider keyWordProvider;
     QueryCategoryContainer categoryContainer;
     private String finalQuery = "";
     private int newsCategory;
@@ -19,27 +20,43 @@ public class NewsApiQueryBuilder {
     public final static String RUSSIAN = "ru";
     public final static String FRENCH = "fr";
 
-    public NewsApiQueryBuilder(SwipeFragment swipeFragment, int languageId){
+    public NewsApiQueryBuilder(IKeyWordProvider keyWordProvider, int languageId){
         categoryContainer = new QueryCategoryContainer();
-        this.swipeFragment = swipeFragment;
+        this.keyWordProvider = keyWordProvider;
         this.setLanguage(languageId);
     }
 
     /**
      * Adds every query word from the category corresponding to the id
-     * to the queryWord String. They are concatenated with an OR.
+     * to the queryWord String.
      * @param newsCategory
      */
     public void setQueryCategory(int newsCategory){
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
-        //QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
-        String[] queryWords = NewsCategoryUtils.getQueryStrings(swipeFragment, newsCategory, this.languageId);
+        String[] queryWords = NewsCategoryUtils.getQueryStrings(keyWordProvider, newsCategory, this.languageId);
+        addQueryStrings(queryCategory, queryWords);
+    }
+
+    public void addQueryWord(String[] queryWords){
+        String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
+        QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
+        addQueryStrings(queryCategory, queryWords);
+    }
+
+    /**
+     * Adds all strings from the query word string array to the
+     * queryString property of the queryCategory.
+     * They are concatenated with an OR.
+     * @param queryCategory
+     * @param queryWords
+     */
+    private void addQueryStrings(QueryCategory queryCategory, String[] queryWords){
         for (int i = 0; i < queryWords.length; i++){
             queryCategory.queryString += queryWords[i];
             if(!(i == queryWords.length - 1)){
-                    queryCategory.queryString += " OR ";
+                queryCategory.queryString += " OR ";
             }
         }
     }

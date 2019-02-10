@@ -32,8 +32,12 @@ public class DateUtils {
     public static String getDateBefore(int daysBefore){
         Date currentDate = new Date();
         addDays(currentDate, daysBefore * -1);
+        return dateToISO8601(currentDate);
+    }
+
+    public static String dateToISO8601(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(currentDate);
+        return sdf.format(date);
     }
 
     /**

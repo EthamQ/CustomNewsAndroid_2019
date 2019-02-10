@@ -19,6 +19,7 @@ import android.view.MenuItem;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.InfoFragment;
+import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
@@ -30,9 +31,8 @@ public class MainActivity extends AppCompatActivity
         SwipeFragment.OnFragmentInteractionListener,
         StatisticFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
-        InfoFragment.OnFragmentInteractionListener {
-
-    private boolean shouldShowIntroductionCard = true;
+        InfoFragment.OnFragmentInteractionListener,
+        NewsOfTheDayFragment.OnFragmentInteractionListener{
 
     public void introductionCardWasShown(){
         StatusDataStorage.mainActivityStarted();
@@ -100,22 +100,21 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view swipe_card clicks here.
         int id = item.getItemId();
-
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_statistics) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new StatisticFragment());
             ft.commit();
         } else if(id == R.id.nav_home){
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new SwipeFragment());
             ft.commit();
         } else if(id == R.id.nav_settings){
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new SettingsFragment());
             ft.commit();
         } else if(id == R.id.nav_info){
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.your_placeholder, new InfoFragment());
+            ft.commit();
+        } else if(id == R.id.nav_news){
+            ft.replace(R.id.your_placeholder, new NewsOfTheDayFragment());
             ft.commit();
         }
 
