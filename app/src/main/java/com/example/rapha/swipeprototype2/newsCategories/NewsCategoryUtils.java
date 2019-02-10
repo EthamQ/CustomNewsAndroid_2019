@@ -5,6 +5,9 @@ import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.languages.TranslationService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+
+import java.util.LinkedList;
 
 public class NewsCategoryUtils {
 
@@ -28,4 +31,5 @@ public class NewsCategoryUtils {
             default: return newsCategory.getQueryStrings_EN(swipeFragment);
         }
     }
+
 }

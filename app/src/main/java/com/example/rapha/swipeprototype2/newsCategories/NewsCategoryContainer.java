@@ -92,8 +92,8 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 2;
 
         public static final String[] FINANCE_QUERY_STRINGS_EN = new String[]{
-                "Economy", "Finance", "stock market", "Wages", "Investment", "Jobs", "Taxes",
-                "insurance"
+                "Economy", "Finance", "Stock market", "Wages", "Investment", "Jobs", "Taxes",
+                "Insurance"
         };
 
         public static final String[] FINANCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
@@ -113,6 +113,10 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 4;
 
+        public static final String[] FOOD_QUERY_STRINGS_EN = new String[] {
+                "Restaurant"
+        };
+
         public static final String[] FOOD_DEFAULT_QUERY_STRINGS_EN = new String[] {
             "pasta", "cook", "food", "meal", "delicious",
                     "recipe", "vegetables", "tomato", "dinner", "pan"
@@ -122,6 +126,7 @@ public class NewsCategoryContainer {
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Food";
             this.DEFAULT_QUERY_STRINGS_EN = FOOD_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = FOOD_QUERY_STRINGS_EN;
             this.USER_DETERMINED_QUERY_STRINGS_EN = new String[0];
         }
     }
@@ -151,8 +156,8 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 0;
 
         public static final String[] POLITIC_QUERY_STRINGS_EN = new String[] {
-                "Trump", "Putin", "Merkel", "Macron", "Russia",
-                "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy"
+                "Trump", "Putin", "Macron", "Russia",
+                "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy", "German politics"
         };
         public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
             "politic", "president", "white house"
@@ -172,7 +177,7 @@ public class NewsCategoryContainer {
 
         public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
                 "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
-                "AI Artificial Intelligence", "Google", "Java", "C++", "Python", "Webdesign"
+                "AI Artificial Intelligence", "Google", "Spotify", "Facebook", "Webdesign"
         };
 
         public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {

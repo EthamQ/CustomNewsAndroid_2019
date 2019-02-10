@@ -30,7 +30,14 @@ public class NewsCategoryContainerUtils {
             if(swipeFragment.livekeyWords.get(i).categoryId == newsCategory.getCategoryID()){
                 if(swipeFragment.livekeyWords.get(i).status == KeyWordRoomModel.UNSET
                         || swipeFragment.livekeyWords.get(i).status == KeyWordRoomModel.LIKED){
-                    keyWords.add(swipeFragment.livekeyWords.get(i));
+                    // Transform a single key word to multiple key words
+                    QueryWordTransformation queryWordTransformation = new QueryWordTransformation();
+                    KeyWordRoomModel keyWordToAdd = swipeFragment.livekeyWords.get(i);
+                    LinkedList<KeyWordRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
+                    for(int k = 0; k < transformedKeyWords.size(); k++){
+                        keyWords.add(transformedKeyWords.get(k));
+                    }
+                    //keyWords.add(swipeFragment.livekeyWords.get(i));
                 }
             }
         }
