@@ -9,11 +9,6 @@ import com.example.rapha.swipeprototype2.swipeCardContent.QuestionSwipeCard;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 import com.example.rapha.swipeprototype2.utils.ListService;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.Interval;
-
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -30,7 +25,7 @@ public class QuestionCardService {
      */
     public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<KeyWordRoomModel> keyWords){
         Log.d("questioncard", "mixQuestionCardsIntoSwipeCards");
-        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 5));
+        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 4));
         // Generate random indices.
         int[] randomIndices = new int[questionSwipeCards.size()];
         for(int i = 0; i < randomIndices.length; i++){

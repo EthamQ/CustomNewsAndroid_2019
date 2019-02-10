@@ -17,7 +17,6 @@ import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.AddDbArticlesToViewState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.ISwipeFragmentState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.NoArticlesState;
 import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.UserChangedLanguageState;

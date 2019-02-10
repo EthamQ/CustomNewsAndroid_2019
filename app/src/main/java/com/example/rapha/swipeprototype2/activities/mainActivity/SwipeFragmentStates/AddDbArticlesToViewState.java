@@ -11,8 +11,11 @@ import java.util.ArrayList;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
 
+    boolean articlesAreAdded;
+
     public AddDbArticlesToViewState(SwipeFragment swipeFragment) {
         super(swipeFragment);
+        articlesAreAdded = false;
         Log.d("statehistory", "AddDbArticlesToViewState");
     }
 
@@ -23,7 +26,10 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      *
      */
     public void addArticlesToView() {
-        if(swipeFragment.dbArticlesToAdd.size() > 0){
+
+        if(swipeFragment.dbArticlesToAdd.size() > 0 && !articlesAreAdded){
+            Log.d("questioncard", "AddDbArticlesToViewState addArticlesToView()");
+            articlesAreAdded = true;
             swipeFragment.addArticlesToView(swipeFragment.dbArticlesToAdd);
             QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeFragment.swipeCardsList, swipeFragment.livekeyWords);
         }
@@ -41,7 +47,6 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      */
     public void setCardsVisibility() {
         swipeFragment.setCardsVisibility(true, true);
-
     }
 
     /**
@@ -49,6 +54,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      */
     @Override
     public void handleAfterAddedToView() {
+        Log.d("questioncard", "DbArticlesAreAddedToViewState handleAfterAddedToView()");
         changeStateTo(new LoadArticlesFromApiState(swipeFragment));
         swipeFragment.swipeFragmentState.loadArticlesFromApi();
     }

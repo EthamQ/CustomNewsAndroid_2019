@@ -16,13 +16,11 @@ public class UserCanSwipeState extends SwipeFragmentState implements ISwipeFragm
      * and let it handle reloading new cards.
      */
     public void handleArticlesOnEmpty() {
+        Log.d("newbug", "UserCanSwipeState handleArticlesOnEmpty() shouldRequestArticles()");
         if(swipeFragment.shouldRequestArticles()){
+            Log.d("newbug", "UserCanSwipeState handleArticlesOnEmpty() shouldRequestArticles() true");
             changeStateTo(new LoadArticlesFromApiState(swipeFragment));
         }
-        //            if(ApiRequestTimeService.forceApiReload(swipeFragment.mainActivity)){
-        //                swipeFragment.swipeCardsList = (ArrayList)ListService.removeAllEntriesStartingAt(swipeFragment.swipeCardsList, 10);
-//                swipeFragment.loadArticlesFromApi();
-//            }
     }
 
     @Override

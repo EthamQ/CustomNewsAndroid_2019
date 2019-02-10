@@ -67,7 +67,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
                             // Call it here to make sure db data already loaded.
                             swipeFragment.swipeFragmentState.addArticlesToView();
                         // Articles only have to be loaded once in the beginning.
-                        newsArticleDbService.getAllArticles().removeObserver(this);
+                        newsArticleDbService.getAllUnreadArticles().removeObserver(this);
                     }
                 });
     }
