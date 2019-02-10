@@ -23,38 +23,5 @@ public class NewsCategoryContainerUtils {
         return result;
     }
 
-    public static String[] getQueryStrings_EN(SwipeFragment swipeFragment, NewsCategory newsCategory){
-        // Get query strings that the user prefers or hasn't set yet.
-        LinkedList<KeyWordRoomModel> keyWords = new LinkedList<>();
-        for(int i = 0; i < swipeFragment.livekeyWords.size(); i++){
-            if(swipeFragment.livekeyWords.get(i).categoryId == newsCategory.getCategoryID()){
-                if(swipeFragment.livekeyWords.get(i).status == KeyWordRoomModel.UNSET
-                        || swipeFragment.livekeyWords.get(i).status == KeyWordRoomModel.LIKED){
-                    // Transform a single key word to multiple key words
-                    QueryWordTransformation queryWordTransformation = new QueryWordTransformation();
-                    KeyWordRoomModel keyWordToAdd = swipeFragment.livekeyWords.get(i);
-                    LinkedList<KeyWordRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
-                    for(int k = 0; k < transformedKeyWords.size(); k++){
-                        keyWords.add(transformedKeyWords.get(k));
-                    }
-                    //keyWords.add(swipeFragment.livekeyWords.get(i));
-                }
-            }
-        }
-
-        // Combine user preferred and default query strings in one array.
-        String[] queryWords = new String[keyWords.size() + newsCategory.DEFAULT_QUERY_STRINGS_EN.length];
-
-        // Add user preferred query strings.
-        for(int i = 0; i < keyWords.size(); i++){
-            queryWords[i] = keyWords.get(i).keyWord;
-        }
-
-        // Add the default query strings.
-        for(int i = 0; i < newsCategory.DEFAULT_QUERY_STRINGS_EN.length; i++){
-            queryWords[i + keyWords.size()] = newsCategory.DEFAULT_QUERY_STRINGS_EN[i];
-        }
-        return  queryWords;
-    }
 }
 

@@ -35,7 +35,7 @@ public class NewsApiQueryBuilder {
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
         //QueryCategory language = categoryContainer.allQueryCategories.get(hashMapKeyLanguage);
-        String[] queryWords = NewsCategoryUtils.getQueryWords(swipeFragment, newsCategory, this.languageId);
+        String[] queryWords = NewsCategoryUtils.getQueryStrings(swipeFragment, newsCategory, this.languageId);
         for (int i = 0; i < queryWords.length; i++){
             queryCategory.queryString += queryWords[i];
             if(!(i == queryWords.length - 1)){

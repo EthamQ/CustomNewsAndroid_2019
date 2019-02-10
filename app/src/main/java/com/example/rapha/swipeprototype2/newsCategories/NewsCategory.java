@@ -27,8 +27,8 @@ public class NewsCategory {
         return this.rating;
     }
 
-    public String[] getQueryStrings_EN(SwipeFragment swipeFragment){
-        return NewsCategoryContainerUtils.getQueryStrings_EN(swipeFragment, this);
+    public String[] getQueryStringsEnglish(SwipeFragment swipeFragment){
+        return NewsCategoryUtils.getQueryStringsEnglish(swipeFragment, this);
     }
 
 
