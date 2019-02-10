@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.activities.viewDimension.StatisticsFragmentDimensions;
+import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsFragmentDimensions;
 import com.example.rapha.swipeprototype2.customAdapters.TopicRowAdapter;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;

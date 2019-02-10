@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.activities.StatisticsIntroSpanService;
+import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsIntroSpanService;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 
 /**
  * A simple {@link Fragment} subclass.

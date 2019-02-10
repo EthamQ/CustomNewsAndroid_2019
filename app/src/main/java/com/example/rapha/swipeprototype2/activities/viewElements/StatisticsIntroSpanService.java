@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.activities;
+package com.example.rapha.swipeprototype2.activities.viewElements;
 
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;

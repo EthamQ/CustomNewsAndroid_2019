@@ -9,4 +9,6 @@
     <color name="black">#000000</color>
     <color name="turquis_dark">#0a5e57</color>
     <color name="gifbckgr">#1b1b1b</color>
+    <color name="white_variation">#f1f1f1</color>
+    <color name="grey_status_bar">#4f4f4f</color>
 </resources>

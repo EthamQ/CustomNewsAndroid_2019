@@ -21,16 +21,16 @@
         android:textSize="@dimen/titleText"
         android:layout_margin="@dimen/text_margin" />
 
-    <TextView
+    <Button
+        android:id="@+id/to_introduction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="270dp"
-        android:layout_marginLeft="@dimen/text_margin"
-        android:layout_marginTop="0dp"
-        android:layout_marginRight="@dimen/text_margin"
-        android:layout_marginBottom="@dimen/text_margin"
-        android:text="@string/how_it_works_text"
-        android:textSize="16dp" />
+        android:text="Go to Introduction"
+        android:layout_margin="@dimen/text_margin"
+        android:background="@drawable/btn_rounded"
+        android:backgroundTint="@color/news_card_text"
+        android:textColor="@color/news_card_background"
+        android:padding="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"

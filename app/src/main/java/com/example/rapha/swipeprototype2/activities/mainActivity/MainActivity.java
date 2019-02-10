@@ -22,6 +22,7 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.dataStorage.StatusDataStorage;
 
 
 public class MainActivity extends AppCompatActivity
@@ -34,11 +35,11 @@ public class MainActivity extends AppCompatActivity
     private boolean shouldShowIntroductionCard = true;
 
     public void introductionCardWasShown(){
-        this.shouldShowIntroductionCard = false;
+        StatusDataStorage.mainActivityStarted();
     }
 
     public boolean showIntroductionCard(){
-        return shouldShowIntroductionCard;
+        return !StatusDataStorage.getMainActivityWasActive();
     }
 
     @Override

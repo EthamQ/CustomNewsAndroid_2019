@@ -1,6 +1,5 @@
-package com.example.rapha.swipeprototype2.activities.viewDimension;
+package com.example.rapha.swipeprototype2.activities.viewElements;
 
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;

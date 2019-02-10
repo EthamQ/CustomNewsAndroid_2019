@@ -21,4 +21,5 @@ public class ArticleDataStorage {
     public static boolean temporaryArticlesExist(){
         return temporaryStoredArticles.size() > 0;
     }
+
 }

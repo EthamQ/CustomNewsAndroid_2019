@@ -25,13 +25,14 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/text_margin">
 
             <TextView
                 android:id="@+id/articleBackground"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:background="@color/black" />
+                android:background="@color/news_card_background" />
 
             <ImageView
                 android:id="@+id/articleImage"
@@ -41,12 +42,16 @@
         </android.support.constraint.ConstraintLayout>
 
 
-
         <TextView
             android:id="@+id/articleContent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_marginStart="@dimen/text_margin"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin_big"
+            android:layout_marginEnd="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="@dimen/text_margin"
             android:text="Example 123 LoremIpsum"
             android:textColor="@color/black" />
 

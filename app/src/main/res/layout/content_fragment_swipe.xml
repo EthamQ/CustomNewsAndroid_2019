@@ -23,7 +23,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/btn_rounded"
-        android:backgroundTint="@color/news_card_background"
+        android:backgroundTint="@color/white_variation"
         android:padding="10dp"
         android:text="Select languages"
         android:textColor="@color/news_card_text"
@@ -38,7 +38,7 @@
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/world"
+        android:background="@drawable/background"
         app:rotation_degrees="15.5"
         tools:context=".MyActivity" />
 
