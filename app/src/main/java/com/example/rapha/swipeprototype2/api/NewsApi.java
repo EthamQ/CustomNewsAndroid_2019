@@ -4,7 +4,9 @@ import android.util.Log;
 
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
+import com.example.rapha.swipeprototype2.utils.HttpRequest;
 import com.example.rapha.swipeprototype2.utils.HttpUtils;
+import com.example.rapha.swipeprototype2.utils.IHttpRequester;
 
 import org.json.JSONObject;
 
@@ -32,6 +34,15 @@ public class NewsApi {
         JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
 		Log.d("oftheday", newsArticleJson.toString());
         return NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, newsCategory);
+	}
+
+	public void queryNewsArticlesAsync(HttpRequest httpRequest, NewsApiQueryBuilder queryBuilder) throws Exception {
+		Log.d("oftheday", "queryNewsArticlesAsync()");
+    	int newsCategory = queryBuilder.getNewsCategory();
+		queryBuilder.buildQuery();
+		String urlForApi = URL_ALL_NEWS_API + ApiKey.API_KEY_NEWS_API + queryBuilder.getQuery();
+		Log.d("URL", urlForApi);
+		HttpUtils.httpGETAsync(httpRequest, urlForApi);
 	}
 
 

@@ -10,6 +10,8 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.HttpRequest;
+import com.example.rapha.swipeprototype2.utils.IHttpRequester;
 
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,14 +36,15 @@ public class ApiService {
         return ApiUtils.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 
-    public static LinkedList<NewsArticle> getArticlesNewsApiByKeyWords(IKeyWordProvider keyWordProvider, String[] queryWords, int language) throws Exception{
+    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, IKeyWordProvider keyWordProvider, String[] queryWords, int language) throws Exception{
+        Log.d("oftheday", "getArticlesNewsApiByKeyWords()");
         NewsApiQueryBuilder builder = new NewsApiQueryBuilder(keyWordProvider, language);
-        builder.setDateFrom(DateUtils.dateToISO8601(new Date()));
+        builder.setDateFrom("2019-02-01");
         builder.addQueryWord(queryWords);
         builder.setNumberOfNewsArticles(10);
         builder.buildQuery();
         NewsApi newsApi = new NewsApi();
         Log.d("oftheday", "Query: " + builder.getQuery());
-        return newsApi.queryNewsArticles(builder);
+        newsApi.queryNewsArticlesAsync(httpRequest, builder);
     }
 }

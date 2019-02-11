@@ -2,10 +2,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFr
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.annotation.AnyThread;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,21 +12,20 @@ import android.view.ViewGroup;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.api.ApiService;
+import com.example.rapha.swipeprototype2.api.NewsApiUtils;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
+import com.example.rapha.swipeprototype2.utils.HttpRequest;
+import com.example.rapha.swipeprototype2.utils.IHttpRequester;
 import com.example.rapha.swipeprototype2.utils.ListService;
 
-import org.xml.sax.XMLReader;
+import org.json.JSONObject;
 
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Observer;
-
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 
 
 /**
@@ -40,11 +36,10 @@ import javax.xml.parsers.SAXParserFactory;
  * Use the {@link NewsOfTheDayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider{
+public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, IHttpRequester {
 
     List<KeyWordRoomModel> topicsToLookFor;
     LinkedList<NewsArticle> articlesOfTheDay = new LinkedList<>();
-
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -91,6 +86,8 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("oftheday", "loadNewsTopics()");
+        loadNewsTopics();
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
     }
@@ -102,11 +99,6 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider{
         }
     }
 
-    @Override
-    public void onActivityCreated (Bundle savedInstanceState){
-            super.onActivityCreated(savedInstanceState);
-        loadNewsTopics();
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -130,6 +122,20 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider{
         return null;
     }
 
+    @Override
+    public void afterHttp(JSONObject newsArticleJson) {
+        Log.d("oftheday", "afterHttp");
+        try {
+            LinkedList<NewsArticle> fetchedArticles = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, 1);
+            if (fetchedArticles.size() > 0) {
+                articlesOfTheDay.add(fetchedArticles.get(0));
+                Log.d("oftheday2", "add article: " + fetchedArticles.get(0).title);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -145,48 +151,47 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider{
         void onFragmentInteraction(Uri uri);
     }
 
-
-    @AnyThread
     public void loadNewsTopics(){
+        Log.d("oftheday", "inside loadNewsTopics()");
+        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        android.arch.lifecycle.Observer observer = getObserverToRequestArticles(keyWordDbService);
+        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
+    }
 
-        Thread thread = new Thread(new Runnable() {
+    public android.arch.lifecycle.Observer getObserverToRequestArticles(KeyWordDbService keyWordDbService){
+        HttpRequest httpRequest = new HttpRequest(NewsOfTheDayFragment.this, 0);
+        android.arch.lifecycle.Observer<List<KeyWordRoomModel>> observer = new android.arch.lifecycle.Observer<List<KeyWordRoomModel>>() {
             @Override
-            public void run() {
-                    KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-                    keyWordDbService.getAllLikedKeyWords().observe(getActivity(), new android.arch.lifecycle.Observer<List<KeyWordRoomModel>>() {
-                        @Override
-                        public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
-                            topicsToLookFor = keyWordRoomModels;
-                            topicsToLookFor = ListService.removeAllEntriesStartingAt(topicsToLookFor,10);
-
-                                for(int i = 0; i < 1; i++) {
-                                    String[] keyWords = new String[]{topicsToLookFor.get(i).keyWord};
-                                    LinkedList<NewsArticle> fetchedArticles = new LinkedList<>();
-                                    try {
-                                        fetchedArticles = ApiService.getArticlesNewsApiByKeyWords(
-                                                NewsOfTheDayFragment.this, keyWords, LanguageSettingsService.INDEX_ENGLISH
-                                        );
-                                        Log.d("oftheday", "Query resultsize: " + fetchedArticles.size());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                        Log.d("oftheday", "Query error: " + e.toString());
-                                        if (android.os.Build.VERSION.SDK_INT > 9) {
-                                            StrictMode.ThreadPolicy policy =
-                                                    new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                                            StrictMode.setThreadPolicy(policy);
-                                        }
-                                        loadNewsTopics();
-                                    }
-                                    if (fetchedArticles.size() > 0) {
-                                        articlesOfTheDay.add(fetchedArticles.get(0));
-                                        Log.d("oftheday2", "add article: " + fetchedArticles.get(0).title);
-                                    }
-                                }
-                        }
-                    });
+            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+                Log.d("oftheday", "Observer on changed: ");
+                topicsToLookFor = keyWordRoomModels;
+                Log.d("oftheday", "topics1: " + topicsToLookFor.size());
+                topicsToLookFor = (List<KeyWordRoomModel>)ListService.removeAllEntriesStartingAt(topicsToLookFor,10);
+                Log.d("oftheday", "topics2: " + topicsToLookFor.size());
+                for(int i = 0; i < topicsToLookFor.size(); i++) {
+                    String[] keyWords = getKeyWordsFromTopics(topicsToLookFor.get(i));
+                    try {
+                        ApiService.getArticlesNewsApiByKeyWords(
+                                httpRequest, NewsOfTheDayFragment.this, keyWords, LanguageSettingsService.INDEX_ENGLISH
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.d("oftheday", "Query error: " + e.toString());
+                    }
+                }
+                keyWordDbService.getAllLikedKeyWords().removeObserver(this);
             }
-        });
-        thread.start();
+        };
+        return observer;
+    }
+
+    public String[] getKeyWordsFromTopics(KeyWordRoomModel topicToLookFor){
+        List<KeyWordRoomModel> transformedKeyWords = new QueryWordTransformation().transformQueryStrings(topicToLookFor);
+        String[] keyWords = new String[transformedKeyWords.size()];
+        for(int k = 0; k < keyWords.length; k++){
+            keyWords[k] = transformedKeyWords.get(k).keyWord;
+        }
+        return keyWords;
     }
 
 

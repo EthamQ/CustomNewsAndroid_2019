@@ -27,12 +27,12 @@ public class QueryWordTransformation {
         dictionary.put("German Politics".toUpperCase(), germanPolitics);
 
         LinkedList<String> programming = new LinkedList<>();
-        germanPolitics.add("C++");
-        germanPolitics.add("Java");
-        germanPolitics.add("Python");
-        germanPolitics.add("Javascript");
-        germanPolitics.add("Typescript");
-        germanPolitics.add("Algorithm");
+        programming.add("C++");
+        programming.add("Java");
+        programming.add("Python");
+        programming.add("Javascript");
+        programming.add("Typescript");
+        programming.add("Algorithm");
         dictionary.put("Programming".toUpperCase(), programming);
     }
 
@@ -45,8 +45,8 @@ public class QueryWordTransformation {
             return toReturn;
         } else{
             for(int i = 0; i < transformedEntries.size(); i++){
-                keyWordRoomModel.keyWord = transformedEntries.get(i);
-                toReturn.add(keyWordRoomModel);
+                KeyWordRoomModel toAdd = new KeyWordRoomModel(transformedEntries.get(i), keyWordRoomModel.categoryId);
+                toReturn.add(toAdd);
             }
             return toReturn;
         }
