@@ -9,10 +9,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsFragmentDimensions;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.api.NewsApiUtils;
+import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
@@ -24,8 +29,11 @@ import com.example.rapha.swipeprototype2.utils.ListService;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifImageView;
 
 
 /**
@@ -38,8 +46,12 @@ import java.util.List;
  */
 public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, IHttpRequester {
 
+    View view;
     List<KeyWordRoomModel> topicsToLookFor;
-    LinkedList<NewsArticle> articlesOfTheDay = new LinkedList<>();
+    ArrayList<NewsArticle> articlesOfTheDay = new ArrayList();
+    ListView articleListView;
+    NewsOfTheDayListAdapter adapter;
+    boolean isLoading;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -89,7 +101,20 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         Log.d("oftheday", "loadNewsTopics()");
         loadNewsTopics();
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
+        view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
+        articleListView = view.findViewById(R.id.articleList);
+        adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
+        articleListView.setAdapter(adapter);
+
+        if(noArticles()){
+            isLoading = true;
+            handleLoading();
+        }
+        return view;
+    }
+
+    public boolean noArticles(){
+        return articlesOfTheDay.size() == 0;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -130,10 +155,20 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
             if (fetchedArticles.size() > 0) {
                 articlesOfTheDay.add(fetchedArticles.get(0));
                 Log.d("oftheday2", "add article: " + fetchedArticles.get(0).title);
+                adapter.notifyDataSetChanged();
+                setListViewHeightBasedOnItems(articleListView);
+                isLoading = false;
+                handleLoading();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void handleLoading(){
+        int visibility = !isLoading ? FrameLayout.INVISIBLE : FrameLayout.VISIBLE;
+        GifImageView loadingGif = view.findViewById(R.id.news_of_the_day_loading);
+        loadingGif.setVisibility(visibility);
     }
 
     /**
@@ -192,6 +227,46 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
             keyWords[k] = transformedKeyWords.get(k).keyWord;
         }
         return keyWords;
+    }
+
+
+    /**
+     * Sets ListView height dynamically based on the height of the items.
+     *
+     * @param listView to be resized
+     * @return true if the listView is successfully resized, false otherwise
+     */
+    public boolean setListViewHeightBasedOnItems(ListView listView) {
+
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter != null) {
+
+            int numberOfItems = listAdapter.getCount();
+
+            // Get total height of all items.
+            int totalItemsHeight = 0;
+            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
+                View item = listAdapter.getView(itemPos, null, listView);
+                item.measure(0, 0);
+                totalItemsHeight += item.getMeasuredHeight();
+            }
+
+            // Get total height of all item dividers.
+            int totalDividersHeight = listView.getDividerHeight() *
+                    (numberOfItems - 1);
+
+            // Set list height.
+            ViewGroup.LayoutParams params = listView.getLayoutParams();
+            params.height = totalItemsHeight + totalDividersHeight;
+            listView.setLayoutParams(params);
+            listView.requestLayout();
+
+            return true;
+
+        } else {
+            return false;
+        }
+
     }
 
 
