@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
+import android.app.Activity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,7 +23,7 @@ public class QuestionSwipeCard implements ISwipeCard {
     }
 
     @Override
-    public void onClick(MainActivity mainActivity) {
+    public void onClick(Activity activity) {
 
     }
 

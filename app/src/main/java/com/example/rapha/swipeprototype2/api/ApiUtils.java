@@ -57,8 +57,8 @@ public class ApiUtils {
      */
     private static LinkedList<NewsArticle> buildQueryAndFetchArticlesFromApi(SwipeFragment swipeFragment, Distribution distribution, Language language)throws Exception{
         NewsApi newsApi = new NewsApi();
-        NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(swipeFragment, language.languageId);
-        queryBuilder.setQueryCategory(distribution.categoryId);
+        NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
+        queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
         return newsApi.queryNewsArticles(queryBuilder);

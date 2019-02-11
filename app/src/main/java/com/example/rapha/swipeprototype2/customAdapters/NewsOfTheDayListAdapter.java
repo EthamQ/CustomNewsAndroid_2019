@@ -29,18 +29,7 @@ public class NewsOfTheDayListAdapter extends ArrayAdapter {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.news_of_the_day_list_item, parent, false);
         }
-        TextView title = convertView.findViewById(R.id.news_of_the_day_title);
-        title.setText(newsArticle.title);
-
-        ImageView imageView = convertView.findViewById(R.id.news_of_the_day_image);
-        try{
-            Picasso.get()
-                    .load(newsArticle.urlToImage)
-                    .error(R.drawable.newsdefault)
-                    .into(imageView);
-        } catch(Exception e){
-            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
-        }
+        newsArticle.setNewsOfTheDayView(convertView);
         return convertView;
     }
 }

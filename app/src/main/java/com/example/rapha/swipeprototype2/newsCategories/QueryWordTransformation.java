@@ -4,6 +4,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordR
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 public class QueryWordTransformation {
 
@@ -50,8 +51,14 @@ public class QueryWordTransformation {
             }
             return toReturn;
         }
+    }
 
-
-
+    public String[] getKeyWordsFromTopics(KeyWordRoomModel topicToLookFor){
+        List<KeyWordRoomModel> transformedKeyWords = transformQueryStrings(topicToLookFor);
+        String[] keyWords = new String[transformedKeyWords.size()];
+        for(int k = 0; k < keyWords.length; k++){
+            keyWords[k] = transformedKeyWords.get(k).keyWord;
+        }
+        return keyWords;
     }
 }

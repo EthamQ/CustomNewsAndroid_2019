@@ -9,8 +9,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.arch.lifecycle.Observer;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
@@ -24,14 +27,16 @@ import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-import com.example.rapha.swipeprototype2.utils.HttpRequest;
-import com.example.rapha.swipeprototype2.utils.IHttpRequester;
+import com.example.rapha.swipeprototype2.http.HttpRequest;
+import com.example.rapha.swipeprototype2.http.IHttpRequester;
+import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
 import com.example.rapha.swipeprototype2.utils.ListService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,15 +51,16 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link NewsOfTheDayFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, IHttpRequester {
+public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
 
     View view;
-    List<KeyWordRoomModel> topicsToLookFor;
     ArrayList<NewsArticle> articlesOfTheDay = new ArrayList();
     ListView articleListView;
     NewsOfTheDayListAdapter adapter;
     NewsArticleDbService newsArticleDbService;
-    boolean isLoading;
+    final int ARTICLE_MINIMUM = 5;
+    // Store observer to remove it in another function.
+    Observer<List<NewsArticleRoomModel>> databaseArticlesObserver;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,6 +75,172 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
 
     public NewsOfTheDayFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
+        init();
+        if(ApiRequestTimeService.forceApiReloadDaily(getActivity())){
+            loadArticlesFromApi();
+        } else{
+            // If no db data calls loadArticlesFromApi() afterwards.
+            loadArticlesFromDatabase();
+        }
+        return view;
+    }
+
+    /**
+     * Called as soon as the http request to the news api received an answer.
+     * @param newsArticleJson
+     */
+    @Override
+    public void httpResultCallback(JSONObject newsArticleJson) {
+        Log.d("oftheday", "httpResultCallback");
+
+        LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
+        try {
+            articlesForKeyword = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, 1);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (articlesForKeyword.size() > 0) {
+            setDateArticlesLoaded();
+            handleLoading(false);
+            handleLoadedApiArticleData(articlesForKeyword);
+        }
+    }
+
+    private void init(){
+        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
+        articleListView = view.findViewById(R.id.articleList);
+        adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
+        articleListView.setAdapter(adapter);
+        articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+                NewsArticle clickedArticle = (NewsArticle)articleListView.getItemAtPosition(position);
+                clickedArticle.onClick(getActivity());
+            }
+        });
+    }
+
+    private void handleLoadedApiArticleData(LinkedList<NewsArticle> articlesForKeyword){
+        int entryToAdd = 0;
+        NewsArticle articleToAdd = articlesForKeyword.get(entryToAdd);
+        articlesOfTheDay.add(articleToAdd);
+        storeArticleInDatabase(articleToAdd);
+        adapter.notifyDataSetChanged();
+        DimensionService.setListViewHeightBasedOnItems(articleListView);
+        Log.d("oftheday2", "add article: " + articlesForKeyword.get(0).title);
+    }
+
+    private void handleLoading(boolean isLoading){
+        int visibilityLoadingGif = isLoading ? FrameLayout.VISIBLE : FrameLayout.INVISIBLE;
+        GifImageView loadingGif = view.findViewById(R.id.news_of_the_day_loading);
+        loadingGif.setVisibility(visibilityLoadingGif);
+    }
+
+    private void loadArticlesFromApi(){
+        Log.d("oftheday", "inside loadArticlesFromApi()");
+        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        Observer observer = getObserverToRequestArticles(keyWordDbService);
+        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
+    }
+
+    private void loadArticlesFromDatabase(){
+        newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
+                databaseArticlesObserver = this;
+                Logging.logArticleModels(storedArticles, "pff");
+                if(articlesEmpty() && storedArticles.size() > 0){
+                    for(int i = 0; i < storedArticles.size(); i++){
+                        articlesOfTheDay.add(newsArticleDbService.createNewsArticle(storedArticles.get(i)));
+                    }
+                    adapter.notifyDataSetChanged();
+                    DimensionService.setListViewHeightBasedOnItems(articleListView);
+                    setTextArticlesLoaded();
+                    handleLoading(false);
+                    newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
+                } else if(allowedToLoadFromApi()){
+                    loadArticlesFromApi();
+                }
+            }
+        });
+    }
+
+    private boolean allowedToLoadFromApi(){
+        boolean firstTime = !ApiRequestTimeService.valueIsSet(
+                getActivity(),
+                ApiRequestTimeService.TIME_OF_RELAOD_DAILY
+        );
+        boolean forceReload = ApiRequestTimeService.forceApiReloadDaily(getActivity());
+        return firstTime || forceReload;
+    }
+
+    private Observer getObserverToRequestArticles(KeyWordDbService keyWordDbService){
+        HttpRequest httpRequest = new HttpRequest(NewsOfTheDayFragment.this, 0);
+        Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+                if(enoughTopics(keyWordRoomModels)){
+                    setTextArticlesLoaded();
+                    handleLoading(true);
+                    List<KeyWordRoomModel> topicsToLookFor = (List<KeyWordRoomModel>)ListService.removeAllEntriesStartingAt(keyWordRoomModels,10);
+                    Log.d("oftheday", "Observer on changed: ");
+                    Log.d("oftheday", "topics1: " + topicsToLookFor.size());
+                    for(int i = 0; i < topicsToLookFor.size(); i++) {
+                        String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
+                        try {
+                            ApiService.getArticlesNewsApiByKeyWords(
+                                    httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
+                            );
+                            if(!(databaseArticlesObserver == null)){
+                                newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(databaseArticlesObserver);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Log.d("oftheday", "Query error: " + e.toString());
+                        }
+                    }
+                    keyWordDbService.getAllLikedKeyWords().removeObserver(this);
+                } else{
+                    handleLoading(false);
+                }
+            }
+        };
+        return observer;
+    }
+
+    private void storeArticleInDatabase(NewsArticle newsArticle){
+        NewsArticleRoomModel insert = newsArticleDbService.createNewsArticleRoomModelToInsert(
+                newsArticle
+        );
+        insert.articleType = NewsArticleRoomModel.NEWS_OF_THE_DAY;
+        newsArticleDbService.insert(insert);
+    }
+
+    private boolean articlesEmpty(){
+        return articlesOfTheDay.size() == 0;
+    }
+
+    private boolean enoughTopics(List<KeyWordRoomModel> topicsToLookFor){
+        return topicsToLookFor.size() >= ARTICLE_MINIMUM;
+    }
+
+    private void setTextArticlesLoaded(){
+        TextView belowHeadline = view.findViewById(R.id.news_of_the_day_info);
+        belowHeadline.setText("Today");
+    }
+
+    private void setDateArticlesLoaded(){
+        ApiRequestTimeService.saveLastLoaded(
+                getActivity(),
+                new Date(),
+                ApiRequestTimeService.TIME_OF_RELAOD_DAILY);
     }
 
     /**
@@ -98,30 +270,6 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         }
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d("oftheday", "loadArticlesFromApi()");
-        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-        // loadArticlesFromApi();
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
-        articleListView = view.findViewById(R.id.articleList);
-        adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
-        articleListView.setAdapter(adapter);
-        loadArticlesFromDatabase();
-
-        if(noArticles()){
-            isLoading = true;
-            handleLoading();
-        }
-        return view;
-    }
-
-    public boolean noArticles(){
-        return articlesOfTheDay.size() == 0;
-    }
-
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -147,36 +295,6 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         mListener = null;
     }
 
-    @Override
-    public List<KeyWordRoomModel> getCurrentKeyWords() {
-        return null;
-    }
-
-    @Override
-    public void afterHttp(JSONObject newsArticleJson) {
-        Log.d("oftheday", "afterHttp");
-        try {
-            LinkedList<NewsArticle> fetchedArticles = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, 1);
-            if (fetchedArticles.size() > 0) {
-                NewsArticle articleToAdd = fetchedArticles.get(0);
-                articlesOfTheDay.add(articleToAdd);
-                storeArticleInDatabase(articleToAdd);
-                Log.d("oftheday2", "add article: " + fetchedArticles.get(0).title);
-                adapter.notifyDataSetChanged();
-                DimensionService.setListViewHeightBasedOnItems(articleListView);
-                isLoading = false;
-                handleLoading();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void handleLoading(){
-        int visibility = !isLoading ? FrameLayout.INVISIBLE : FrameLayout.VISIBLE;
-        GifImageView loadingGif = view.findViewById(R.id.news_of_the_day_loading);
-        loadingGif.setVisibility(visibility);
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -192,79 +310,4 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-    public void loadArticlesFromApi(){
-        Log.d("oftheday", "inside loadArticlesFromApi()");
-        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-        android.arch.lifecycle.Observer observer = getObserverToRequestArticles(keyWordDbService);
-        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
-    }
-
-    public android.arch.lifecycle.Observer getObserverToRequestArticles(KeyWordDbService keyWordDbService){
-        HttpRequest httpRequest = new HttpRequest(NewsOfTheDayFragment.this, 0);
-        android.arch.lifecycle.Observer<List<KeyWordRoomModel>> observer = new android.arch.lifecycle.Observer<List<KeyWordRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
-                Log.d("oftheday", "Observer on changed: ");
-                topicsToLookFor = keyWordRoomModels;
-                Log.d("oftheday", "topics1: " + topicsToLookFor.size());
-                topicsToLookFor = (List<KeyWordRoomModel>)ListService.removeAllEntriesStartingAt(topicsToLookFor,10);
-                Log.d("oftheday", "topics2: " + topicsToLookFor.size());
-                for(int i = 0; i < topicsToLookFor.size(); i++) {
-                    String[] keyWords = getKeyWordsFromTopics(topicsToLookFor.get(i));
-                    try {
-                        ApiService.getArticlesNewsApiByKeyWords(
-                                httpRequest, NewsOfTheDayFragment.this, keyWords, LanguageSettingsService.INDEX_ENGLISH
-                        );
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.d("oftheday", "Query error: " + e.toString());
-                    }
-                }
-                keyWordDbService.getAllLikedKeyWords().removeObserver(this);
-            }
-        };
-        return observer;
-    }
-
-    public String[] getKeyWordsFromTopics(KeyWordRoomModel topicToLookFor){
-        List<KeyWordRoomModel> transformedKeyWords = new QueryWordTransformation().transformQueryStrings(topicToLookFor);
-        String[] keyWords = new String[transformedKeyWords.size()];
-        for(int k = 0; k < keyWords.length; k++){
-            keyWords[k] = transformedKeyWords.get(k).keyWord;
-        }
-        return keyWords;
-    }
-
-
-    public void loadArticlesFromDatabase(){
-        newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), new android.arch.lifecycle.Observer<List<NewsArticleRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
-                Logging.logArticleModels(storedArticles, "pff");
-                for(int i = 0; i < storedArticles.size(); i++){
-                    articlesOfTheDay.add(newsArticleDbService.createNewsArticle(storedArticles.get(i)));
-                }
-                adapter.notifyDataSetChanged();
-                DimensionService.setListViewHeightBasedOnItems(articleListView);
-                if(noArticles()){
-                    loadArticlesFromApi();
-                } else {
-                    isLoading = false;
-                    handleLoading();
-                }
-                newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
-            }
-        });
-    }
-
-    public void storeArticleInDatabase(NewsArticle newsArticle){
-        NewsArticleRoomModel insert = newsArticleDbService.createNewsArticleRoomModelToInsert(
-                newsArticle
-        );
-        insert.articleType = NewsArticleRoomModel.NEWS_OF_THE_DAY;
-        newsArticleDbService.insert(insert);
-    }
-
-
 }

@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
@@ -56,13 +57,13 @@ public class NewsArticle implements Parcelable, ISwipeCard {
 
     /**
      * Open the entire article in ArticleDetailScrollingActivity.
-     * @param mainActivity
+     * @param activity
      */
 	@Override
-    public void onClick(MainActivity mainActivity){
-        Intent intent = new Intent(mainActivity, ArticleDetailScrollingActivity.class);
+    public void onClick(Activity activity){
+        Intent intent = new Intent(activity, ArticleDetailScrollingActivity.class);
         intent.putExtra("clickedArticle", this);
-        mainActivity.startActivity(intent);
+        activity.startActivity(intent);
     }
 
     @Override
@@ -70,6 +71,21 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         TextView mainText = convertView.findViewById(R.id.card_main_text);
         mainText.setText(this.title);
         ImageView imageView = convertView.findViewById(R.id.news_card_image);
+        try{
+            Picasso.get()
+                    .load(this.urlToImage)
+                    .error(R.drawable.newsdefault)
+                    .into(imageView);
+        } catch(Exception e){
+            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+        }
+    }
+
+    public void setNewsOfTheDayView(View convertView){
+        TextView title = convertView.findViewById(R.id.news_of_the_day_title);
+        title.setText(this.title);
+
+        ImageView imageView = convertView.findViewById(R.id.news_of_the_day_image);
         try{
             Picasso.get()
                     .load(this.urlToImage)

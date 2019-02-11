@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.http;
 
 public class HttpRequest {
 

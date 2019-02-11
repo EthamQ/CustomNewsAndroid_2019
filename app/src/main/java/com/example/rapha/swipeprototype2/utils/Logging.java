@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
+import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
@@ -65,6 +66,14 @@ public class Logging {
             Log.d(key, list.get(i).title);
         }
     }
+
+    public static void logSwipeCards(List<ISwipeCard> swipeCardsList, String key){
+        for(int i = 0; i < swipeCardsList.size(); i++){
+            Log.d(key, swipeCardsList.get(i).toString());
+        }
+    }
+
+
 
 
 }

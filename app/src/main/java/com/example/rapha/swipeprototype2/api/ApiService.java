@@ -2,18 +2,14 @@ package com.example.rapha.swipeprototype2.api;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
-import com.example.rapha.swipeprototype2.utils.HttpRequest;
-import com.example.rapha.swipeprototype2.utils.IHttpRequester;
+import com.example.rapha.swipeprototype2.http.HttpRequest;
 
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,9 +32,9 @@ public class ApiService {
         return ApiUtils.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 
-    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, IKeyWordProvider keyWordProvider, String[] queryWords, int language) throws Exception{
+    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language) throws Exception{
         Log.d("oftheday", "getArticlesNewsApiByKeyWords()");
-        NewsApiQueryBuilder builder = new NewsApiQueryBuilder(keyWordProvider, language);
+        NewsApiQueryBuilder builder = new NewsApiQueryBuilder(language);
         builder.setDateFrom("2019-02-01");
         builder.addQueryWord(queryWords);
         builder.setNumberOfNewsArticles(10);

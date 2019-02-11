@@ -4,9 +4,8 @@ import android.util.Log;
 
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-import com.example.rapha.swipeprototype2.utils.HttpRequest;
-import com.example.rapha.swipeprototype2.utils.HttpUtils;
-import com.example.rapha.swipeprototype2.utils.IHttpRequester;
+import com.example.rapha.swipeprototype2.http.HttpRequest;
+import com.example.rapha.swipeprototype2.http.HttpUtils;
 
 import org.json.JSONObject;
 

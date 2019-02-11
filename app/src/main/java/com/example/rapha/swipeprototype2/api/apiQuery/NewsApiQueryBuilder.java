@@ -9,8 +9,7 @@ import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryUtils;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 public class NewsApiQueryBuilder {
-
-    IKeyWordProvider keyWordProvider;
+    
     QueryCategoryContainer categoryContainer;
     private String finalQuery = "";
     private int newsCategory;
@@ -20,9 +19,8 @@ public class NewsApiQueryBuilder {
     public final static String RUSSIAN = "ru";
     public final static String FRENCH = "fr";
 
-    public NewsApiQueryBuilder(IKeyWordProvider keyWordProvider, int languageId){
+    public NewsApiQueryBuilder(int languageId){
         categoryContainer = new QueryCategoryContainer();
-        this.keyWordProvider = keyWordProvider;
         this.setLanguage(languageId);
     }
 
@@ -31,7 +29,7 @@ public class NewsApiQueryBuilder {
      * to the queryWord String.
      * @param newsCategory
      */
-    public void setQueryCategory(int newsCategory){
+    public void setQueryCategory(int newsCategory, IKeyWordProvider keyWordProvider){
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);

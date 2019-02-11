@@ -17,7 +17,6 @@
     tools:context=".activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment">
 
     <TextView
-        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="News Selected by the topics you liked"
@@ -26,9 +25,10 @@
         android:textColor="@color/turquis_dark"/>
 
     <TextView
+        android:id="@+id/news_of_the_day_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Today"
+        android:text="Answer at least 5 questions with yes to see your news of the day"
         android:layout_marginLeft="15dp"
         android:textSize="@dimen/subTitleText"
         android:textColor="@color/turquis_dark"

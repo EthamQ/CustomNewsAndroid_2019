@@ -1,22 +1,15 @@
-package com.example.rapha.swipeprototype2.utils;
+package com.example.rapha.swipeprototype2.http;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class HttpUtils {
 
@@ -113,7 +106,7 @@ public class HttpUtils {
 
 		protected void onPostExecute(JSONObject result) {
 			Log.d("oftheday", "httpGETAsync() onPostExecute");
-			httpRequest.httpRequester.afterHttp(result);
+			httpRequest.httpRequester.httpResultCallback(result);
 		}
 	}
 	
