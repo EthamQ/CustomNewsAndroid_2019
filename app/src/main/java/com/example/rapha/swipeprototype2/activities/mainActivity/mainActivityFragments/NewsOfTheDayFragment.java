@@ -88,6 +88,7 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
         } else{
             // If no db data calls loadArticlesFromApi() afterwards.
             loadArticlesFromDatabase();
+            Log.d("loadDB", "loadArticlesFromDatabase() createviw");
         }
         return view;
     }
@@ -151,11 +152,13 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
     }
 
     private void loadArticlesFromDatabase(){
+        Log.d("loadDB", "loadArticlesFromDatabase()");
         newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
                 databaseArticlesObserver = this;
                 Logging.logArticleModels(storedArticles, "pff");
+                Log.d("loadDB", "storedarticles: " + storedArticles.size());
                 if(articlesEmpty() && storedArticles.size() > 0){
                     for(int i = 0; i < storedArticles.size(); i++){
                         articlesOfTheDay.add(newsArticleDbService.createNewsArticle(storedArticles.get(i)));
@@ -164,6 +167,7 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
                     DimensionService.setListViewHeightBasedOnItems(articleListView);
                     setTextArticlesLoaded();
                     handleLoading(false);
+                    Log.d("loadDB", "removeobserver1 ");
                     newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
                 } else if(allowedToLoadFromApi()){
                     loadArticlesFromApi();
@@ -200,6 +204,7 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
                             );
                             if(!(databaseArticlesObserver == null)){
                                 newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(databaseArticlesObserver);
+                                Log.d("loadDB", "removeobserver2 ");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

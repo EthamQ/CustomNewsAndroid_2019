@@ -41,7 +41,7 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
     public void saveArticlesInDb() {
 //        if(swipeFragment != null){
 //            if(swipeFragment.getActivity() != null){
-//                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAll();
+//                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAllSwipeArticles();
 //                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication())
 //                        .insertNewsArticles(swipeFragment.apiArticlesToAdd);
 //            }

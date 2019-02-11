@@ -30,8 +30,8 @@ public class NewsArticleDbService {
         repository.insert(newsArticleRoomModel);
     }
 
-    public void deleteAll(){
-        repository.deleteAll();
+    public void deleteAllSwipedArticles(){
+        repository.deleteAllSwipeArticles();
     }
 
     public void update(NewsArticleRoomModel newsArticleRoomModel){

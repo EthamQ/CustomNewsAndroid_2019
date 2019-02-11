@@ -27,8 +27,8 @@ public class NewsArticleRepository {
         new InsertNewsArticleAsyncTask(dao).execute(newsArticleRoomModel);
     }
 
-    public void deleteAll(){
-        new DeleteAllNewsArticlesAsyncTask (dao).execute();
+    public void deleteAllSwipeArticles(){
+        new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.SWIPE_CARDS);
     }
 
     public void update(NewsArticleRoomModel newsArticleRoomModel){
@@ -61,7 +61,7 @@ public class NewsArticleRepository {
         }
     }
 
-    private static class DeleteAllNewsArticlesAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class DeleteAllNewsArticlesAsyncTask extends AsyncTask<Integer, Void, Void> {
 
         private INewsArticleDao dao;
 
@@ -69,8 +69,8 @@ public class NewsArticleRepository {
             this.dao = dao;
         }
         @Override
-        protected Void doInBackground(Void... voids) {
-            dao.deleteAllNewsArticles();
+        protected Void doInBackground(Integer... integers) {
+            dao.deleteAllNewsArticles(integers[0]);
             return null;
         }
     }

@@ -27,8 +27,8 @@ public interface INewsArticleDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOneNewsArticle(NewsArticleRoomModel newsArticleRoomModel);
 
-    @Query("DELETE FROM NewsArticles")
-    void deleteAllNewsArticles();
+    @Query("DELETE FROM NewsArticles WHERE articleType = :articleType")
+    void deleteAllNewsArticles(int articleType);
 
     @Update
     void updateNewsArticle(NewsArticleRoomModel newsArticleRoomModel);

@@ -10,7 +10,7 @@ import java.util.Date;
 
 public class ApiRequestTimeService {
 
-    private static String version = "8";
+    private static String version = "15";
     public static String TIME_OF_RELAOD_SWIPE = "time_reload_swipe";
     public static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_SWIPE = 12;
