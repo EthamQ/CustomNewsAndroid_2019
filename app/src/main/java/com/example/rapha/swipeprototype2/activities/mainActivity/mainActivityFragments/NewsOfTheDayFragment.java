@@ -103,13 +103,13 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
                              Bundle savedInstanceState) {
         Log.d("oftheday", "loadArticlesFromApi()");
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-        loadArticlesFromDatabase();
         // loadArticlesFromApi();
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
         articleListView = view.findViewById(R.id.articleList);
         adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
         articleListView.setAdapter(adapter);
+        loadArticlesFromDatabase();
 
         if(noArticles()){
             isLoading = true;
@@ -253,6 +253,7 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
                     isLoading = false;
                     handleLoading();
                 }
+                newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
             }
         });
     }

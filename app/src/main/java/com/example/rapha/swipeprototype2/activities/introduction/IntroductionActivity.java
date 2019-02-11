@@ -41,7 +41,7 @@ public class IntroductionActivity extends AppCompatActivity
     }
 
     public boolean appIsStartedTheFirstTime(){
-        return false;
+        return true;
     }
 
     public void changeToFragment(int fragment){
