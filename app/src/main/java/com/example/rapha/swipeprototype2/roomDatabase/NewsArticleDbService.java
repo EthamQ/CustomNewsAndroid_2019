@@ -39,11 +39,19 @@ public class NewsArticleDbService {
     }
 
     public LiveData<List<NewsArticleRoomModel>> getAllArticles(){
-        return repository.getAllArticles();
+        return repository.getAllSwipeArticles();
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllSwipeArticles(){
+        return repository.getAllSwipeArticles();
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllNewsOfTheDayArticles(){
+        return repository.getAllNewsOfTheDayArticles();
     }
 
     public LiveData<List<NewsArticleRoomModel>> getAllUnreadArticles(){
-        return repository.getAllUnreadArticles();
+        return repository.getAllUnreadSwipeArticles();
     }
 
     public NewsArticleRoomModel createNewsArticleRoomModelToInsert(NewsArticle newsArticle){
@@ -57,14 +65,16 @@ public class NewsArticleDbService {
         dbModel.publishedAt = newsArticle.publishedAt;
         dbModel.content = newsArticle.content;
         dbModel.newsCategory = newsArticle.newsCategory;
+        dbModel.articleType = newsArticle.articleType;
         return dbModel;
     }
 
     public NewsArticleRoomModel createNewsArticleRoomModelToUpdate(NewsArticle newsArticle){
-        NewsArticleRoomModel dbModel = new NewsArticleRoomModel();
+        NewsArticleRoomModel dbModel;
         dbModel = createNewsArticleRoomModelToInsert(newsArticle);
         return dbModel;
     }
+
 
     public NewsArticle createNewsArticle(NewsArticleRoomModel dbModel){
         NewsArticle newsArticle = new NewsArticle();
@@ -77,6 +87,7 @@ public class NewsArticleDbService {
         newsArticle.publishedAt = dbModel.publishedAt;
         newsArticle.content = dbModel.content;
         newsArticle.newsCategory = dbModel.newsCategory;
+        newsArticle.articleType = dbModel.articleType;
         return newsArticle;
     }
 

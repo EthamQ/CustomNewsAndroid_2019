@@ -32,7 +32,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     public String publishedAt;
     public String content;
 	public int newsCategory;
-	public boolean isDefault = false;
+    public int articleType;
 
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many
@@ -51,6 +51,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
 		this.content = "";
 		this.newsCategory = 0;
 		this.totalAmountInThisQuery = 0;
+		this.articleType = NewsArticleRoomModel.SWIPE_CARDS;
 	}
 
     /**

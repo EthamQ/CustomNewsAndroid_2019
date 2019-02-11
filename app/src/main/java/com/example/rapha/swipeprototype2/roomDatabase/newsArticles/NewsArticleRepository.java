@@ -10,15 +10,17 @@ import java.util.List;
 
 public class NewsArticleRepository {
 
-    private LiveData<List<NewsArticleRoomModel>> allArticles;
-    private LiveData<List<NewsArticleRoomModel>> allUnreadArticles;
     private INewsArticleDao dao;
+    private LiveData<List<NewsArticleRoomModel>> allSwipeArticles;
+    private LiveData<List<NewsArticleRoomModel>> allUnreadSwipeArticles;
+    private LiveData<List<NewsArticleRoomModel>> allNewsOfTheDayArticles;
 
     public NewsArticleRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
         dao = database.newsArticleDao();
-        allArticles = dao.getAllNewsArticles();
-        allUnreadArticles = dao.getAllUnreadNewsArticles(false);
+        allSwipeArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.SWIPE_CARDS);
+        allNewsOfTheDayArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        allUnreadSwipeArticles = dao.getAllUnreadSwipeNewsArticles(false, NewsArticleRoomModel.SWIPE_CARDS);
     }
 
     public void insert(NewsArticleRoomModel newsArticleRoomModel){
@@ -33,12 +35,16 @@ public class NewsArticleRepository {
         new UpdateOneNewsArticlesAsyncTask(dao).execute(newsArticleRoomModel);
     }
 
-    public LiveData<List<NewsArticleRoomModel>> getAllArticles(){
-        return allArticles;
+    public LiveData<List<NewsArticleRoomModel>> getAllSwipeArticles(){
+        return allSwipeArticles;
     }
 
-    public LiveData<List<NewsArticleRoomModel>> getAllUnreadArticles(){
-        return allUnreadArticles;
+    public LiveData<List<NewsArticleRoomModel>> getAllNewsOfTheDayArticles(){
+        return allNewsOfTheDayArticles;
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllUnreadSwipeArticles(){
+        return allUnreadSwipeArticles;
     }
 
     private static class InsertNewsArticleAsyncTask extends AsyncTask<NewsArticleRoomModel, Void, Void> {

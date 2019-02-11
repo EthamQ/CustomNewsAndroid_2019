@@ -1,16 +1,24 @@
 package com.example.rapha.swipeprototype2.roomDatabase.newsArticles;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
 
-@Entity(tableName = "NewsArticles")
+@Entity(tableName = "NewsArticles", primaryKeys = {"title", "articleType"})
 public class NewsArticleRoomModel {
 
+    @Ignore
+    public static final int SWIPE_CARDS = 0;
+    @Ignore
+    public static final int NEWS_OF_THE_DAY = 1;
+
     @NonNull
-    @PrimaryKey()
     public String title;
+    @NonNull
+    public int articleType;
+
     public String sourceId;
     public String sourceName;
     public String author;
@@ -32,6 +40,11 @@ public class NewsArticleRoomModel {
         this.publishedAt = "";
         this.content = "";
         this.newsCategory = 0;
+        this.articleType = SWIPE_CARDS;
+    }
+
+    public void belongsToNewsOfTheDay(){
+        this.articleType = NEWS_OF_THE_DAY;
     }
 
 }

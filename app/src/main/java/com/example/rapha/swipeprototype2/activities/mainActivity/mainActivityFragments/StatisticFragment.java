@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsFragmentDimensions;
 import com.example.rapha.swipeprototype2.customAdapters.TopicRowAdapter;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
@@ -192,7 +193,7 @@ public class StatisticFragment extends Fragment {
                     }
                 }
                 topicRowAdapter.notifyDataSetChanged();
-                statisticsFragmentDimensions.setListViewHeightBasedOnItems(listView);
+                DimensionService.setListViewHeightBasedOnItems(listView);
                 if(topicSets.size() > 0){
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");

@@ -10,22 +10,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsFragmentDimensions;
+import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.api.NewsApiUtils;
 import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.utils.HttpRequest;
 import com.example.rapha.swipeprototype2.utils.IHttpRequester;
 import com.example.rapha.swipeprototype2.utils.ListService;
+import com.example.rapha.swipeprototype2.utils.Logging;
 
 import org.json.JSONObject;
 
@@ -51,6 +53,7 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
     ArrayList<NewsArticle> articlesOfTheDay = new ArrayList();
     ListView articleListView;
     NewsOfTheDayListAdapter adapter;
+    NewsArticleDbService newsArticleDbService;
     boolean isLoading;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -98,8 +101,10 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d("oftheday", "loadNewsTopics()");
-        loadNewsTopics();
+        Log.d("oftheday", "loadArticlesFromApi()");
+        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
+        loadArticlesFromDatabase();
+        // loadArticlesFromApi();
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
         articleListView = view.findViewById(R.id.articleList);
@@ -153,10 +158,12 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         try {
             LinkedList<NewsArticle> fetchedArticles = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, 1);
             if (fetchedArticles.size() > 0) {
-                articlesOfTheDay.add(fetchedArticles.get(0));
+                NewsArticle articleToAdd = fetchedArticles.get(0);
+                articlesOfTheDay.add(articleToAdd);
+                storeArticleInDatabase(articleToAdd);
                 Log.d("oftheday2", "add article: " + fetchedArticles.get(0).title);
                 adapter.notifyDataSetChanged();
-                setListViewHeightBasedOnItems(articleListView);
+                DimensionService.setListViewHeightBasedOnItems(articleListView);
                 isLoading = false;
                 handleLoading();
             }
@@ -186,8 +193,8 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
         void onFragmentInteraction(Uri uri);
     }
 
-    public void loadNewsTopics(){
-        Log.d("oftheday", "inside loadNewsTopics()");
+    public void loadArticlesFromApi(){
+        Log.d("oftheday", "inside loadArticlesFromApi()");
         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         android.arch.lifecycle.Observer observer = getObserverToRequestArticles(keyWordDbService);
         keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
@@ -230,43 +237,32 @@ public class NewsOfTheDayFragment extends Fragment implements IKeyWordProvider, 
     }
 
 
-    /**
-     * Sets ListView height dynamically based on the height of the items.
-     *
-     * @param listView to be resized
-     * @return true if the listView is successfully resized, false otherwise
-     */
-    public boolean setListViewHeightBasedOnItems(ListView listView) {
-
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter != null) {
-
-            int numberOfItems = listAdapter.getCount();
-
-            // Get total height of all items.
-            int totalItemsHeight = 0;
-            for (int itemPos = 0; itemPos < numberOfItems; itemPos++) {
-                View item = listAdapter.getView(itemPos, null, listView);
-                item.measure(0, 0);
-                totalItemsHeight += item.getMeasuredHeight();
+    public void loadArticlesFromDatabase(){
+        newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), new android.arch.lifecycle.Observer<List<NewsArticleRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
+                Logging.logArticleModels(storedArticles, "pff");
+                for(int i = 0; i < storedArticles.size(); i++){
+                    articlesOfTheDay.add(newsArticleDbService.createNewsArticle(storedArticles.get(i)));
+                }
+                adapter.notifyDataSetChanged();
+                DimensionService.setListViewHeightBasedOnItems(articleListView);
+                if(noArticles()){
+                    loadArticlesFromApi();
+                } else {
+                    isLoading = false;
+                    handleLoading();
+                }
             }
+        });
+    }
 
-            // Get total height of all item dividers.
-            int totalDividersHeight = listView.getDividerHeight() *
-                    (numberOfItems - 1);
-
-            // Set list height.
-            ViewGroup.LayoutParams params = listView.getLayoutParams();
-            params.height = totalItemsHeight + totalDividersHeight;
-            listView.setLayoutParams(params);
-            listView.requestLayout();
-
-            return true;
-
-        } else {
-            return false;
-        }
-
+    public void storeArticleInDatabase(NewsArticle newsArticle){
+        NewsArticleRoomModel insert = newsArticleDbService.createNewsArticleRoomModelToInsert(
+                newsArticle
+        );
+        insert.articleType = NewsArticleRoomModel.NEWS_OF_THE_DAY;
+        newsArticleDbService.insert(insert);
     }
 
 

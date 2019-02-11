@@ -18,8 +18,11 @@ public interface INewsArticleDao {
     @Query("SELECT * FROM NewsArticles")
     LiveData<List<NewsArticleRoomModel>> getAllNewsArticles();
 
-    @Query("SELECT * FROM NewsArticles WHERE hasBeenRead = :hasBeenRead")
-    LiveData<List<NewsArticleRoomModel>> getAllUnreadNewsArticles(boolean hasBeenRead);
+    @Query("SELECT * FROM NewsArticles WHERE hasBeenRead = :hasBeenRead AND articleType = :articleType")
+    LiveData<List<NewsArticleRoomModel>> getAllUnreadSwipeNewsArticles(boolean hasBeenRead, int articleType);
+
+    @Query("SELECT * FROM NewsArticles WHERE articleType = :articleType")
+    LiveData<List<NewsArticleRoomModel>> getAllNewsArticlesByType(int articleType);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOneNewsArticle(NewsArticleRoomModel newsArticleRoomModel);
