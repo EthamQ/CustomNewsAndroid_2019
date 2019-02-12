@@ -1,7 +1,10 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
+import android.app.Activity;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
@@ -56,5 +59,17 @@ public class KeyWordDbService {
 
     public LiveData<List<KeyWordRoomModel>> getAllLikedKeyWords(){
         return repository.getAllLikedKeyWords();
+    }
+
+    public void resetDailyKeyWords(){
+        getAllKeyWordsArticlesOfTheDay().observeForever(new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+                for(int i = 0; i < keyWordRoomModels.size(); i++){
+                    removeAsNewsOfTheDayKeyWord(keyWordRoomModels.get(i));
+                }
+                getAllKeyWordsArticlesOfTheDay().removeObserver(this);
+            }
+        });
     }
 }

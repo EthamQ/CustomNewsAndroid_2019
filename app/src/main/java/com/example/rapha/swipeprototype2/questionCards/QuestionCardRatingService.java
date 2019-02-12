@@ -23,6 +23,7 @@ public class QuestionCardRatingService {
                 questionSwipeCard.questionKeyword,
                 questionSwipeCard.getNewsCategory()
         );
+        keyWordRoomModel.usedInArticleOfTheDay = false;
         keyWordRoomModel.status = status;
         keyWordRoomModel.shownToUser = new Date();
         swipeFragment.keyWordDbService.update(keyWordRoomModel);

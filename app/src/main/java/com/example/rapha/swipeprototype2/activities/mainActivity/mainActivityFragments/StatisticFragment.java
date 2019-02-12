@@ -156,19 +156,6 @@ public class StatisticFragment extends Fragment {
         keyWordDbService.getAllLikedKeyWords().observe(getActivity(), new Observer<List<KeyWordRoomModel>>(){
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> likedKeyWords) {
-                // Just for testing
-//                TextView likedTopics = view.findViewById(R.id.liked_topics);
-//                String newText = "";
-//                for(int i = 0; i < likedKeyWords.size(); i++){
-//                    newText += likedKeyWords.get(i).keyWord;
-//                    if(i > 0 || i < (likedKeyWords.size() - 1)){
-//                        newText += ", ";
-//                    }
-//                }
-//                if(!newText.isEmpty()){
-//                    likedTopics.setText(newText);
-//                }
-                //
                 String[] topicSet = new String[]{"", "", ""};
                 boolean firstSetFull = !(likedKeyWords.size() < ROW_LENGTH);
                 if(!firstSetFull){
@@ -193,12 +180,12 @@ public class StatisticFragment extends Fragment {
                     }
                 }
                 topicRowAdapter.notifyDataSetChanged();
-                DimensionService.setListViewHeightBasedOnItems(listView);
+                DimensionService.setListViewHeightBasedOnItems(listView, false);
                 if(topicSets.size() > 0){
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");
                 }
-
+                keyWordDbService.getAllLikedKeyWords().removeObserver(this);
             }
         });
     }

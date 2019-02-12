@@ -198,7 +198,7 @@ public class NewsOfTheDayFragment extends Fragment {
                                         articlesOfTheDay.add(newsArticleDbService.createNewsArticle(articlesForKeyWord.get(indexFirstEntry)));
                                         newsArticleDbService.setAsRead(articlesForKeyWord.get(indexFirstEntry));
                                         adapter.notifyDataSetChanged();
-                                        DimensionService.setListViewHeightBasedOnItems(articleListView);
+                                        DimensionService.setListViewHeightBasedOnItems(articleListView, true);
                                         setTextArticlesLoaded();
                                         handleLoading(false);
                                     }

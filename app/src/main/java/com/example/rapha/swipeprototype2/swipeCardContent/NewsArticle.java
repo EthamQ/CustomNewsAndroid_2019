@@ -14,7 +14,9 @@ import com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScr
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
+import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
@@ -89,11 +91,14 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     public void setNewsOfTheDayView(View convertView){
         TextView title = convertView.findViewById(R.id.news_of_the_day_title);
         title.setText(this.title);
+        TextView topic = convertView.findViewById(R.id.news_of_the_day_topic);
+        topic.setText("Because you liked: " + this.foundWithKeyWord);
 
         ImageView imageView = convertView.findViewById(R.id.news_of_the_day_image);
         try{
             Picasso.get()
                     .load(this.urlToImage)
+                    .resize(120, 80)
                     .error(R.drawable.newsdefault)
                     .into(imageView);
         } catch(Exception e){

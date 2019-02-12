@@ -29,7 +29,7 @@ public class KeyWordRoomModel {
     public KeyWordRoomModel(String keyWord, int categoryId){
         this.keyWord = keyWord;
         this.categoryId = categoryId;
-        status= UNSET;
+        status = UNSET;
         usedInArticleOfTheDay = false;
     }
 

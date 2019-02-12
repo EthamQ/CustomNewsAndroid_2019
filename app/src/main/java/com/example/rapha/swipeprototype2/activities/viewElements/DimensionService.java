@@ -12,7 +12,7 @@ public class DimensionService {
      * @param listView to be resized
      * @return true if the listView is successfully resized, false otherwise
      */
-    public static boolean setListViewHeightBasedOnItems(ListView listView) {
+    public static boolean setListViewHeightBasedOnItems(ListView listView, boolean extraWidth) {
 
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter != null) {
@@ -25,6 +25,13 @@ public class DimensionService {
                 View item = listAdapter.getView(itemPos, null, listView);
                 item.measure(0, 0);
                 totalItemsHeight += item.getMeasuredHeight();
+                if(extraWidth){
+                    totalItemsHeight += 20;
+                }
+            }
+
+            if(extraWidth){
+                totalItemsHeight += 200;
             }
 
             // Get total height of all item dividers.
