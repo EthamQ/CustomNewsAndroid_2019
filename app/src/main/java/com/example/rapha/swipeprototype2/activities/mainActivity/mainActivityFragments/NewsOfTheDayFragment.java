@@ -1,5 +1,8 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,10 +19,12 @@ import android.widget.TextView;
 import android.arch.lifecycle.Observer;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.api.NewsApiUtils;
 import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
+import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayScheduler;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
@@ -41,6 +46,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
+
+import static android.content.Context.JOB_SCHEDULER_SERVICE;
 
 
 /**
@@ -83,13 +90,7 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
         init();
-        if(ApiRequestTimeService.forceApiReloadDaily(getActivity())){
-            loadArticlesFromApi();
-        } else{
-            // If no db data calls loadArticlesFromApi() afterwards.
-            loadArticlesFromDatabase();
-            Log.d("loadDB", "loadArticlesFromDatabase() createviw");
-        }
+        loadArticles();
         return view;
     }
 
@@ -144,11 +145,47 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
         loadingGif.setVisibility(visibilityLoadingGif);
     }
 
-    private void loadArticlesFromApi(){
-        Log.d("oftheday", "inside loadArticlesFromApi()");
-        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-        Observer observer = getObserverToRequestArticles(keyWordDbService);
-        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
+    private void loadArticles(){
+        boolean firstTimeLoading = !ApiRequestTimeService.valueIsSetDefault(
+                        getActivity(),
+                        ApiRequestTimeService.TIME_OF_RELAOD_DAILY
+                );
+        if(firstTimeLoading){
+            // loadArticlesFromApi();
+            initScheduler();
+        }
+        else{
+            loadArticlesFromDatabase();
+        }
+
+
+    }
+
+    private void initScheduler(){
+        int testValue = 15 * 60 * 1000;
+        int realValue = 24 * 60 * 60 * 1000;
+        ComponentName componentName = new ComponentName(this.getActivity(), NewsOfTheDayScheduler.class);
+        JobInfo info = new JobInfo.Builder(123, componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .setPeriodic(testValue)
+                .build();
+        JobScheduler scheduler = (JobScheduler) getActivity().getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = scheduler.schedule(info);
+        String TAG = "scheduler";
+        if(resultCode == JobScheduler.RESULT_SUCCESS){
+            Log.d(TAG, "scheduler success");
+        }
+        else{
+            Log.d(TAG, "scheduler failure");
+        }
+    }
+
+    private void cancelJob(){
+        String TAG = "scheduler";
+        JobScheduler scheduler = (JobScheduler) getActivity().getSystemService(JOB_SCHEDULER_SERVICE);
+        scheduler.cancel(123);
+        Log.d(TAG, "job cancelled");
     }
 
     private void loadArticlesFromDatabase(){
@@ -156,7 +193,6 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
         newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
-                databaseArticlesObserver = this;
                 Logging.logArticleModels(storedArticles, "pff");
                 Log.d("loadDB", "storedarticles: " + storedArticles.size());
                 if(articlesEmpty() && storedArticles.size() > 0){
@@ -167,10 +203,7 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
                     DimensionService.setListViewHeightBasedOnItems(articleListView);
                     setTextArticlesLoaded();
                     handleLoading(false);
-                    Log.d("loadDB", "removeobserver1 ");
                     newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
-                } else if(allowedToLoadFromApi()){
-                    loadArticlesFromApi();
                 }
             }
         });
@@ -185,15 +218,21 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
         return firstTime || forceReload;
     }
 
+    private void loadArticlesFromApi(){
+        Log.d("oftheday", "inside loadArticlesFromApi()");
+        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        Observer observer = getObserverToRequestArticles(keyWordDbService);
+        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), observer);
+    }
+
     private Observer getObserverToRequestArticles(KeyWordDbService keyWordDbService){
         HttpRequest httpRequest = new HttpRequest(NewsOfTheDayFragment.this, 0);
         Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
-                if(enoughTopics(keyWordRoomModels)){
+            public void onChanged(@Nullable List<KeyWordRoomModel> topicsToLookFor) {
+                if(enoughTopics(topicsToLookFor)){
                     setTextArticlesLoaded();
                     handleLoading(true);
-                    List<KeyWordRoomModel> topicsToLookFor = (List<KeyWordRoomModel>)ListService.removeAllEntriesStartingAt(keyWordRoomModels,10);
                     Log.d("oftheday", "Observer on changed: ");
                     Log.d("oftheday", "topics1: " + topicsToLookFor.size());
                     for(int i = 0; i < topicsToLookFor.size(); i++) {
@@ -202,10 +241,6 @@ public class NewsOfTheDayFragment extends Fragment implements IHttpRequester {
                             ApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
-                            if(!(databaseArticlesObserver == null)){
-                                newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(databaseArticlesObserver);
-                                Log.d("loadDB", "removeobserver2 ");
-                            }
                         } catch (Exception e) {
                             e.printStackTrace();
                             Log.d("oftheday", "Query error: " + e.toString());

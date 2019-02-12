@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.time;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.rapha.swipeprototype2.utils.DateUtils;
@@ -10,7 +11,7 @@ import java.util.Date;
 
 public class ApiRequestTimeService {
 
-    private static String version = "15";
+    private static String version = "19";
     public static String TIME_OF_RELAOD_SWIPE = "time_reload_swipe";
     public static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_SWIPE = 12;
@@ -34,6 +35,25 @@ public class ApiRequestTimeService {
         }
     }
 
+    public static void saveLastLoadedDefault(Context context, Date date, String key){
+        if(!(context == null)){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong(key, DateUtils.dateToLong(date));
+            editor.commit();
+        }
+    }
+
+    public static Date getLastLoadedDefault(Context context, String key){
+        if(!(context == null)) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            long defaultLoad = DateUtils.dateToLong(new Date());
+            long dateMills = sharedPreferences.getLong(key, defaultLoad);
+            return DateUtils.longToDate(dateMills);
+        } else return new Date();
+    }
+
+
     public static Date getLastLoaded(Activity activity, String key){
         if(!(activity == null)) {
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
@@ -46,6 +66,15 @@ public class ApiRequestTimeService {
     public static boolean valueIsSet(Activity activity, String key){
         if(!(activity == null)) {
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
+            long value = sharedPreferences.getLong(key, -1);
+            return value != -1;
+        }
+        else return true;
+    }
+
+    public static boolean valueIsSetDefault(Context context, String key){
+        if(!(context == null)) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             long value = sharedPreferences.getLong(key, -1);
             return value != -1;
         }
