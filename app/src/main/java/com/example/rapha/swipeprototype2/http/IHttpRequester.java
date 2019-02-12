@@ -4,5 +4,5 @@ import org.json.JSONObject;
 
 public interface IHttpRequester {
 
-    void httpResultCallback(JSONObject newsArticleJson);
+    void httpResultCallback(HttpRequestInfo httpRequestInfo);
 }

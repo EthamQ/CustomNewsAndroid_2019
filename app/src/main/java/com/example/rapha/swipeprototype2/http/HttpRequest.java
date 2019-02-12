@@ -3,10 +3,10 @@ package com.example.rapha.swipeprototype2.http;
 public class HttpRequest {
 
     IHttpRequester httpRequester;
-    int informationCode;
+    HttpRequestInfo requestInfo;
 
-    public HttpRequest(IHttpRequester httpRequester, int informationCode){
+    public HttpRequest(IHttpRequester httpRequester, HttpRequestInfo requestInfo){
         this.httpRequester = httpRequester;
-        this.informationCode = informationCode;
+        this.requestInfo = requestInfo;
     }
 }

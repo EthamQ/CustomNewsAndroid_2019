@@ -13,15 +13,21 @@ import org.json.JSONObject;
 
 public class HttpUtils {
 
+	/**
+	 * Calls the httpResultCallback() function of the class calling this function
+	 * with the received data.
+	 * The calling class is defined in the HttpRequest object.
+	 * @param httpRequest
+	 * @param url
+	 */
 	public static void httpGETAsync(HttpRequest httpRequest, String url) {
-		Log.d("oftheday", "httpGETAsync()");
-		new DownloadImageTask(httpRequest).execute(url);
+		new HttpGetAsync(httpRequest).execute(url);
 	}
 	
 	/**
-	 * Sends a http get request to "url".
+	 * Sends a http get request to the specified url.
 	 * @param url 
-	 * @return returns the answer to the requestas a JSONObject.
+	 * @return returns the answer to the request as a JSONObject.
 	 * @throws Exception
 	 */
 	public static JSONObject httpGET(String url) throws Exception {
@@ -59,9 +65,9 @@ public class HttpUtils {
 
 
 
-	private static class DownloadImageTask extends AsyncTask<String, Void, JSONObject> {
+	private static class HttpGetAsync extends AsyncTask<String, Void, JSONObject> {
 		HttpRequest httpRequest;
-		public DownloadImageTask(HttpRequest httpRequest) {
+		public HttpGetAsync(HttpRequest httpRequest) {
 			this.httpRequest = httpRequest;
 		}
 
@@ -91,13 +97,13 @@ public class HttpUtils {
 				reader.close();
 			}
 			catch(Exception e){
-				Log.d("oftheday", "httpGETAsync() doInBackground error: " + e.toString());
 				e.printStackTrace();
 			}
 			JSONObject json = new JSONObject();
 			try {
 				json = new JSONObject(response.toString());
 			} catch (JSONException e) {
+				httpRequest.requestInfo.setErrorOccurred(true);
 				e.printStackTrace();
 			}
 			Log.d("oftheday", "httpGETAsync() doInBackground jsonlength: " + json.length());
@@ -106,7 +112,8 @@ public class HttpUtils {
 
 		protected void onPostExecute(JSONObject result) {
 			Log.d("oftheday", "httpGETAsync() onPostExecute");
-			httpRequest.httpRequester.httpResultCallback(result);
+			httpRequest.requestInfo.setData(result);
+			httpRequest.httpRequester.httpResultCallback(httpRequest.requestInfo);
 		}
 	}
 	

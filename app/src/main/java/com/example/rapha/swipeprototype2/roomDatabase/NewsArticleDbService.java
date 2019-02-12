@@ -30,6 +30,14 @@ public class NewsArticleDbService {
         repository.insert(newsArticleRoomModel);
     }
 
+    public void insert(NewsArticle newsArticle){
+        NewsArticleRoomModel insert = createNewsArticleRoomModelToInsert(
+                newsArticle
+        );
+        insert.articleType = NewsArticleRoomModel.NEWS_OF_THE_DAY;
+        insert(insert);
+    }
+
     public void deleteAllSwipedArticles(){
         repository.deleteAllSwipeArticles();
     }
