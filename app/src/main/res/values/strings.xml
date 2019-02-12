@@ -24,7 +24,7 @@
         if not swipe it to the left.
         This app will remember what kind of topics you\'re interested in and show
         you more articles related to that topic.
-        If you want to know what kind of data the app collects about you just go to
+        If you want to know what kind of requestResponse the app collects about you just go to
         My Statistics.
     </string>
 
@@ -128,7 +128,7 @@
         Every day we adjust the news we show to you according to your preferred CATEGORIES and TOPICS.
     </string>
     <string name="explain_statistic_below_text2">
-        In MY STATISTICS you can always check out the data we collected about you.
+        In MY STATISTICS you can always check out the requestResponse we collected about you.
     </string>
 
     <string name="introcard_right">

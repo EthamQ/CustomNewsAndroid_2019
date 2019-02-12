@@ -46,6 +46,16 @@ public class NewsArticleDbService {
         repository.update(newsArticleRoomModel);
     }
 
+    public void setAsRead(NewsArticleRoomModel newsArticleRoomModel){
+        newsArticleRoomModel.hasBeenRead = true;
+        repository.update(newsArticleRoomModel);
+    }
+
+    public void setAsArchived(NewsArticleRoomModel newsArticleRoomModel){
+        newsArticleRoomModel.archived = true;
+        repository.update(newsArticleRoomModel);
+    }
+
     public LiveData<List<NewsArticleRoomModel>> getAllArticles(){
         return repository.getAllSwipeArticles();
     }
@@ -54,12 +64,32 @@ public class NewsArticleDbService {
         return repository.getAllSwipeArticles();
     }
 
+    public LiveData<List<NewsArticleRoomModel>> getAllNewsOfTheDayArticlesByKeyWord(String keyWord){
+        return repository.getAllNewsOfTheDayArticlesByKeyWord(keyWord);
+    }
+
+    public  LiveData<List<NewsArticleRoomModel>> getOneNewsArticle(String title, int articleType){
+        return repository.getOneNewsArticle(title, articleType);
+    }
+
     public LiveData<List<NewsArticleRoomModel>> getAllNewsOfTheDayArticles(){
         return repository.getAllNewsOfTheDayArticles();
     }
 
-    public LiveData<List<NewsArticleRoomModel>> getAllUnreadArticles(){
+    public LiveData<List<NewsArticleRoomModel>> getAllUnreadSwipeArticles(){
         return repository.getAllUnreadSwipeArticles();
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllUnreadDailyArticles(){
+        return repository.getAllUnreadNewsOfTheDayArticles();
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllReadDailyArticles(){
+        return repository.getAllReadNewsOfTheDayArticles();
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllDailyArticlesNotArchived(){
+        return repository.getAllDailyArticlesNotArchived();
     }
 
     public NewsArticleRoomModel createNewsArticleRoomModelToInsert(NewsArticle newsArticle){
@@ -74,6 +104,9 @@ public class NewsArticleDbService {
         dbModel.content = newsArticle.content;
         dbModel.newsCategory = newsArticle.newsCategory;
         dbModel.articleType = newsArticle.articleType;
+        dbModel.archived = newsArticle.archived;
+        dbModel.hasBeenRead = newsArticle.hasBeenRead;
+        dbModel.foundWithKeyWord = newsArticle.foundWithKeyWord;
         return dbModel;
     }
 
@@ -96,6 +129,9 @@ public class NewsArticleDbService {
         newsArticle.content = dbModel.content;
         newsArticle.newsCategory = dbModel.newsCategory;
         newsArticle.articleType = dbModel.articleType;
+        newsArticle.archived = dbModel.archived;
+        newsArticle.hasBeenRead = dbModel.hasBeenRead;
+        newsArticle.foundWithKeyWord = dbModel.foundWithKeyWord;
         return newsArticle;
     }
 

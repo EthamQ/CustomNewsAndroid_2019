@@ -38,8 +38,20 @@ public class KeyWordDbService {
         repository.update(keyWordRoomModel);
     }
 
+    public void setAsNewsOfTheDayKeyWord(KeyWordRoomModel keyWordRoomModel){
+        repository.setUsedInArticleOfTheDay(keyWordRoomModel, true);
+    }
+
+    public void removeAsNewsOfTheDayKeyWord(KeyWordRoomModel keyWordRoomModel){
+        repository.setUsedInArticleOfTheDay(keyWordRoomModel, false);
+    }
+
     public LiveData<List<KeyWordRoomModel>> getAllKeyWords(){
         return repository.getAllKeyWords();
+    }
+
+    public LiveData<List<KeyWordRoomModel>> getAllKeyWordsArticlesOfTheDay(){
+        return repository.getAllKeyWords(true);
     }
 
     public LiveData<List<KeyWordRoomModel>> getAllLikedKeyWords(){

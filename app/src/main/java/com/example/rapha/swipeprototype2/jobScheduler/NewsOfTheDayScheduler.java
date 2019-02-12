@@ -18,6 +18,7 @@ import com.example.rapha.swipeprototype2.notifications.NewsOfTheDayNotificationS
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
 
@@ -31,32 +32,54 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
 
     String TAG = "scheduler";
     NewsArticleDbService newsArticleDbService;
+    KeyWordDbService keyWordDbService;
+    boolean notificationWasSent = false;
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         Log.d(TAG, "job started");
         newsArticleDbService = NewsArticleDbService.getInstance(getApplication());
-        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getApplication());
-        Observer observer = getObserverToRequestArticles(keyWordDbService, jobParameters);
+        keyWordDbService = KeyWordDbService.getInstance(getApplication());
+        // To not show them to the user again.
+        setReadArticlesToArchived();
+        // Request articles for liked keywords.
+        Observer observer = getObserverToRequestArticles(jobParameters);
         keyWordDbService.getAllLikedKeyWords().observeForever(observer);
         return true;
     }
 
-    private Observer getObserverToRequestArticles(KeyWordDbService keyWordDbService, JobParameters jobParameters){
-        HttpRequestInfo httpRequestInfo = new HttpRequestInfo();
-        HttpRequest httpRequest = new HttpRequest(NewsOfTheDayScheduler.this, httpRequestInfo);
+    private void setReadArticlesToArchived(){
+        newsArticleDbService.getAllReadDailyArticles().observeForever(new Observer<List<NewsArticleRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<NewsArticleRoomModel> readArticles) {
+                if(readArticles.size() > 0){
+                    for(int i = 0; i < readArticles.size(); i++){
+                        newsArticleDbService.setAsArchived(readArticles.get(i));
+                    }
+                }
+            }
+        });
+    }
+
+    int numberOfRequests = 0;
+    private Observer getObserverToRequestArticles(JobParameters jobParameters){
+        this.jobParameters = jobParameters;
         Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topicsToLookFor) {
                 if(topicsToLookFor.size() >= NewsOfTheDayFragment.ARTICLE_MINIMUM){
                     Log.d(TAG, "in onchanged");
+                    numberOfRequests = topicsToLookFor.size();
                     for(int i = 0; i < topicsToLookFor.size(); i++) {
+                        HttpRequestInfo httpRequestInfo = new HttpRequestInfo();
+                        httpRequestInfo.setDataOfRequester(topicsToLookFor.get(i).keyWord);
+                        HttpRequest httpRequest = new HttpRequest(NewsOfTheDayScheduler.this, httpRequestInfo);
+                        keyWordDbService.setAsNewsOfTheDayKeyWord(topicsToLookFor.get(i));
                         String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
                             ApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
-                            jobFinished(jobParameters, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                             jobFinished(jobParameters, true);
@@ -75,23 +98,36 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
         return true;
     }
 
+    int numberResults = 0;
+    JobParameters jobParameters;
     @Override
     public void httpResultCallback(HttpRequestInfo info) {
+        numberResults++;
         Log.d(TAG, "reached httpResultCallback");
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
-        JSONObject newsArticleJson = (JSONObject) info.getData();
+        JSONObject newsArticleJson = (JSONObject) info.getRequestResponse();
         try {
             articlesForKeyword = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, -1);
         } catch (Exception e) {
             e.printStackTrace();
         }
         if(articlesForKeyword.size() > 0){
-            NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
+            if(!notificationWasSent){
+                // NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
+                notificationWasSent = true;
+            }
             setDateArticlesLoaded();
-            int entryToAdd = 0;
-            NewsArticle articleToAdd = articlesForKeyword.get(entryToAdd);
-            Log.d(TAG, "adds this article to db: " + articlesForKeyword.get(entryToAdd));
-            newsArticleDbService.insert(articleToAdd);
+            for(int i = 0; i < articlesForKeyword.size(); i++) {
+                Log.d(TAG, "adds this article to db: " + articlesForKeyword.get(i));
+
+                NewsArticle articleToAdd = articlesForKeyword.get(i);
+                articleToAdd.foundWithKeyWord = (String) info.getDataOfRequester();
+                newsArticleDbService.insert(articleToAdd);
+            }
+        }
+        if(numberResults == numberOfRequests){
+            jobFinished(jobParameters, false);
+            NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
         }
     }
 

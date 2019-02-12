@@ -19,10 +19,19 @@ public interface INewsArticleDao {
     LiveData<List<NewsArticleRoomModel>> getAllNewsArticles();
 
     @Query("SELECT * FROM NewsArticles WHERE hasBeenRead = :hasBeenRead AND articleType = :articleType")
-    LiveData<List<NewsArticleRoomModel>> getAllUnreadSwipeNewsArticles(boolean hasBeenRead, int articleType);
+    LiveData<List<NewsArticleRoomModel>> getAllUnreadNewsArticles(boolean hasBeenRead, int articleType);
 
     @Query("SELECT * FROM NewsArticles WHERE articleType = :articleType")
     LiveData<List<NewsArticleRoomModel>> getAllNewsArticlesByType(int articleType);
+
+    @Query("SELECT * FROM NewsArticles WHERE title = :title AND articleType = :articleType")
+    LiveData<List<NewsArticleRoomModel>> getOneNewsArticle(String title, int articleType);
+
+    @Query("SELECT * FROM NewsArticles WHERE archived = :archived AND articleType = :articleType")
+    LiveData<List<NewsArticleRoomModel>> getAllNewsArticles(int articleType, boolean archived);
+
+    @Query("SELECT * FROM NewsArticles WHERE foundWithKeyWord = :foundWithKeyWord AND articleType = :articleType AND archived = :archived")
+    LiveData<List<NewsArticleRoomModel>> getAllNewsArticlesByKeyWord(String foundWithKeyWord, int articleType, boolean archived);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertOneNewsArticle(NewsArticleRoomModel newsArticleRoomModel);

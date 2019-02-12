@@ -4,7 +4,17 @@ public class HttpRequestInfo {
 
     private int informationCode;
     private boolean errorOccurred;
-    private Object data;
+    private Object requestResponse;
+
+    public Object getDataOfRequester() {
+        return dataOfRequester;
+    }
+
+    public void setDataOfRequester(Object dataOfRequester) {
+        this.dataOfRequester = dataOfRequester;
+    }
+
+    private Object dataOfRequester;
     private static final int DEFAULT_CODE = -1;
 
     public HttpRequestInfo(){
@@ -28,11 +38,11 @@ public class HttpRequestInfo {
         this.errorOccurred = errorOccurred;
     }
 
-    public Object getData() {
-        return data;
+    public Object getRequestResponse() {
+        return requestResponse;
     }
 
-    public void setData(Object data) {
-        this.data = data;
+    public void setRequestResponse(Object requestResponse) {
+        this.requestResponse = requestResponse;
     }
 }

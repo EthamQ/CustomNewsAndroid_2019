@@ -1,10 +1,13 @@
 package com.example.rapha.swipeprototype2.roomDatabase.newsArticles;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 @Entity(tableName = "NewsArticles", primaryKeys = {"title", "articleType"})
 public class NewsArticleRoomModel {
@@ -29,6 +32,8 @@ public class NewsArticleRoomModel {
     public String content;
     public int newsCategory;
     public boolean hasBeenRead = false;
+    public boolean archived = false;
+    public String foundWithKeyWord;
 
     public NewsArticleRoomModel(){
         this.sourceId = "";

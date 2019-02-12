@@ -13,14 +13,22 @@ public class NewsArticleRepository {
     private INewsArticleDao dao;
     private LiveData<List<NewsArticleRoomModel>> allSwipeArticles;
     private LiveData<List<NewsArticleRoomModel>> allUnreadSwipeArticles;
+    private LiveData<List<NewsArticleRoomModel>> allUnreadNewsOfTheDayArticles;
+    private LiveData<List<NewsArticleRoomModel>> allReadNewsOfTheDayArticles;
     private LiveData<List<NewsArticleRoomModel>> allNewsOfTheDayArticles;
+    private LiveData<List<NewsArticleRoomModel>> allDailyArticlesNotArchived;
 
     public NewsArticleRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
         dao = database.newsArticleDao();
+
         allSwipeArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.SWIPE_CARDS);
+        allUnreadSwipeArticles = dao.getAllUnreadNewsArticles(false, NewsArticleRoomModel.SWIPE_CARDS);
+
+        allUnreadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(false, NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        allReadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(true, NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        allDailyArticlesNotArchived = dao.getAllNewsArticles(NewsArticleRoomModel.NEWS_OF_THE_DAY, false);
         allNewsOfTheDayArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.NEWS_OF_THE_DAY);
-        allUnreadSwipeArticles = dao.getAllUnreadSwipeNewsArticles(false, NewsArticleRoomModel.SWIPE_CARDS);
     }
 
     public void insert(NewsArticleRoomModel newsArticleRoomModel){
@@ -29,6 +37,10 @@ public class NewsArticleRepository {
 
     public void deleteAllSwipeArticles(){
         new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.SWIPE_CARDS);
+    }
+
+    public  LiveData<List<NewsArticleRoomModel>> getOneNewsArticle(String title, int articleType){
+        return dao.getOneNewsArticle(title, articleType);
     }
 
     public void update(NewsArticleRoomModel newsArticleRoomModel){
@@ -43,8 +55,24 @@ public class NewsArticleRepository {
         return allNewsOfTheDayArticles;
     }
 
+    public LiveData<List<NewsArticleRoomModel>> getAllNewsOfTheDayArticlesByKeyWord(String keyWord){
+        return dao.getAllNewsArticlesByKeyWord(keyWord, NewsArticleRoomModel.NEWS_OF_THE_DAY, false);
+    }
+
     public LiveData<List<NewsArticleRoomModel>> getAllUnreadSwipeArticles(){
         return allUnreadSwipeArticles;
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllUnreadNewsOfTheDayArticles(){
+        return allUnreadNewsOfTheDayArticles;
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllReadNewsOfTheDayArticles(){
+        return allReadNewsOfTheDayArticles;
+    }
+
+    public LiveData<List<NewsArticleRoomModel>> getAllDailyArticlesNotArchived(){
+        return allDailyArticlesNotArchived;
     }
 
     private static class InsertNewsArticleAsyncTask extends AsyncTask<NewsArticleRoomModel, Void, Void> {

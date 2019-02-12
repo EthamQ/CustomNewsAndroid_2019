@@ -24,11 +24,13 @@ public class KeyWordRoomModel {
     public int categoryId;
     public int status;
     public Date shownToUser;
+    public boolean usedInArticleOfTheDay;
 
     public KeyWordRoomModel(String keyWord, int categoryId){
         this.keyWord = keyWord;
         this.categoryId = categoryId;
         status= UNSET;
+        usedInArticleOfTheDay = false;
     }
 
     @Override

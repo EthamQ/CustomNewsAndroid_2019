@@ -112,7 +112,7 @@ public class HttpUtils {
 
 		protected void onPostExecute(JSONObject result) {
 			Log.d("oftheday", "httpGETAsync() onPostExecute");
-			httpRequest.requestInfo.setData(result);
+			httpRequest.requestInfo.setRequestResponse(result);
 			httpRequest.httpRequester.httpResultCallback(httpRequest.requestInfo);
 		}
 	}

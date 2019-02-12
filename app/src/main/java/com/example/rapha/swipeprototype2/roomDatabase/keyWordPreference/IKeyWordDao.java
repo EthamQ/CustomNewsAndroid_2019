@@ -17,6 +17,9 @@ public interface IKeyWordDao {
     @Query("SELECT * FROM KeyWordPreference")
     LiveData<List<KeyWordRoomModel>> getAllKeyWords();
 
+    @Query("SELECT * FROM KeyWordPreference WHERE usedInArticleOfTheDay = :usedInArticleOfTheDay")
+    LiveData<List<KeyWordRoomModel>> getAllKeyWords(boolean usedInArticleOfTheDay);
+
     @Query("SELECT * FROM KeyWordPreference WHERE status = :status")
     LiveData<List<KeyWordRoomModel>> getKeyWordsByStatus(int status);
 

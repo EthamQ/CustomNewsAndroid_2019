@@ -52,7 +52,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
      */
     private void loadDatabaseCards(){
         final NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication());
-        newsArticleDbService.getAllUnreadArticles().observe(
+        newsArticleDbService.getAllUnreadSwipeArticles().observe(
                 swipeFragment.getActivity(),
                 new Observer<List<NewsArticleRoomModel>>() {
                     @Override
@@ -67,7 +67,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
                             // Call it here to make sure db data already loaded.
                             swipeFragment.swipeFragmentState.addArticlesToView();
                         // Articles only have to be loaded once in the beginning.
-                        newsArticleDbService.getAllUnreadArticles().removeObserver(this);
+                        newsArticleDbService.getAllUnreadSwipeArticles().removeObserver(this);
                     }
                 });
     }

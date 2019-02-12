@@ -14,6 +14,7 @@ import com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScr
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
@@ -32,6 +33,9 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     public Bitmap imageForTextView;
     public String publishedAt;
     public String content;
+    public String foundWithKeyWord;
+    public boolean hasBeenRead;
+    public boolean archived;
 	public int newsCategory;
     public int articleType;
 
@@ -52,6 +56,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
 		this.content = "";
 		this.newsCategory = 0;
 		this.totalAmountInThisQuery = 0;
+		foundWithKeyWord = "";
 		this.articleType = NewsArticleRoomModel.SWIPE_CARDS;
 	}
 
@@ -99,19 +104,20 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     @Override
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
-        userReadArticle(swipeFragment);
+        userReadArticle(swipeFragment.getActivity());
     }
     @Override
     public void dislike(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
-        userReadArticle(swipeFragment);
+        userReadArticle(swipeFragment.getActivity());
     }
 
-    private void userReadArticle(SwipeFragment swipeFragment){
+    public void userReadArticle(Activity activity){
+        NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
             NewsArticleRoomModel readArticle =
-                    swipeFragment.newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
+                    newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
             readArticle.hasBeenRead = true;
-            swipeFragment.newsArticleDbService.update(readArticle);
+            newsArticleDbService.update(readArticle);
         }
 
 

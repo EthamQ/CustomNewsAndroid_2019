@@ -9,6 +9,7 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.http.HttpRequest;
+import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,9 +36,9 @@ public class ApiService {
     public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language) throws Exception{
         Log.d("oftheday", "getArticlesNewsApiByKeyWords()");
         NewsApiQueryBuilder builder = new NewsApiQueryBuilder(language);
-        builder.setDateFrom("2019-02-01");
+        builder.setDateFrom(DateUtils.getDateBefore(7));
         builder.addQueryWord(queryWords);
-        builder.setNumberOfNewsArticles(10);
+        builder.setNumberOfNewsArticles(MAX_NUMBER_OF_ARTICLES);
         builder.buildQuery();
         NewsApi newsApi = new NewsApi();
         Log.d("oftheday", "Query: " + builder.getQuery());

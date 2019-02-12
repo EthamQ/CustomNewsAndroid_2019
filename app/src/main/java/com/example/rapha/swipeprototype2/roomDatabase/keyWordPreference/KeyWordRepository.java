@@ -33,8 +33,17 @@ public class KeyWordRepository {
         new UpdateOneKeyWordAsyncTask (dao).execute(keyWordRoomModel);
     }
 
+    public void setUsedInArticleOfTheDay(KeyWordRoomModel keyWordRoomModel, boolean usedInArticleOfTheDay){
+        keyWordRoomModel.usedInArticleOfTheDay = usedInArticleOfTheDay;
+        update(keyWordRoomModel);
+    }
+
     public LiveData<List<KeyWordRoomModel>> getAllKeyWords(){
         return allKeyWords;
+    }
+
+    public LiveData<List<KeyWordRoomModel>> getAllKeyWords(boolean usedInArticleOfTheDay){
+        return dao.getAllKeyWords(usedInArticleOfTheDay);
     }
 
     public LiveData<List<KeyWordRoomModel>> getAllLikedKeyWords(){
