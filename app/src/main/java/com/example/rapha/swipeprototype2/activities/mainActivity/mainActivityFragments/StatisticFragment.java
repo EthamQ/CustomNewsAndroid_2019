@@ -185,7 +185,6 @@ public class StatisticFragment extends Fragment {
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");
                 }
-                keyWordDbService.getAllLikedKeyWords().removeObserver(this);
             }
         });
     }

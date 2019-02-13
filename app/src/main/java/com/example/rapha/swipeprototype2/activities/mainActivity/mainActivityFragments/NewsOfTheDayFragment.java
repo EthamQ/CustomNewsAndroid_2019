@@ -171,7 +171,8 @@ public class NewsOfTheDayFragment extends Fragment {
 //            }
 //        });
 
-        getOneArticleForEveryTopicOfTheDay();
+        // getOneArticleForEveryTopicOfTheDay();
+        getTopicsOfTheDay();
     }
 
     private void getOneArticleForEveryTopicOfTheDay(){
@@ -190,28 +191,107 @@ public class NewsOfTheDayFragment extends Fragment {
                         newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
                             @Override
                             public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForKeyWord) {
+                                Log.d(TAG, "current topic below: " + currentTopic);
                                 //Log.d(TAG, "onchanged articlesforkeyword size: " + articlesForKeyWord.size());
-                                if(articlesForKeyWord.size() > 0){
+                                if(articlesForKeyWord.size() > 0 && articlesOfTheDay.size() < topics.size()){
                                     int indexFirstEntry = 0;
                                     Log.d(TAG, "add article:: " + articlesForKeyWord.get(indexFirstEntry).hasBeenRead + ", " +articlesForKeyWord.get(indexFirstEntry).archived + ", " + articlesForKeyWord.get(indexFirstEntry).title);
-                                    if(articlesOfTheDay.size() < topics.size()){
                                         articlesOfTheDay.add(newsArticleDbService.createNewsArticle(articlesForKeyWord.get(indexFirstEntry)));
                                         newsArticleDbService.setAsRead(articlesForKeyWord.get(indexFirstEntry));
                                         adapter.notifyDataSetChanged();
                                         DimensionService.setListViewHeightBasedOnItems(articleListView, true);
                                         setTextArticlesLoaded();
                                         handleLoading(false);
-                                    }
-                                    //keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(keyWordObserver);
-                                    // newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
+
+                                    newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
+
+                                } else if(articlesOfTheDay.size() == topics.size()){
+                                    // keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(keyWordObserver);
+                                    keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(keyWordObserver);
+
                                 }
                             }
                         });
-
                     }
                 }
             }
         });
+    }
+
+    private void getTopicsOfTheDay(){
+        String TAG = "avoidrepeat";
+        Log.d(TAG, "getOneArticleForEveryTopicOfTheDay()");
+        keyWordDbService.getAllKeyWordsArticlesOfTheDay().observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
+                Log.d(TAG, "onchanged topic size: " + topics.size());
+                if(articlesEmpty() && topics.size() >= ARTICLE_MINIMUM){
+                    String[] topicsTemp = new String[topics.size()];
+                    for(int i = 0; i < topics.size(); i++){
+                        final String currentTopic = topics.get(i).keyWord;
+                        topicsTemp[i] = currentTopic;
+                        Log.d(TAG, "current topic1: " + currentTopic);
+                    }
+                    getArticlesForTopics(topicsTemp);
+                    keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(this);
+                }
+            }
+        });
+    }
+
+    public void getArticlesForTopics(String[] topics){
+        String TAG = "avoidrepeat";
+        Log.d(TAG, "topic size: " + topics.length);
+        NewsArticle[] articles = new NewsArticle[topics.length];
+        for(int i = 0; i < topics.length; i++){
+            String currentTopic = topics[i];
+            Log.d(TAG, "current topic2: " + currentTopic);
+            int currentIndex = i;
+            newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForKeyWord) {
+                    Log.d(TAG, "article obs size: " + articlesForKeyWord.size());
+                    if(!articlesForKeyWord.isEmpty()){
+                        Log.d(TAG, "article before adding1: " + articlesForKeyWord.get(0).title);
+                        articles[currentIndex] = newsArticleDbService.createNewsArticle(articlesForKeyWord.get(0));
+                    }
+                    else{
+                        articles[currentIndex] = new NewsArticle();
+                    }
+
+                    boolean ready = true;
+                    for(int i = 0; i < articles.length; i++){
+                        if(articles[i] == null){
+                            ready = false;
+                        }
+                    }
+                    if(ready){
+                        addArticles(articles);
+                    }
+                    newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
+
+                }
+            });
+        }
+    }
+
+    private void addArticles(NewsArticle[] articles){
+        if(articlesEmpty()){
+            String TAG = "avoidrepeat";
+            for(int i = 0; i < articles.length; i++){
+                Log.d(TAG, "articles entry: " + articles[i]);
+            }
+            for(int i = 0; i < articles.length; i++){
+                if(!articles[i].title.isEmpty()){
+                    articlesOfTheDay.add(articles[i]);
+                    newsArticleDbService.setAsRead(newsArticleDbService.createNewsArticleRoomModelToUpdate(articles[i]));
+                    adapter.notifyDataSetChanged();
+                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
+                    setTextArticlesLoaded();
+                    handleLoading(false);
+                }
+            }
+        }
     }
 
 

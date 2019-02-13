@@ -98,7 +98,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         try{
             Picasso.get()
                     .load(this.urlToImage)
-                    .resize(120, 80)
+                    .resize(200, 120)
                     .error(R.drawable.newsdefault)
                     .into(imageView);
         } catch(Exception e){

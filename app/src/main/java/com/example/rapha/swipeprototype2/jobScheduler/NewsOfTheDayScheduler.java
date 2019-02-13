@@ -80,6 +80,7 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
                             ApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
+                            jobFinished(jobParameters, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                             jobFinished(jobParameters, true);
@@ -113,7 +114,7 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
         }
         if(articlesForKeyword.size() > 0){
             if(!notificationWasSent){
-                // NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
+                //NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
                 notificationWasSent = true;
             }
             setDateArticlesLoaded();
