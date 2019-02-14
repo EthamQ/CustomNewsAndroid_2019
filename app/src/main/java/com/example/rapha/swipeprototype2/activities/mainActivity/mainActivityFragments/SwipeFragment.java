@@ -1,7 +1,10 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +25,7 @@ import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
@@ -115,6 +119,15 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                 swipeFragmentState.loadArticles();
         });
         getKeyWordsFromDb();
+
+        DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
+            if(loading){
+                setCardsVisibility(false, true);
+            }
+            else{
+                setCardsVisibility(true, true);
+            }
+        });
         return view;
     }
 
@@ -202,6 +215,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                 dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
+                        LanguageSettingsService.saveChecked(mainActivity, initialSelection);
                         dialog.cancel();
                     }
                 });
@@ -355,6 +369,10 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                 clickedArticle.onClick(mainActivity);
             }
         });
+    }
+
+    private void restartApplication(){
+        System.exit(2);
     }
 
     /**

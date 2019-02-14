@@ -10,20 +10,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
-import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsIntroSpanService;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link ExplainStatisticsFragment.OnFragmentInteractionListener} interface
+ * {@link ExplainDailyNewsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link ExplainStatisticsFragment#newInstance} factory method to
+ * Use the {@link ExplainDailyNewsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ExplainStatisticsFragment extends Fragment {
+public class ExplainDailyNewsFragment extends Fragment {
 
-    public View view;
+    View view;
     IntroductionActivity introductionActivity;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -37,7 +36,7 @@ public class ExplainStatisticsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public ExplainStatisticsFragment() {
+    public ExplainDailyNewsFragment() {
         // Required empty public constructor
     }
 
@@ -47,11 +46,11 @@ public class ExplainStatisticsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ExplainStatisticsFragment.
+     * @return A new instance of fragment DailyNewsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ExplainStatisticsFragment newInstance(String param1, String param2) {
-        ExplainStatisticsFragment fragment = new ExplainStatisticsFragment();
+    public static ExplainDailyNewsFragment newInstance(String param1, String param2) {
+        ExplainDailyNewsFragment fragment = new ExplainDailyNewsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -71,12 +70,12 @@ public class ExplainStatisticsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_explain_statistics, container, false);
+        view = inflater.inflate(R.layout.fragment_daily_news, container, false);
 
         this.introductionActivity = (IntroductionActivity)getActivity();
         initButtons();
-        StatisticsIntroSpanService.statisticFragmentSetColor(this);
         return view;
     }
 
@@ -120,12 +119,9 @@ public class ExplainStatisticsFragment extends Fragment {
     }
 
     private void initButtons(){
-        Button button = view.findViewById(R.id.introduction_button_2);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_DAILY_NEWS);
-            }
-        });
+        Button button = view.findViewById(R.id.introduction_button_daily);
+        button.setOnClickListener(view ->
+                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_FINANCE)
+        );
     }
 }

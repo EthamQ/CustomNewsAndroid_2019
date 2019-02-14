@@ -100,6 +100,14 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view swipe_card clicks here.
         int id = item.getItemId();
+        changeFragmentTo(id);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void changeFragmentTo(int id){
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_statistics) {
             ft.replace(R.id.your_placeholder, new StatisticFragment());
@@ -108,19 +116,17 @@ public class MainActivity extends AppCompatActivity
             ft.replace(R.id.your_placeholder, new SwipeFragment());
             ft.commit();
         } else if(id == R.id.nav_settings){
+            toolbar.setTitle("My Statistics");
             ft.replace(R.id.your_placeholder, new SettingsFragment());
             ft.commit();
         } else if(id == R.id.nav_info){
             ft.replace(R.id.your_placeholder, new InfoFragment());
             ft.commit();
         } else if(id == R.id.nav_news){
+            toolbar.setTitle("News of the day");
             ft.replace(R.id.your_placeholder, new NewsOfTheDayFragment());
             ft.commit();
         }
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
     }
 
     @Override

@@ -102,7 +102,7 @@ public class NewsArticle implements Parcelable, ISwipeCard {
                     .error(R.drawable.newsdefault)
                     .into(imageView);
         } catch(Exception e){
-            convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
+            //convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
         }
     }
 

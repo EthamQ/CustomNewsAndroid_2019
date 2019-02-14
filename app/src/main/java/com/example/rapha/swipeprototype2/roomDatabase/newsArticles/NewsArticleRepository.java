@@ -23,10 +23,10 @@ public class NewsArticleRepository {
         dao = database.newsArticleDao();
 
         allSwipeArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.SWIPE_CARDS);
-        allUnreadSwipeArticles = dao.getAllUnreadNewsArticles(false, NewsArticleRoomModel.SWIPE_CARDS);
+        allUnreadSwipeArticles = dao.getAllUnreadNewsArticles(false, false, NewsArticleRoomModel.SWIPE_CARDS);
 
-        allUnreadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(false, NewsArticleRoomModel.NEWS_OF_THE_DAY);
-        allReadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(true, NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        allUnreadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(false, false, NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        allReadNewsOfTheDayArticles = dao.getAllUnreadNewsArticles(true, false,NewsArticleRoomModel.NEWS_OF_THE_DAY);
         allDailyArticlesNotArchived = dao.getAllNewsArticles(NewsArticleRoomModel.NEWS_OF_THE_DAY, false);
         allNewsOfTheDayArticles = dao.getAllNewsArticlesByType(NewsArticleRoomModel.NEWS_OF_THE_DAY);
     }
@@ -37,6 +37,10 @@ public class NewsArticleRepository {
 
     public void deleteAllSwipeArticles(){
         new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.SWIPE_CARDS);
+    }
+
+    public void deleteAllDailyArticles(){
+        new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.NEWS_OF_THE_DAY);
     }
 
     public  LiveData<List<NewsArticleRoomModel>> getOneNewsArticle(String title, int articleType){

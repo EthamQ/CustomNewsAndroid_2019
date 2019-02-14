@@ -118,11 +118,8 @@ public class ExplainQuestionsFragment extends Fragment {
 
     private void initButtons(){
         Button button = view.findViewById(R.id.introduction_button_4);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_STATISTIC);
-            }
-        });
+        button.setOnClickListener(view ->
+                introductionActivity.changeToFragment(introductionActivity.EXPLAIN_STATISTIC)
+        );
     }
 }

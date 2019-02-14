@@ -14,7 +14,9 @@ import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -136,6 +138,9 @@ public class SettingsFragment extends Fragment {
                         ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
                         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
                         keyWordDbService.deleteAll();
+                        NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
+                        newsArticleDbService.deleteAllDailyArticles();
+                        NewsOfTheDayTimeService.resetLastLoaded(getContext());
                         dialogInterface.cancel();
                     }
                 })

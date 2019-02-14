@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,11 @@ import android.widget.TextView;
 import android.arch.lifecycle.Observer;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
 import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayJobScheduler;
+import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
@@ -56,8 +59,6 @@ public class NewsOfTheDayFragment extends Fragment {
     NewsArticleDbService newsArticleDbService;
     KeyWordDbService keyWordDbService;
     public static final int ARTICLE_MINIMUM = 5;
-    // Store observer to remove it in another function.
-    Observer<List<NewsArticleRoomModel>> databaseArticlesObserver;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -81,7 +82,21 @@ public class NewsOfTheDayFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
         init();
         loadArticles();
+        boolean[] last = new boolean[1];
+        DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
+                handleLoading(loading);
+                reloadFragmentAfterLoadingData(last[0], loading);
+                last[0] = loading;
+                });
         return view;
+    }
+
+    private void reloadFragmentAfterLoadingData(boolean lastLoadingValue, boolean currentLoadingValue){
+        if(lastLoadingValue != currentLoadingValue && !currentLoadingValue){
+            if(!(NewsOfTheDayFragment.this.getActivity() == null)){
+                ((MainActivity) NewsOfTheDayFragment.this.getActivity()).changeFragmentTo(R.id.nav_news);
+            }
+        }
     }
 
     private void init(){
@@ -96,7 +111,7 @@ public class NewsOfTheDayFragment extends Fragment {
         });
 
         Button debug = view.findViewById(R.id.debug_button);
-        debug.setOnClickListener(view -> initArticleRequestScheduler());
+        debug.setOnClickListener(view -> {initArticleRequestScheduler(); DailyNewsLoadingService.setLoading(true);});
     }
 
     private void handleLoading(boolean isLoading){
@@ -109,6 +124,7 @@ public class NewsOfTheDayFragment extends Fragment {
         boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
         if(firstTimeLoading){
             initArticleRequestScheduler();
+            setTextNotEnoughTopics();
         }
         else{
             loadArticlesFromDatabase();
@@ -191,12 +207,19 @@ public class NewsOfTheDayFragment extends Fragment {
         if(articlesOfTheDay.isEmpty()){
             for(int i = 0; i < articles.length; i++){
                 if(!articles[i].title.isEmpty()){
+
                     articlesOfTheDay.add(articles[i]);
                     newsArticleDbService.setAsRead(newsArticleDbService.createNewsArticleRoomModelToUpdate(articles[i]));
                     adapter.notifyDataSetChanged();
                     DimensionService.setListViewHeightBasedOnItems(articleListView, true);
                     setTextArticlesLoaded();
+                    Log.d("archived", "Add to view: " + "archived: " + articles[i].archived + ", read: " + articles[i].hasBeenRead +", title: " +  articles[i].title);
                 }
+                newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), data ->{
+                    for(int j = 0; j < data.size(); j++){
+                        //Log.d("archived", "All articles: " + "archived: " + data.get(j).archived + ", read: " + data.get(j).hasBeenRead +", title: " +  data.get(j).title);
+                    }
+                });
             }
         }
     }

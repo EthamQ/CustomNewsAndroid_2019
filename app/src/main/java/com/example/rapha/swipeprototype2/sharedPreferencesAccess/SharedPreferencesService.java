@@ -38,6 +38,15 @@ public class SharedPreferencesService {
         }
     }
 
+    public static void deleteDataDefault(Context context, String key){
+        if(!(context == null)){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove(key);
+            editor.commit();
+        }
+    }
+
     public static Date getData(Activity activity, String key){
         if(!(activity == null)) {
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);

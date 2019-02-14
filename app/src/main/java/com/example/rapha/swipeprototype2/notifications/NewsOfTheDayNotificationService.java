@@ -4,6 +4,8 @@ import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayJobScheduler;
 
 public class NewsOfTheDayNotificationService {
 
+    private static boolean allowDebugMessages = false;
+
     public static void sendNotificationLoadedDailyNews(NewsOfTheDayJobScheduler scheduler){
         int NOTIFICATION_ID = 233;
         String title = "Daily News";
@@ -12,10 +14,12 @@ public class NewsOfTheDayNotificationService {
     }
 
     public static void sendNotificationDebug(NewsOfTheDayJobScheduler scheduler, String debugMessage, int id){
-        int NOTIFICATION_ID = 1;
-        String title = "debugMessage";
-        String content = "";
-        NotificationService.sendNotificaton(id, scheduler.getApplication(), debugMessage, content);
+        if(allowDebugMessages){
+            int NOTIFICATION_ID = 1;
+            String title = "debugMessage";
+            String content = "";
+            NotificationService.sendNotificaton(id, scheduler.getApplication(), debugMessage, content);
+        }
     }
 
 }

@@ -95,7 +95,7 @@ public class StatisticFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_statistic, container, false);
         Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("MY Statistics");
+        toolbar.setTitle("My Statistics");
         statisticsFragmentDimensions = new StatisticsFragmentDimensions(this);
         setGraph();
         setLikedTopics();
@@ -154,7 +154,7 @@ public class StatisticFragment extends Fragment {
 
         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         keyWordDbService.getAllLikedKeyWords().observe(getActivity(), likedKeyWords -> {
-                if(likedKeyWords.size() != topicSets.size()){
+            topicSets.clear();
                 String[] topicSet = new String[]{"", "", ""};
                 boolean firstSetFull = !(likedKeyWords.size() < ROW_LENGTH);
                 if(!firstSetFull){
@@ -184,7 +184,7 @@ public class StatisticFragment extends Fragment {
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");
                 }
-                }
+
         });
     }
 

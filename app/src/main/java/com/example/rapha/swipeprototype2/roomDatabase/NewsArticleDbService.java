@@ -42,6 +42,10 @@ public class NewsArticleDbService {
         repository.deleteAllSwipeArticles();
     }
 
+    public void deleteAllDailyArticles(){
+        repository.deleteAllDailyArticles();
+    }
+
     public void update(NewsArticleRoomModel newsArticleRoomModel){
         repository.update(newsArticleRoomModel);
     }

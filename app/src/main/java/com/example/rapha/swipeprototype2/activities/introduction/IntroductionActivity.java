@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainDailyNewsFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainQuestionsFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainStatisticsFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainFinanceFragment;
@@ -19,13 +20,14 @@ public class IntroductionActivity extends AppCompatActivity
         ExplainFinanceFragment.OnFragmentInteractionListener,
         ExplainStatisticsFragment.OnFragmentInteractionListener,
         HowToUseFragment.OnFragmentInteractionListener,
-        ExplainQuestionsFragment.OnFragmentInteractionListener{
+        ExplainQuestionsFragment.OnFragmentInteractionListener,
+        ExplainDailyNewsFragment.OnFragmentInteractionListener{
 
     public final int EXPLAIN_ARTICLES = 0;
     public final int EXPLAIN_QUESTIONS = 1;
     public final int EXPLAIN_STATISTIC = 2;
-    public final int EXPLAIN_FINANCE = 3;
-    public final int EXPLAIN_DAILY_NEWS = 4;
+    public final int EXPLAIN_DAILY_NEWS = 3;
+    public final int EXPLAIN_FINANCE = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,34 +44,30 @@ public class IntroductionActivity extends AppCompatActivity
         }
     }
 
-    public boolean introductionShouldBeShown(){
-        return false;
-    }
-
     public void changeToFragment(int fragment){
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         switch(fragment){
             case EXPLAIN_ARTICLES:
-                ft.replace(R.id.introduction_placeholder, new HowToUseFragment());
-                ft.commit();
+                transaction.replace(R.id.introduction_placeholder, new HowToUseFragment());
                 break;
             case EXPLAIN_QUESTIONS:
-                ft.replace(R.id.introduction_placeholder, new ExplainQuestionsFragment());
-                ft.commit();
+                transaction.replace(R.id.introduction_placeholder, new ExplainQuestionsFragment());
                 break;
             case EXPLAIN_STATISTIC:
-                ft.replace(R.id.introduction_placeholder, new ExplainStatisticsFragment());
-                ft.commit();
+                transaction.replace(R.id.introduction_placeholder, new ExplainStatisticsFragment());
                 break;
             case EXPLAIN_FINANCE:
-                IntroductionAccessService.setIntroductionShouldBeShown(getApplicationContext(), false);
-                ft.replace(R.id.introduction_placeholder, new ExplainFinanceFragment());
-                ft.commit();
+                transaction.replace(R.id.introduction_placeholder, new ExplainFinanceFragment());
+                break;
+            case EXPLAIN_DAILY_NEWS:
+                transaction.replace(R.id.introduction_placeholder, new ExplainDailyNewsFragment());
                 break;
         }
+        transaction.commit();
     }
 
     public void finishIntroduction(){
+        IntroductionAccessService.setIntroductionShouldBeShown(getApplicationContext(), false);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

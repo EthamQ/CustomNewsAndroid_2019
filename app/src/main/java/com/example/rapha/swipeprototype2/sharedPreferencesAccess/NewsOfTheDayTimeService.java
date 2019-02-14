@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class NewsOfTheDayTimeService {
 
-    private static String version = "26";
+    private static String version = "32";
     private static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 24;
     private static boolean testing = true;
@@ -22,6 +22,11 @@ public class NewsOfTheDayTimeService {
 
     public static boolean firstTimeLoadingData(Context context){
         return !SharedPreferencesService.valueIsSetDefault(context, TIME_OF_RELAOD_DAILY);
+    }
+
+
+    public static void resetLastLoaded(Context context){
+        SharedPreferencesService.deleteDataDefault(context, TIME_OF_RELAOD_DAILY);
     }
 
     public static int getRequestIntervallMills(){

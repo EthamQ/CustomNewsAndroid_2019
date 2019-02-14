@@ -13,6 +13,7 @@ import com.example.rapha.swipeprototype2.http.HttpRequest;
 import com.example.rapha.swipeprototype2.http.HttpRequestInfo;
 import com.example.rapha.swipeprototype2.http.IHttpRequester;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.notifications.NewsOfTheDayNotificationService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
@@ -54,19 +55,34 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
     }
 
     private void setReadArticlesToArchived(){
-        newsArticleDbService.getAllReadDailyArticles().observeForever(new Observer<List<NewsArticleRoomModel>>() {
+        List<NewsArticleRoomModel> readArticles = new LinkedList<>();
+        newsArticleDbService.getAllNewsOfTheDayArticles().observeForever(new Observer<List<NewsArticleRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<NewsArticleRoomModel> readArticles) {
+            public void onChanged(@Nullable List<NewsArticleRoomModel> data) {
+                if(NewsOfTheDayTimeService.firstTimeLoadingData(getApplicationContext())){
+                    newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
+                }
+                for(int j = 0; j < data.size(); j++){
+                    // Log.d("archived", "All articles: " + "archived: " + data.get(j).archived + ", read: " + data.get(j).hasBeenRead +", title: " +  data.get(j).title);
+                    if(data.get(j).archived == false && data.get(j).hasBeenRead == true){
+                        readArticles.add(data.get(j));
+                    }
+                }
+
                 if(readArticles.size() > 0){
                     for(int i = 0; i < readArticles.size(); i++){
                         newsArticleDbService.setAsArchived(readArticles.get(i));
+                        NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "setasarchived", 4);
+                        Log.d("archived", "Set to archived: " + "archived: " + readArticles.get(i).archived + ", read: " + readArticles.get(i).hasBeenRead +", title: " +  readArticles.get(i).title);
                     }
-                    newsArticleDbService.getAllReadDailyArticles().removeObserver(this);
+                    newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
                 }
+
             }
-        });
+            });
     }
 
+    boolean first = true;
     private Observer getObserverToRequestArticles(JobParameters jobParameters){
         this.jobParameters = jobParameters;
         Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
@@ -83,13 +99,14 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                         keyWordDbService.setAsNewsOfTheDayKeyWord(topicsToLookFor.get(i));
                         String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
+                            DailyNewsLoadingService.setLoading(true);
                             NewsOfTheDayApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
                         } catch (Exception e) {
                             NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "catchblock", 2);
                             e.printStackTrace();
-                            jobFinished(jobParameters, true);
+                            DailyNewsLoadingService.setLoading(false);
                         }
                     }
                     keyWordDbService.getAllLikedKeyWords().removeObserver(this);
@@ -108,7 +125,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
 
     @Override
     public void httpResultCallback(HttpRequestInfo info) {
-        NewsOfTheDayNotificationService.sendNotificationDebug(this, "callback", 4);
+        NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "setasarchived", 5);
         numberOfReceivedResponses++;
         Log.d(TAG, "reached httpResultCallback");
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
@@ -127,8 +144,8 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         // Send notification when all responses have arrived and at least one of the
         // contained data.
         if(numberOfReceivedResponses == numberOfSentRequests){
+                DailyNewsLoadingService.setLoading(false);
                 storeDateLastLoadedData();
-                jobFinished(jobParameters, false);
                 NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
         }
     }
