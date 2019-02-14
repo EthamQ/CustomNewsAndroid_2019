@@ -20,7 +20,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.time.NewsOfTheDayTimeService;
 
 import org.json.JSONObject;
 
@@ -45,6 +45,7 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
         // Request articles for liked keywords.
         Observer observer = getObserverToRequestArticles(jobParameters);
         keyWordDbService.getAllLikedKeyWords().observeForever(observer);
+        jobFinished(jobParameters, false);
         return true;
     }
 
@@ -80,7 +81,6 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
                             ApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
-                            jobFinished(jobParameters, false);
                         } catch (Exception e) {
                             e.printStackTrace();
                             jobFinished(jobParameters, true);
@@ -113,10 +113,6 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
             e.printStackTrace();
         }
         if(articlesForKeyword.size() > 0){
-            if(!notificationWasSent){
-                //NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
-                notificationWasSent = true;
-            }
             setDateArticlesLoaded();
             for(int i = 0; i < articlesForKeyword.size(); i++) {
                 Log.d(TAG, "adds this article to db: " + articlesForKeyword.get(i));
@@ -133,10 +129,10 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
     }
 
     private void setDateArticlesLoaded(){
-        ApiRequestTimeService.saveLastLoadedDefault(
+        NewsOfTheDayTimeService.saveDateLastLoadedArticles(
                 getApplicationContext(),
-                new Date(),
-                ApiRequestTimeService.TIME_OF_RELAOD_DAILY);
+                new Date()
+        );
     }
 
 }

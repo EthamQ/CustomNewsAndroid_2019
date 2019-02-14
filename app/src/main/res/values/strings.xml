@@ -141,5 +141,9 @@
         Swipe in any direction to start
     </string>
 
+    <string name="not_enough_topics_news_of_the_day">
+        Answer at least 5 questions with yes to see your news of the day
+    </string>
+
 
 </resources>

@@ -29,11 +29,16 @@
         android:id="@+id/news_of_the_day_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Answer at least 5 questions with yes to see your news of the day"
         android:layout_marginLeft="15dp"
         android:textSize="@dimen/subTitleText"
         android:textColor="@color/turquis_dark"
         android:layout_marginTop="@dimen/activity_vertical_margin_big"/>
+    <TextView
+        android:id="@+id/news_of_the_day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:textSize="@dimen/subTitleText" />
 
     <ListView
         android:id="@+id/articleList"

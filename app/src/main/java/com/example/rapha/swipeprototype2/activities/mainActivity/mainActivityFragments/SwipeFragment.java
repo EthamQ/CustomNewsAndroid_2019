@@ -31,7 +31,8 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
-import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.time.NewsOfTheDayTimeService;
+import com.example.rapha.swipeprototype2.time.SwipeTimeService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
@@ -221,7 +222,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
      */
     public void loadArticlesFromApi(){
         if(shouldRequestArticles()){
-            ApiRequestTimeService.saveLastLoaded(mainActivity, new Date(), ApiRequestTimeService.TIME_OF_RELAOD_SWIPE);
+            SwipeTimeService.saveLastLoaded(mainActivity, new Date());
             Log.d("LOADD", "loadArticlesFromApi()");
             Thread thread = new Thread(new Runnable() {
                 @Override

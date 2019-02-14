@@ -7,7 +7,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordR
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.QuestionSwipeCard;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
-import com.example.rapha.swipeprototype2.utils.ListService;
+import com.example.rapha.swipeprototype2.utils.CollectionService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,8 +50,8 @@ public class QuestionCardService {
                         questionCards.add(questionCard);
                     }
                 }
-                questionCards = ListService.orderListRandomly(questionCards);
-                questionCards = (LinkedList)ListService.removeAllEntriesStartingAt(questionCards, amount);
+                questionCards = CollectionService.orderListRandomly(questionCards);
+                questionCards = (LinkedList)CollectionService.removeAllEntriesStartingAt(questionCards, amount);
                 Log.d("questioncard", "Number of cards: " + questionCards.size());
                 return questionCards;
     }

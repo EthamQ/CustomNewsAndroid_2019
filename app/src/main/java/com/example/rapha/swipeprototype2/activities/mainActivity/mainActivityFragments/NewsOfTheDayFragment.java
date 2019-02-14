@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,12 @@ import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-import com.example.rapha.swipeprototype2.time.ApiRequestTimeService;
+import com.example.rapha.swipeprototype2.time.NewsOfTheDayTimeService;
+import com.example.rapha.swipeprototype2.utils.CollectionService;
+import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -89,21 +91,13 @@ public class NewsOfTheDayFragment extends Fragment {
         articleListView = view.findViewById(R.id.articleList);
         adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
         articleListView.setAdapter(adapter);
-        articleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+        articleListView.setOnItemClickListener((arg0, view, position, arg3) -> {
                 NewsArticle clickedArticle = (NewsArticle)articleListView.getItemAtPosition(position);
                 clickedArticle.onClick(getActivity());
-            }
         });
 
         Button debug = view.findViewById(R.id.debug_button);
-        debug.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                initArticleRequestScheduler();
-            }
-        });
+        debug.setOnClickListener(view -> initArticleRequestScheduler());
     }
 
     private void handleLoading(boolean isLoading){
@@ -113,10 +107,7 @@ public class NewsOfTheDayFragment extends Fragment {
     }
 
     private void loadArticles(){
-        boolean firstTimeLoading = !ApiRequestTimeService.valueIsSetDefault(
-                        getActivity(),
-                        ApiRequestTimeService.TIME_OF_RELAOD_DAILY
-                );
+        boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
         if(firstTimeLoading){
             initArticleRequestScheduler();
         }
@@ -126,111 +117,39 @@ public class NewsOfTheDayFragment extends Fragment {
     }
 
     private void initArticleRequestScheduler(){
-        int testValue = 15 * 60 * 1000;
-        int realValue = 24 * 60 * 60 * 1000;
         ComponentName componentName = new ComponentName(this.getActivity(), NewsOfTheDayScheduler.class);
-        JobInfo info = new JobInfo.Builder(123, componentName)
+        JobInfo info = new JobInfo.Builder(NewsOfTheDayTimeService.SCHEDULER_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
-                .setPeriodic(testValue)
+                .setPeriodic(NewsOfTheDayTimeService.getRequestIntervallMills())
                 .build();
         JobScheduler scheduler = (JobScheduler) getActivity().getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = scheduler.schedule(info);
-        String TAG = "scheduler";
-        if(resultCode == JobScheduler.RESULT_SUCCESS){
-            Log.d(TAG, "scheduler success");
-        }
-        else{
-            Log.d(TAG, "scheduler failure");
-        }
-    }
-
-    private void cancelJob(){
-        String TAG = "scheduler";
-        JobScheduler scheduler = (JobScheduler) getActivity().getSystemService(JOB_SCHEDULER_SERVICE);
-        scheduler.cancel(123);
-        Log.d(TAG, "job cancelled");
     }
 
     private void loadArticlesFromDatabase(){
-//        Log.d("loadDB", "loadArticlesFromDatabase()");
-//        newsArticleDbService.getAllDailyArticlesNotArchived().observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
-//            @Override
-//            public void onChanged(@Nullable List<NewsArticleRoomModel> storedArticles) {
-//                if(articlesEmpty() && storedArticles.size() >= ARTICLE_MINIMUM){
-//                    for(int i = 0; i < storedArticles.size(); i++){
-//                        articlesOfTheDay.add(newsArticleDbService.createNewsArticle(storedArticles.get(i)));
-//                        newsArticleDbService.setAsRead(storedArticles.get(i));
-//                    }
-//                    adapter.notifyDataSetChanged();
-//                    DimensionService.setListViewHeightBasedOnItems(articleListView);
-//                    setTextArticlesLoaded();
-//                    handleLoading(false);
-//                    newsArticleDbService.getAllDailyArticlesNotArchived().removeObserver(this);
-//                }
-//            }
-//        });
-
-        // getOneArticleForEveryTopicOfTheDay();
+        // Start the chain of different database requests.
         getTopicsOfTheDay();
     }
 
-    private void getOneArticleForEveryTopicOfTheDay(){
-
-        String TAG = "avoidrepeat";
-        Log.d(TAG, "getOneArticleForEveryTopicOfTheDay()");
-        keyWordDbService.getAllKeyWordsArticlesOfTheDay().observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
-                Observer keyWordObserver = this;
-                Log.d(TAG, "onchanged topic size: " + topics.size());
-                if(articlesEmpty() && topics.size() >= ARTICLE_MINIMUM){
-                    for(int i = 0; i < topics.size(); i++){
-                        final String currentTopic = topics.get(i).keyWord;
-                        Log.d(TAG, "current topic: " + currentTopic);
-                        newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
-                            @Override
-                            public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForKeyWord) {
-                                Log.d(TAG, "current topic below: " + currentTopic);
-                                //Log.d(TAG, "onchanged articlesforkeyword size: " + articlesForKeyWord.size());
-                                if(articlesForKeyWord.size() > 0 && articlesOfTheDay.size() < topics.size()){
-                                    int indexFirstEntry = 0;
-                                    Log.d(TAG, "add article:: " + articlesForKeyWord.get(indexFirstEntry).hasBeenRead + ", " +articlesForKeyWord.get(indexFirstEntry).archived + ", " + articlesForKeyWord.get(indexFirstEntry).title);
-                                        articlesOfTheDay.add(newsArticleDbService.createNewsArticle(articlesForKeyWord.get(indexFirstEntry)));
-                                        newsArticleDbService.setAsRead(articlesForKeyWord.get(indexFirstEntry));
-                                        adapter.notifyDataSetChanged();
-                                        DimensionService.setListViewHeightBasedOnItems(articleListView, true);
-                                        setTextArticlesLoaded();
-                                        handleLoading(false);
-
-                                    newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
-
-                                } else if(articlesOfTheDay.size() == topics.size()){
-                                    // keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(keyWordObserver);
-                                    keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(keyWordObserver);
-
-                                }
-                            }
-                        });
-                    }
-                }
-            }
-        });
-    }
-
+    /**
+     * Get all topics that are marked as topics of the day from the database.
+     * Pass them to getArticlesForTopics().
+     */
     private void getTopicsOfTheDay(){
-        String TAG = "avoidrepeat";
-        Log.d(TAG, "getOneArticleForEveryTopicOfTheDay()");
         keyWordDbService.getAllKeyWordsArticlesOfTheDay().observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
-                Log.d(TAG, "onchanged topic size: " + topics.size());
-                if(articlesEmpty() && topics.size() >= ARTICLE_MINIMUM){
+                boolean articlesHaveBeenAdded = !articlesOfTheDay.isEmpty();
+                boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
+                if(!enoughTopics){
+                    setTextNotEnoughTopics();
+                }
+                if(!articlesHaveBeenAdded && enoughTopics){
                     String[] topicsTemp = new String[topics.size()];
                     for(int i = 0; i < topics.size(); i++){
                         final String currentTopic = topics.get(i).keyWord;
                         topicsTemp[i] = currentTopic;
-                        Log.d(TAG, "current topic1: " + currentTopic);
                     }
                     getArticlesForTopics(topicsTemp);
                     keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(this);
@@ -239,48 +158,38 @@ public class NewsOfTheDayFragment extends Fragment {
         });
     }
 
-    public void getArticlesForTopics(String[] topics){
-        String TAG = "avoidrepeat";
-        Log.d(TAG, "topic size: " + topics.length);
+    /**
+     * Request the articles for every topic from the database and
+     * pass them to addArticlesToListView() when done.
+     * @param topics
+     */
+    private void getArticlesForTopics(String[] topics){
         NewsArticle[] articles = new NewsArticle[topics.length];
         for(int i = 0; i < topics.length; i++){
             String currentTopic = topics[i];
-            Log.d(TAG, "current topic2: " + currentTopic);
             int currentIndex = i;
             newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
                 @Override
                 public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForKeyWord) {
-                    Log.d(TAG, "article obs size: " + articlesForKeyWord.size());
-                    if(!articlesForKeyWord.isEmpty()){
-                        Log.d(TAG, "article before adding1: " + articlesForKeyWord.get(0).title);
-                        articles[currentIndex] = newsArticleDbService.createNewsArticle(articlesForKeyWord.get(0));
-                    }
-                    else{
-                        articles[currentIndex] = new NewsArticle();
-                    }
-
-                    boolean ready = true;
-                    for(int i = 0; i < articles.length; i++){
-                        if(articles[i] == null){
-                            ready = false;
-                        }
-                    }
-                    if(ready){
-                        addArticles(articles);
+                    articles[currentIndex] = articlesForKeyWord.isEmpty()?
+                            new NewsArticle() : newsArticleDbService.createNewsArticle(articlesForKeyWord.get(0));
+                    if(!CollectionService.arrayHasNullValues(articles)){
+                        addArticlesToListView(articles);
                     }
                     newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
-
                 }
             });
         }
     }
 
-    private void addArticles(NewsArticle[] articles){
-        if(articlesEmpty()){
-            String TAG = "avoidrepeat";
-            for(int i = 0; i < articles.length; i++){
-                Log.d(TAG, "articles entry: " + articles[i]);
-            }
+
+    /**
+     * Add every article to the array that belongs to the list view.
+     * Set all articles as hasBeenRead = true in the database.
+     * @param articles
+     */
+    private void addArticlesToListView(NewsArticle[] articles){
+        if(articlesOfTheDay.isEmpty()){
             for(int i = 0; i < articles.length; i++){
                 if(!articles[i].title.isEmpty()){
                     articlesOfTheDay.add(articles[i]);
@@ -288,20 +197,23 @@ public class NewsOfTheDayFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     DimensionService.setListViewHeightBasedOnItems(articleListView, true);
                     setTextArticlesLoaded();
-                    handleLoading(false);
                 }
             }
         }
     }
 
-
-    private boolean articlesEmpty(){
-        return articlesOfTheDay.size() == 0;
-    }
-
     private void setTextArticlesLoaded(){
         TextView belowHeadline = view.findViewById(R.id.news_of_the_day_info);
-        belowHeadline.setText("Today");
+        belowHeadline.setText("Last update ");
+
+        TextView belowHeadlineDate = view.findViewById(R.id.news_of_the_day_date);
+        Date lastReload = NewsOfTheDayTimeService.getDateLastLoadedArticles(getContext());
+        belowHeadlineDate.setText(DateUtils.makeDateReadable(lastReload));
+    }
+
+    private void setTextNotEnoughTopics(){
+        TextView belowHeadline = view.findViewById(R.id.news_of_the_day_info);
+        belowHeadline.setText(R.string.not_enough_topics_news_of_the_day);
     }
 
     /**
@@ -337,7 +249,6 @@ public class NewsOfTheDayFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
-
 
     @Override
     public void onAttach(Context context) {

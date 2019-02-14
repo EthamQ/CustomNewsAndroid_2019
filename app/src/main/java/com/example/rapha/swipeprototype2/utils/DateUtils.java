@@ -4,9 +4,11 @@ import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Hours;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class DateUtils {
 
@@ -72,5 +74,10 @@ public class DateUtils {
 
     public static Date longToDate(long dateMills){
         return new Date(dateMills);
+    }
+
+    public static String makeDateReadable(Date date){
+        DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy | hh:mm a", Locale.ENGLISH);
+        return dateFormat.format(date);
     }
 }

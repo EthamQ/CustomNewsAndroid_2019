@@ -8,16 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ListService {
-
-    public HashMap<Integer, UserPreferenceRoomModel> ratingListToHashMap(LinkedList<UserPreferenceRoomModel> ratings){
-        HashMap<Integer, UserPreferenceRoomModel> ratingAsHashMap = new HashMap<>();
-        for(int i = 0; i < ratings.size(); i++){
-            int currentCategory = ratings.get(i).getNewsCategoryId();
-            ratingAsHashMap.put(currentCategory, ratings.get(i));
-        }
-        return ratingAsHashMap;
-    }
+public class CollectionService {
 
     public static LinkedList orderListRandomly(LinkedList list){
         LinkedList listCopy = new LinkedList();
@@ -39,5 +30,14 @@ public class ListService {
             }
         }
         return list;
+    }
+
+    public static boolean arrayHasNullValues(Object[] array){
+        for(int i = 0; i < array.length; i++){
+            if(array[i] == null){
+                return true;
+            }
+        }
+        return false;
     }
 }

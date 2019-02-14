@@ -153,9 +153,8 @@ public class StatisticFragment extends Fragment {
         topicRowAdapter.notifyDataSetChanged();
 
         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), new Observer<List<KeyWordRoomModel>>(){
-            @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> likedKeyWords) {
+        keyWordDbService.getAllLikedKeyWords().observe(getActivity(), likedKeyWords -> {
+                if(likedKeyWords.size() != topicSets.size()){
                 String[] topicSet = new String[]{"", "", ""};
                 boolean firstSetFull = !(likedKeyWords.size() < ROW_LENGTH);
                 if(!firstSetFull){
@@ -185,7 +184,7 @@ public class StatisticFragment extends Fragment {
                     TextView likedTopics = view.findViewById(R.id.liked_topics);
                     likedTopics.setText("");
                 }
-            }
+                }
         });
     }
 
@@ -211,11 +210,6 @@ public class StatisticFragment extends Fragment {
                 graph.setTitle("Your news preferences");
 //                graph.setTitleColor(Color.BLACK);
                 graph.addSeries(series);
-//                graph.getGridLabelRenderer().setVerticalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
-//                graph.getGridLabelRenderer().setHorizontalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
-//                graph.getGridLabelRenderer().setVerticalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
-//                graph.getGridLabelRenderer().setHorizontalLabelsColor(ContextCompat.getColor(getContext(), R.color.news_card_text));
-//                graph.getGridLabelRenderer().reloadStyles();
 
                 // Convert the x axis values to strings representing its news category.
                 graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
