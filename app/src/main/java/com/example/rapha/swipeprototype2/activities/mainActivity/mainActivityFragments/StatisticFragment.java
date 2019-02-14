@@ -241,12 +241,7 @@ public class StatisticFragment extends Fragment {
                 });
 
                 // styling
-                series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-                    @Override
-                    public int get(DataPoint data) {
-                        return ContextCompat.getColor(getContext(), R.color.news_card_text);
-                    }
-                });
+                series.setValueDependentColor(data -> ContextCompat.getColor(getContext(), R.color.news_card_text));
             }
         });
     }

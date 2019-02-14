@@ -9,6 +9,7 @@ import android.util.Log;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.api.NewsApiUtils;
+import com.example.rapha.swipeprototype2.api.NewsOfTheDayApiService;
 import com.example.rapha.swipeprototype2.http.HttpRequest;
 import com.example.rapha.swipeprototype2.http.HttpRequestInfo;
 import com.example.rapha.swipeprototype2.http.IHttpRequester;
@@ -74,11 +75,12 @@ public class NewsOfTheDayScheduler extends JobService implements IHttpRequester 
                     for(int i = 0; i < topicsToLookFor.size(); i++) {
                         HttpRequestInfo httpRequestInfo = new HttpRequestInfo();
                         httpRequestInfo.setDataOfRequester(topicsToLookFor.get(i).keyWord);
+                        httpRequestInfo.setContext(getApplicationContext());
                         HttpRequest httpRequest = new HttpRequest(NewsOfTheDayScheduler.this, httpRequestInfo);
                         keyWordDbService.setAsNewsOfTheDayKeyWord(topicsToLookFor.get(i));
                         String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
-                            ApiService.getArticlesNewsApiByKeyWords(
+                            NewsOfTheDayApiService.getArticlesNewsApiByKeyWords(
                                     httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
                             );
                         } catch (Exception e) {

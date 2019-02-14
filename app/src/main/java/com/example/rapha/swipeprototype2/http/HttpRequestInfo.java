@@ -1,10 +1,21 @@
 package com.example.rapha.swipeprototype2.http;
 
+import android.content.Context;
+
 public class HttpRequestInfo {
 
     private int informationCode;
     private boolean errorOccurred;
     private Object requestResponse;
+    private Context context;
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public Object getDataOfRequester() {
         return dataOfRequester;

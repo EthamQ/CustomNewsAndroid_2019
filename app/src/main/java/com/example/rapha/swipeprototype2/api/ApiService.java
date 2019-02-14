@@ -33,12 +33,11 @@ public class ApiService {
         return ApiUtils.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 
-    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language) throws Exception{
-        Log.d("oftheday", "getArticlesNewsApiByKeyWords()");
+    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language, int amount, int daysBefore) throws Exception{
         NewsApiQueryBuilder builder = new NewsApiQueryBuilder(language);
-        builder.setDateFrom(DateUtils.getDateBefore(7));
+        builder.setDateFrom(DateUtils.getDateBefore(daysBefore));
         builder.addQueryWord(queryWords);
-        builder.setNumberOfNewsArticles(MAX_NUMBER_OF_ARTICLES);
+        builder.setNumberOfNewsArticles(amount);
         builder.buildQuery();
         NewsApi newsApi = new NewsApi();
         Log.d("oftheday", "Query: " + builder.getQuery());
