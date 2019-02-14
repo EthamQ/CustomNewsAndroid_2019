@@ -1,6 +1,6 @@
 package com.example.rapha.swipeprototype2.api;
 import com.example.rapha.swipeprototype2.http.HttpRequest;
-import com.example.rapha.swipeprototype2.time.NewsOfTheDayTimeService;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
 
 public class NewsOfTheDayApiService {
 

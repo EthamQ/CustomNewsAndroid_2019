@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".jobScheduler.NewsOfTheDayScheduler"
+            android:name=".jobScheduler.NewsOfTheDayJobScheduler"
             android:label="JOB_SCHEDULER_SERVICE"
             android:permission="android.permission.BIND_JOB_SERVICE" >
         </service>

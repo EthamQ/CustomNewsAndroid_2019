@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.sharedPreferences;
+package com.example.rapha.swipeprototype2.sharedPreferencesAccess;
 
 import android.app.Activity;
 import android.content.Context;
@@ -29,6 +29,15 @@ public class SharedPreferencesService {
         }
     }
 
+    public static void storeDataDefault(Context context, boolean bool, String key){
+        if(!(context == null)){
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(key, bool);
+            editor.commit();
+        }
+    }
+
     public static Date getData(Activity activity, String key){
         if(!(activity == null)) {
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
@@ -38,7 +47,14 @@ public class SharedPreferencesService {
         } else return new Date();
     }
 
-    public static Date getDataDefault(Context context, String key){
+    public static boolean getBooleanDefault(Context context, String key){
+        if(!(context == null)) {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+            return sharedPreferences.getBoolean(key, false);
+        } else return false;
+    }
+
+    public static Date getDateDefault(Context context, String key){
         if(!(context == null)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             long defaultLoad = DateUtils.dateToLong(new Date());

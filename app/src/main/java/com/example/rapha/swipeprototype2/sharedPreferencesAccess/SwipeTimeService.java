@@ -1,8 +1,7 @@
-package com.example.rapha.swipeprototype2.time;
+package com.example.rapha.swipeprototype2.sharedPreferencesAccess;
 
 import android.app.Activity;
 
-import com.example.rapha.swipeprototype2.sharedPreferences.SharedPreferencesService;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import java.util.Date;

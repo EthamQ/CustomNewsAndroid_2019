@@ -12,6 +12,7 @@ import com.example.rapha.swipeprototype2.activities.introduction.IntroductionAct
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.ExplainFinanceFragment;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivityFragments.HowToUseFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.IntroductionAccessService;
 
 public class IntroductionActivity extends AppCompatActivity
         implements
@@ -24,13 +25,14 @@ public class IntroductionActivity extends AppCompatActivity
     public final int EXPLAIN_QUESTIONS = 1;
     public final int EXPLAIN_STATISTIC = 2;
     public final int EXPLAIN_FINANCE = 3;
+    public final int EXPLAIN_DAILY_NEWS = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introduction);
 
-        if(appIsStartedTheFirstTime()){
+        if(IntroductionAccessService.getIntroductionShouldBeShown(getApplicationContext())){
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.introduction_placeholder, new HowToUseFragment());
             ft.commit();
@@ -40,7 +42,7 @@ public class IntroductionActivity extends AppCompatActivity
         }
     }
 
-    public boolean appIsStartedTheFirstTime(){
+    public boolean introductionShouldBeShown(){
         return false;
     }
 
@@ -60,6 +62,7 @@ public class IntroductionActivity extends AppCompatActivity
                 ft.commit();
                 break;
             case EXPLAIN_FINANCE:
+                IntroductionAccessService.setIntroductionShouldBeShown(getApplicationContext(), false);
                 ft.replace(R.id.introduction_placeholder, new ExplainFinanceFragment());
                 ft.commit();
                 break;

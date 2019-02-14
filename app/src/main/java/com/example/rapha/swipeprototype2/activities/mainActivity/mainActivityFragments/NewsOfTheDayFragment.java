@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -21,13 +20,13 @@ import android.arch.lifecycle.Observer;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
-import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayScheduler;
+import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayJobScheduler;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
-import com.example.rapha.swipeprototype2.time.NewsOfTheDayTimeService;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
 import com.example.rapha.swipeprototype2.utils.CollectionService;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
@@ -117,7 +116,7 @@ public class NewsOfTheDayFragment extends Fragment {
     }
 
     private void initArticleRequestScheduler(){
-        ComponentName componentName = new ComponentName(this.getActivity(), NewsOfTheDayScheduler.class);
+        ComponentName componentName = new ComponentName(this.getActivity(), NewsOfTheDayJobScheduler.class);
         JobInfo info = new JobInfo.Builder(NewsOfTheDayTimeService.SCHEDULER_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)

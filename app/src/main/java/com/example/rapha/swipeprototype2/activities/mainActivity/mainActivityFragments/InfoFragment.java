@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.IntroductionAccessService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -77,6 +78,7 @@ public class InfoFragment extends Fragment {
         introductionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                IntroductionAccessService.setIntroductionShouldBeShown(getContext(), true);
                 Intent intent = new Intent(getActivity(), IntroductionActivity.class);
                 getActivity().startActivity(intent);
             }

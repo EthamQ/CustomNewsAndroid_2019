@@ -1,13 +1,7 @@
-package com.example.rapha.swipeprototype2.time;
+package com.example.rapha.swipeprototype2.sharedPreferencesAccess;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 
-import com.example.rapha.swipeprototype2.sharedPreferences.SharedPreferencesService;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
 import java.util.Date;
 
 public class NewsOfTheDayTimeService {
@@ -23,7 +17,7 @@ public class NewsOfTheDayTimeService {
     }
 
     public static Date getDateLastLoadedArticles(Context context){
-        return SharedPreferencesService.getDataDefault(context, TIME_OF_RELAOD_DAILY);
+        return SharedPreferencesService.getDateDefault(context, TIME_OF_RELAOD_DAILY);
     }
 
     public static boolean firstTimeLoadingData(Context context){
