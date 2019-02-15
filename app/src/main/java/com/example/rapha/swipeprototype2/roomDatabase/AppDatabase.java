@@ -20,7 +20,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRo
         UserPreferenceRoomModel.class,
         NewsArticleRoomModel.class,
         KeyWordRoomModel.class
-}, version = 48, exportSchema = false)
+}, version = 49, exportSchema = false)
 @TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 

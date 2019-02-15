@@ -138,8 +138,6 @@ public class SettingsFragment extends Fragment {
                         ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
                         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
                         keyWordDbService.deleteAll();
-                        NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-                        newsArticleDbService.deleteAllDailyArticles();
                         NewsOfTheDayTimeService.resetLastLoaded(getContext());
                         dialogInterface.cancel();
                     }

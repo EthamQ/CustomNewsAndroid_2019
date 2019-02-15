@@ -215,11 +215,6 @@ public class NewsOfTheDayFragment extends Fragment {
                     setTextArticlesLoaded();
                     Log.d("archived", "Add to view: " + "archived: " + articles[i].archived + ", read: " + articles[i].hasBeenRead +", title: " +  articles[i].title);
                 }
-                newsArticleDbService.getAllNewsOfTheDayArticles().observe(getActivity(), data ->{
-                    for(int j = 0; j < data.size(); j++){
-                        //Log.d("archived", "All articles: " + "archived: " + data.get(j).archived + ", read: " + data.get(j).hasBeenRead +", title: " +  data.get(j).title);
-                    }
-                });
             }
         }
     }

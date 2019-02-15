@@ -116,7 +116,7 @@
     </string>
 
     <string name="daily_expl_headline">
-        Daily news
+        News of the day
     </string>
 
     <string name="statistics_expl_headline">
@@ -133,6 +133,18 @@
     </string>
     <string name="explain_statistic_below_text2">
         In MY STATISTICS you can always check out the data we collected about you.
+    </string>
+
+    <string name="explain_daily_news1">
+        Here you see one news article for every topic you liked.
+    </string>
+
+    <string name="explain_daily_news2">
+        The more questions you answer with yes the more articles are displayed.
+    </string>
+
+    <string name="explain_daily_news3">
+        It is updated once a day.
     </string>
 
     <string name="introcard_right">

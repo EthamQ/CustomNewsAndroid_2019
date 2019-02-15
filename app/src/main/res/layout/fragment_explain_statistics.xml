@@ -54,9 +54,10 @@
         android:paddingRight="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.652">
+        app:layout_constraintVertical_bias="0.819">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -93,7 +94,7 @@
 
             <ImageView
                 android:id="@+id/imageView3"
-                android:layout_width="56dp"
+                android:layout_width="39dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/ic_love"
@@ -117,8 +118,8 @@
 
             <ImageView
                 android:id="@+id/imageView5"
-                android:layout_width="73dp"
-                android:layout_height="79dp"
+                android:layout_width="48dp"
+                android:layout_height="76dp"
                 android:layout_weight="1"
                 android:src="@drawable/chart"
                 android:tint="@color/turquis_dark" />
@@ -147,14 +148,29 @@
         android:layout_marginBottom="8dp"
         android:background="@drawable/btn_rounded"
         android:backgroundTint="@color/news_card_text"
-        android:text="I understood!"
         android:padding="10dp"
+        android:text="I understood!"
         android:textColor="@color/news_card_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/imageView9"
+        android:layout_width="259dp"
+        android:layout_height="117dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/statisticssample"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.504"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.948" />
+        app:layout_constraintVertical_bias="0.293" />
 
 </android.support.constraint.ConstraintLayout>
