@@ -63,13 +63,12 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                     newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
                 }
                 for(int j = 0; j < data.size(); j++){
-                    // Log.d("archived", "All articles: " + "archived: " + data.get(j).archived + ", read: " + data.get(j).hasBeenRead +", title: " +  data.get(j).title);
-                    if(data.get(j).archived == false && data.get(j).hasBeenRead == true){
+                    if(!data.get(j).archived && data.get(j).hasBeenRead){
                         readArticles.add(data.get(j));
                     }
                 }
 
-                if(readArticles.size() > 0){
+                if(!readArticles.isEmpty()){
                     for(int i = 0; i < readArticles.size(); i++){
                         newsArticleDbService.setAsArchived(readArticles.get(i));
                         NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "setasarchived", 4);
@@ -77,12 +76,10 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                     }
                     newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
                 }
-
             }
-            });
+        });
     }
 
-    boolean first = true;
     private Observer getObserverToRequestArticles(JobParameters jobParameters){
         this.jobParameters = jobParameters;
         Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
@@ -141,8 +138,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
             storeArticlesInDatabase(articlesForKeyword, foundWithKeyWord);
         }
 
-        // Send notification when all responses have arrived and at least one of the
-        // contained data.
+        // Send notification when all responses have arrived
         if(numberOfReceivedResponses == numberOfSentRequests){
                 DailyNewsLoadingService.setLoading(false);
                 storeDateLastLoadedData();

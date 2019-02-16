@@ -189,50 +189,37 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
      */
     public void setLanguageDialog(){
         Button button = view.findViewById(R.id.button_languages);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                debug();
-                AlertDialog.Builder dialog = new
-                        AlertDialog.Builder(mainActivity);
-                dialog.setTitle("Select languages");
-                final String[] languageItems = LanguageSettingsService.languageItems;
-                final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
-                final boolean[] languageSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
-                dialog.setMultiChoiceItems(languageItems, languageSelection, new DialogInterface.OnMultiChoiceClickListener()  {
-                    @Override
-                    public void onClick(DialogInterface var1, int which, boolean isChecked){
-                        languageSelection[which] = isChecked;
-                        LanguageSettingsService.saveChecked(mainActivity, languageSelection);
-                    }
-                });
-                dialog.setPositiveButton("Confirm choice", new
-                        DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                if(LanguageSettingsService.userChangedLanguage(initialSelection, languageSelection)){
-                                    shouldReloadFragment = true;
-                                    swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
-                                    swipeFragmentState.loadArticles();
-                                }
-                                dialog.cancel();
-                            }
-                        });
-                dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        LanguageSettingsService.saveChecked(mainActivity, initialSelection);
-                        dialog.cancel();
-                    }
-                });
-                AlertDialog alertDialog = dialog.create();
-                alertDialog.show();
-            }
+
+        button.setOnClickListener(view -> {
+            AlertDialog.Builder dialog = new
+                    AlertDialog.Builder(mainActivity);
+            dialog.setTitle("Select languages");
+            final String[] languageItems = LanguageSettingsService.languageItems;
+            final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+            final boolean[] currentSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+
+            dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) ->   {
+                currentSelection[position] = isChecked;
+                LanguageSettingsService.saveChecked(mainActivity, currentSelection);
+            });
+
+            dialog.setPositiveButton("Confirm choice", (positiveDialog, which) -> {
+                if(LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)){
+                    shouldReloadFragment = true;
+                    swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
+                    swipeFragmentState.loadArticles();
+                }
+                positiveDialog.cancel();
+            });
+
+            dialog.setNegativeButton("Cancel", (negativeDialog, which) -> {
+                LanguageSettingsService.saveChecked(mainActivity, initialSelection);
+                negativeDialog.cancel();
+            });
+
+            AlertDialog alertDialog = dialog.create();
+            alertDialog.show();
         });
-    }
-
-    private void debug(){
-
     }
 
     /**
@@ -449,5 +436,5 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    
+
 }

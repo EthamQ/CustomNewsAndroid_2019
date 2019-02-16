@@ -45,6 +45,34 @@ public class SettingsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_settings, container, false);
+        initButtons();
+        return view;
+    }
+
+    private void initButtons(){
+        Button statisticReset = view.findViewById(R.id.statistic_reset_button);
+        statisticReset.setOnClickListener(view ->
+            new AlertDialog.Builder(getActivity())
+                    .setTitle("Confirm")
+                    .setMessage("Do you really want to reset all of your liked categories and topics? " +
+                            "You can't reverse this decision.")
+                    .setPositiveButton("Yes reset", (dialogInterface, i) -> {
+                        RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
+                        ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
+                        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+                        keyWordDbService.deleteAll();
+                        NewsOfTheDayTimeService.resetLastLoaded(getContext());
+                        dialogInterface.cancel();
+                    })
+                    .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
+                    .create().show());
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -70,17 +98,6 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Settings");
-        // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_settings, container, false);
-        initButtons();
-        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -120,36 +137,5 @@ public class SettingsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-    }
-
-    private void initButtons(){
-        Button statisticReset = view.findViewById(R.id.statistic_reset_button);
-        statisticReset.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new AlertDialog.Builder(getActivity())
-                .setTitle("Confirm")
-                .setMessage("Do you really want to reset all of your news preferences? " +
-                        "You can't reverse this decision.")
-                .setPositiveButton("Yes reset", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
-                        ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
-                        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-                        keyWordDbService.deleteAll();
-                        NewsOfTheDayTimeService.resetLastLoaded(getContext());
-                        dialogInterface.cancel();
-                    }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                })
-                .create().show();
-            }
-        });
     }
 }

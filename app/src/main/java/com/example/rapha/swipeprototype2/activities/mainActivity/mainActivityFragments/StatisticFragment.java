@@ -94,8 +94,6 @@ public class StatisticFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_statistic, container, false);
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("My Statistics");
         statisticsFragmentDimensions = new StatisticsFragmentDimensions(this);
         setGraph();
         setLikedTopics();

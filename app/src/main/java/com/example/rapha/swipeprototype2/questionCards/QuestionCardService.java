@@ -29,7 +29,7 @@ public class QuestionCardService {
         // Generate random indices.
         int[] randomIndices = new int[questionSwipeCards.size()];
         for(int i = 0; i < randomIndices.length; i++){
-            int randomIndex = ThreadLocalRandom.current().nextInt(5, swipeCardsList.size());
+            int randomIndex = ThreadLocalRandom.current().nextInt(2, swipeCardsList.size());
             randomIndices[i] = randomIndex;
         }
 

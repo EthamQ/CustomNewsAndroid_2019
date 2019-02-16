@@ -119,16 +119,19 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         if (id == R.id.nav_statistics) {
+            toolbar.setTitle("My Statistics");
             ft.replace(R.id.your_placeholder, new StatisticFragment());
             ft.commit();
         } else if(id == R.id.nav_home){
+            toolbar.setTitle("Swipe");
             ft.replace(R.id.your_placeholder, new SwipeFragment());
             ft.commit();
         } else if(id == R.id.nav_settings){
-            toolbar.setTitle("My Statistics");
+            toolbar.setTitle("Settings");
             ft.replace(R.id.your_placeholder, new SettingsFragment());
             ft.commit();
         } else if(id == R.id.nav_info){
+            toolbar.setTitle("Info");
             ft.replace(R.id.your_placeholder, new InfoFragment());
             ft.commit();
         } else if(id == R.id.nav_news){

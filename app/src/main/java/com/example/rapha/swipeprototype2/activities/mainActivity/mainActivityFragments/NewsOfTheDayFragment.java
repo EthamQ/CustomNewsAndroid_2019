@@ -229,7 +229,7 @@ public class NewsOfTheDayFragment extends Fragment {
     }
 
     private void setTextNotEnoughTopics(){
-        TextView belowHeadline = view.findViewById(R.id.news_of_the_day_info);
+        TextView belowHeadline = view.findViewById(R.id.news_of_the_day_date);
         belowHeadline.setText(R.string.not_enough_topics_news_of_the_day);
     }
 

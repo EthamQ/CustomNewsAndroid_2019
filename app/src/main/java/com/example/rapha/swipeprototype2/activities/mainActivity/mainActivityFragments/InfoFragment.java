@@ -71,8 +71,6 @@ public class InfoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_info, container, false);
-        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
-        toolbar.setTitle("Info");
 
         Button introductionButton = view.findViewById(R.id.to_introduction);
         introductionButton.setOnClickListener(new View.OnClickListener() {
