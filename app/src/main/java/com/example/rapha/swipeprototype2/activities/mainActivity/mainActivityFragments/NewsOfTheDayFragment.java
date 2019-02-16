@@ -92,7 +92,7 @@ public class NewsOfTheDayFragment extends Fragment {
     }
 
     private void reloadFragmentAfterLoadingData(boolean lastLoadingValue, boolean currentLoadingValue){
-        if(lastLoadingValue != currentLoadingValue && !currentLoadingValue){
+        if(!(getActivity() == null) && lastLoadingValue != currentLoadingValue && !currentLoadingValue){
             if(!(NewsOfTheDayFragment.this.getActivity() == null)){
                 ((MainActivity) NewsOfTheDayFragment.this.getActivity()).changeFragmentTo(R.id.nav_news);
             }

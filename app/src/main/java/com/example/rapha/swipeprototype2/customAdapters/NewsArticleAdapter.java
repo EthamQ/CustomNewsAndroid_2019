@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.R;
+import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class NewsArticleAdapter extends ArrayAdapter{
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.swipe_card, parent, false);
         }
-        newsArticle.setSwipeCardView(convertView);
+            newsArticle.setSwipeCardView(convertView);
         return convertView;
     }
 

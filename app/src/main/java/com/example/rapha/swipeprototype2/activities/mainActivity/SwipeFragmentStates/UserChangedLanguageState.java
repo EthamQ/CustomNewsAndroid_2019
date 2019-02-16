@@ -1,14 +1,9 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates;
 
 import android.util.Log;
-import android.widget.Button;
 
-import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
-import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
-
-import java.util.ArrayList;
 
 public class UserChangedLanguageState extends SwipeFragmentState implements ISwipeFragmentState {
     public UserChangedLanguageState(SwipeFragment swipeFragment) {
@@ -35,9 +30,7 @@ public class UserChangedLanguageState extends SwipeFragmentState implements ISwi
     public void loadArticles() {
         Log.d("questioncard", "UserChangedLanguageState loadArticles()()");
         swipeFragment.setCardsVisibility(false, true);
-        for(int i = swipeFragment.swipeCardsList.size() - 1; i > 0; i--){
-            swipeFragment.swipeCardsList.remove(i);
-        }
+        swipeFragment.swipeCardsList.clear();
         swipeFragment.loadArticlesFromApi();
     }
 

@@ -1,10 +1,7 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -88,6 +85,8 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
 
     public ISwipeFragmentState swipeFragmentState;
 
+    public boolean shouldReloadFragment = false;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -110,7 +109,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
         init();
         setLanguageDialog();
-        setSwipeFunctionality();
+        //setSwipeFunctionality();
         swipeFragmentState = new NoArticlesState(this);
         swipeFragmentState.setCardsVisibility();
 
@@ -163,11 +162,17 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
             swipeCardsList.add(new IntroductionSwipeCard());
             mainActivity.introductionCardWasShown();
         }
-        articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
+
         dbService = RatingDbService.getInstance(getActivity().getApplication());
+        initAdapter();
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         dbArticlesToAdd = new LinkedList<>();
+    }
+
+    public void initAdapter(){
+        articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
+        setSwipeFunctionality();
     }
 
     public void getKeyWordsFromDb(){
@@ -206,6 +211,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 if(LanguageSettingsService.userChangedLanguage(initialSelection, languageSelection)){
+                                    shouldReloadFragment = true;
                                     swipeFragmentState = new UserChangedLanguageState(SwipeFragment.this);
                                     swipeFragmentState.loadArticles();
                                 }
@@ -289,6 +295,14 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         articlesArrayAdapter.notifyDataSetChanged();
         Logging.logAmountOfArticles(mainActivity);
         Logging.logSwipeCards(swipeCardsList, "addedtoview");
+        if(shouldReloadFragment){
+            reloadFragment();
+            shouldReloadFragment = false;
+        }
+    }
+
+    public void reloadFragment(){
+        mainActivity.changeFragmentTo(R.id.nav_home);
     }
 
     public boolean shouldRequestArticles(){
@@ -435,5 +449,5 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
+    
 }

@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class NewsOfTheDayTimeService {
 
-    private static String version = "33";
+    private static String version = "35";
     private static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 24;
     private static boolean testing = true;
@@ -34,7 +34,7 @@ public class NewsOfTheDayTimeService {
         int minute = 60;
         int millsFactor = 1000;
         if(testing){
-            return 15 * second * millsFactor;
+            return 60 * second * millsFactor;
         }
         else{
             return INTERVALL_HOURS_RELAOD_DAILY_HOURS * second * minute * millsFactor;

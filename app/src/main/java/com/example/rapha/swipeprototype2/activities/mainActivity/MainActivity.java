@@ -1,11 +1,14 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity;
 
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity
         SettingsFragment.OnFragmentInteractionListener,
         InfoFragment.OnFragmentInteractionListener,
         NewsOfTheDayFragment.OnFragmentInteractionListener{
+
+    public int currentFragment = R.id.nav_home;
 
     public void introductionCardWasShown(){
         StatusDataStorage.mainActivityStarted();
@@ -65,12 +70,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+            if(currentFragment == R.id.nav_home){
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                startActivity(intent);
+            }
+            else{
+                changeFragmentTo(R.id.nav_home);
+            }
     }
 
     @Override
@@ -101,6 +109,7 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view swipe_card clicks here.
         int id = item.getItemId();
         changeFragmentTo(id);
+        currentFragment = id;
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
