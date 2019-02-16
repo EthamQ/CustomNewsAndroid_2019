@@ -1,7 +1,6 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
@@ -23,6 +23,7 @@ import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
+import com.example.rapha.swipeprototype2.loading.SwipeLoadingService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
@@ -121,10 +122,10 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
 
         DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
             if(loading){
-                setCardsVisibility(false, true);
+                handleLoading(false, true, DailyNewsLoadingService.LOAD_DAILY_NEWS);
             }
             else{
-                setCardsVisibility(true, true);
+                handleLoading(true, true, DailyNewsLoadingService.LOAD_DAILY_NEWS);
             }
         });
         return view;
@@ -142,14 +143,25 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         return livekeyWords;
     }
 
-    public void setCardsVisibility(boolean visible, boolean loadingIcon){
+    public void handleLoading(boolean visible, boolean changeLoadingGif, int loadingType){
         int visibility = visible ? View.VISIBLE : View.INVISIBLE;
         view.findViewById(R.id.frame).setVisibility(visibility);
         view.findViewById(R.id.button_languages).setVisibility(visibility);
-        if(loadingIcon){
+        if(changeLoadingGif){
             int visibilityLoading = visible ? GifImageView.INVISIBLE : GifImageView.VISIBLE;
             GifImageView loading = view.findViewById(R.id.loading);
             loading.setVisibility(visibilityLoading);
+            TextView loadingInfo = view.findViewById(R.id.loading_info);
+            loadingInfo.setVisibility(visibilityLoading);
+            String loadingText = "Loading articles, please wait a moment...";
+            switch(loadingType){
+                case SwipeLoadingService.CHANGE_LANGUAGE:
+                    loadingText = "Changing language..."; break;
+                case DailyNewsLoadingService.LOAD_DAILY_NEWS:
+                     loadingText = "Loading your daily news..."; break;
+
+            }
+            loadingInfo.setText(loadingText);
         }
 
     }
@@ -370,10 +382,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                 clickedArticle.onClick(mainActivity);
             }
         });
-    }
-
-    private void restartApplication(){
-        System.exit(2);
     }
 
     /**

@@ -62,5 +62,5 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="250dp"
         android:text="+ 24 hours (testing)"
-        android:visibility="visible"/>
+        android:visibility="invisible"/>
 </FrameLayout>

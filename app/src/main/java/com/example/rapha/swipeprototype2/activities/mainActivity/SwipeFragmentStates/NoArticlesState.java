@@ -22,7 +22,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
      * No data. Make contentof view invisible.
      */
     public void setCardsVisibility() {
-        swipeFragment.setCardsVisibility(false, false);
+        swipeFragment.handleLoading(false, false, -1);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class NoArticlesState extends SwipeFragmentState implements ISwipeFragmen
 
     private void loadTemporarilyStoredCards(){
         swipeFragment.swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
-        swipeFragment.setCardsVisibility(true, true);
+        swipeFragment.handleLoading(true, true, 1);
         changeStateTo(new LoadArticlesFromApiState(swipeFragment));
     }
 

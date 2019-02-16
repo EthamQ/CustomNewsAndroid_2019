@@ -6,6 +6,8 @@ import java.util.List;
 
 public class DailyNewsLoadingService {
 
+    public static final int LOAD_DAILY_NEWS = 1;
+
     private static MutableLiveData<Boolean> dailyNewsAreLoading = new MutableLiveData<>();
 
     public static void setLoading(boolean loading){

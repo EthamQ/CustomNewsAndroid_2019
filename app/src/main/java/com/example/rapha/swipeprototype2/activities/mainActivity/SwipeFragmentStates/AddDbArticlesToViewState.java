@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.loading.SwipeLoadingService;
 import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
 
 public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwipeFragmentState {
@@ -38,7 +39,7 @@ public class AddDbArticlesToViewState extends SwipeFragmentState implements ISwi
      * Make the articles visible.
      */
     public void setCardsVisibility() {
-        swipeFragment.setCardsVisibility(true, true);
+        swipeFragment.handleLoading(true, true, -1);
     }
 
     /**

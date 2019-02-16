@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MY News</string>
+    <string name="app_name">MY News - multilingual</string>
     <string name="title_activity_article_detail_scrolling">ArticleDetailScrollingActivity</string>
 
     <string name="action_settings">Settings</string>
