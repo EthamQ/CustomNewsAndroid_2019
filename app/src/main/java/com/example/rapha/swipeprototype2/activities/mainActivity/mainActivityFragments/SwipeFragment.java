@@ -207,8 +207,8 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                     AlertDialog.Builder(mainActivity);
             dialog.setTitle("Select languages");
             final String[] languageItems = LanguageSettingsService.languageItems;
-            final boolean[] initialSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
-            final boolean[] currentSelection = LanguageSettingsService.loadChecked(SwipeFragment.this);
+            final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
+            final boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
 
             dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) ->   {
                 currentSelection[position] = isChecked;
@@ -252,16 +252,13 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
                         apiArticlesToAdd = ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
                         storeArticlesInDatabase(apiArticlesToAdd);
                         Log.d("AMOUNT", "news articles loaded: " + apiArticlesToAdd.size());
-                        mainActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                        mainActivity.runOnUiThread(() -> {
                                 // Tell the state that data is ready
                                 swipeFragmentState.articlesFromApiAreLoaded();
                                 // Store them to have cached data
                                 // when the user opens the application the next time.
                                 swipeFragmentState.saveArticlesInDb();
                                 swipeFragmentState.addArticlesToView();
-                            }
                         });
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -276,7 +273,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
     public void storeArticlesInDatabase(LinkedList<NewsArticle>  articles){
         if(this != null){
             if(getActivity() != null){
-                NewsArticleDbService.getInstance(getActivity().getApplication()).deleteAllSwipedArticles();
                 NewsArticleDbService.getInstance(getActivity().getApplication())
                         .insertNewsArticles(articles);
             }

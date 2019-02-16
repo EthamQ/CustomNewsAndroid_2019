@@ -9,12 +9,15 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.example.rapha.swipeprototype2.roomDatabase.articleLanguageLink.IArticleLanguageLinkDao;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.IUserPreferenceDao;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.IKeyWordDao;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.ILanguageCombinationDao;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.INewsArticleDao;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.IRequestOffsetDao;
 
 @Database(entities = {
         UserPreferenceRoomModel.class,
@@ -27,7 +30,10 @@ public abstract class AppDatabase extends RoomDatabase{
         private static AppDatabase instance;
         public abstract IUserPreferenceDao dao();
         public abstract INewsArticleDao newsArticleDao();
-        public abstract IKeyWordDao keyWordDaoDao();
+        public abstract IKeyWordDao keyWordDao();
+        public abstract ILanguageCombinationDao languageCombinationDao();
+        public abstract IRequestOffsetDao requestOffsetDao();
+        public abstract IArticleLanguageLinkDao articleLanguageLinkDao();
 
         public static synchronized AppDatabase getInstance(Context context){
                 if(instance == null){

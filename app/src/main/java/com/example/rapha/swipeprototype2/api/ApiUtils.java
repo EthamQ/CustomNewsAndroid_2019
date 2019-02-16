@@ -4,6 +4,9 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.languages.Language;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.roomDatabase.ArticleLanguageLinkDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
@@ -28,7 +31,7 @@ public class ApiUtils {
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
         LinkedList<Distribution> distribution = distributionContainer.getDistributionAsLinkedList();
 
-        boolean[] languageSettings = LanguageSettingsService.loadChecked(swipeFragment);
+        boolean[] languageSettings = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
         LinkedList<Language> languages = new LinkedList<>();
         for(int languageIndex = LanguageSettingsService.INDEX_ENGLISH; languageIndex < languageSettings.length; languageIndex++){
             if(languageSettings[languageIndex]){
@@ -61,7 +64,22 @@ public class ApiUtils {
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
-        return newsApi.queryNewsArticles(queryBuilder);
+        LinkedList<NewsArticle> fetchedArticles = newsApi.queryNewsArticles(queryBuilder);
+        storeDataAboutFetchedArticles(swipeFragment, fetchedArticles, distribution);
+        return fetchedArticles;
+    }
+
+    private static void storeDataAboutFetchedArticles(SwipeFragment swipeFragment, LinkedList<NewsArticle> fetchedArticles, Distribution distribution){
+        LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+        OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
+        ArticleLanguageLinkDbService articleLanguageLinkDbService = ArticleLanguageLinkDbService.getInstance(swipeFragment.getActivity().getApplication());
+        int combinationId = languageCombinationDbService.insertLanguageCombination(LanguageSettingsService.loadChecked(swipeFragment.mainActivity));
+        int languageCombinationId = offsetDbService.saveRequestOffset(
+                distribution.amountToFetchFromApi,
+                distribution.categoryId,
+                combinationId
+        );
+        articleLanguageLinkDbService.linkArticleWithLanguage(fetchedArticles, languageCombinationId);
     }
 
     /**
