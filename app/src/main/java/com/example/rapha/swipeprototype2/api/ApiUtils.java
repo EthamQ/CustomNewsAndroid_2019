@@ -1,17 +1,27 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.languages.Language;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.ArticleLanguageLinkDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
 import com.example.rapha.swipeprototype2.utils.DateUtils;
 
+import org.joda.time.DateTime;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.LinkedList;
@@ -48,7 +58,23 @@ public class ApiUtils {
                 newsArticles.addAll(buildQueryAndFetchArticlesFromApi(swipeFragment, currentDistribution, languages.get(j)));
             }
         }
-        return orderRandomly(newsArticles);
+
+        Collections.sort(newsArticles, new Comparator<NewsArticle>() {
+            @Override
+            public int compare(NewsArticle a, NewsArticle b) {
+                DateTime date1 = new DateTime( a.publishedAt );
+                DateTime date2 = new DateTime( b.publishedAt );
+                if(date1.isBefore(date2)){
+                    return -1;
+                }
+                else if(date1.isAfter(date2)){
+                    return 1;
+                }
+                else return 0;
+            }
+        });
+
+        return newsArticles;
     }
 
     /**
@@ -64,23 +90,31 @@ public class ApiUtils {
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
+        String requestOffset = "";
+        if(distribution.categoryId == NewsCategoryContainer.Politics.CATEGORY_ID){
+            requestOffset = swipeFragment.requestOffsetPolitics;
+        }
+        if(distribution.categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
+            requestOffset = swipeFragment.requestOffsetMovie;
+        }
+        if(distribution.categoryId == NewsCategoryContainer.Finance.CATEGORY_ID){
+            requestOffset = swipeFragment.requestOffsetFinance;
+        }
+        if(distribution.categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
+            requestOffset = swipeFragment.requestOffsetFood;
+        }
+        if(distribution.categoryId == NewsCategoryContainer.Technology.CATEGORY_ID){
+            requestOffset = swipeFragment.requestOffsetTechnology;
+        }
+
+        if(!requestOffset.isEmpty()){
+            // Log.d("ofsss", "offset in query: " + requestOffset);
+            queryBuilder.setDateTo(requestOffset);
+        }
         LinkedList<NewsArticle> fetchedArticles = newsApi.queryNewsArticles(queryBuilder);
-        storeDataAboutFetchedArticles(swipeFragment, fetchedArticles, distribution);
         return fetchedArticles;
     }
 
-    private static void storeDataAboutFetchedArticles(SwipeFragment swipeFragment, LinkedList<NewsArticle> fetchedArticles, Distribution distribution){
-        LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-        OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
-        ArticleLanguageLinkDbService articleLanguageLinkDbService = ArticleLanguageLinkDbService.getInstance(swipeFragment.getActivity().getApplication());
-        int combinationId = languageCombinationDbService.insertLanguageCombination(LanguageSettingsService.loadChecked(swipeFragment.mainActivity));
-        int languageCombinationId = offsetDbService.saveRequestOffset(
-                distribution.amountToFetchFromApi,
-                distribution.categoryId,
-                combinationId
-        );
-        articleLanguageLinkDbService.linkArticleWithLanguage(fetchedArticles, languageCombinationId);
-    }
 
     /**
      * Return the LinkedList that the function receives in random order.
@@ -96,4 +130,20 @@ public class ApiUtils {
         }
         return randomOrderedList;
     }
+
+    /**
+     * Return the LinkedList that the function receives in random order.
+     * @param newsArticles
+     * @return
+     */
+    public static LinkedList<NewsArticle> orderByDate(LinkedList<NewsArticle> newsArticles){
+        LinkedList<NewsArticle> randomOrderedList = new LinkedList<>();
+        while(newsArticles.size() > 0){
+            int randomIndex = ThreadLocalRandom.current().nextInt(0, newsArticles.size());
+            randomOrderedList.add(newsArticles.get(randomIndex));
+            newsArticles.remove(randomIndex);
+        }
+        return randomOrderedList;
+    }
+
 }

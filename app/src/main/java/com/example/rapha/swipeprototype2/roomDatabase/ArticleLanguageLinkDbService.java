@@ -31,7 +31,6 @@ public class ArticleLanguageLinkDbService {
             if (currentArticle.articleType == NewsArticleRoomModel.SWIPE_CARDS) {
                 ArticleLanguageLinkRoomModel linkModel = new ArticleLanguageLinkRoomModel();
                 linkModel.articleTitle = currentArticle.title;
-                linkModel.articleType = currentArticle.articleType;
                 linkModel.languageCombination = languageCombinationId;
                 repository.insert(linkModel);
             }

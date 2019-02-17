@@ -17,8 +17,8 @@ public interface ILanguageCombinationDao {
     @Query("SELECT * FROM language_combination")
     LiveData<List<LanguageCombinationRoomModel>> getAll();
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    void insertOne(LanguageCombinationRoomModel languageCombinationRoomModel);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    long insertOne(LanguageCombinationRoomModel languageCombinationRoomModel);
 
     @Update
     void update(LanguageCombinationRoomModel languageCombinationRoomModel);

@@ -29,6 +29,7 @@ public class NewsApi {
 	    int newsCategory = queryBuilder.getNewsCategory();
 	    queryBuilder.buildQuery();
 	    String urlForApi = URL_ALL_NEWS_API + ApiKey.API_KEY_NEWS_API + queryBuilder.getQuery();
+		Log.d("ofsss", "received query:  " + queryBuilder.getQuery());
 	    Log.d("URL", urlForApi);
         JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
 		Log.d("oftheday", newsArticleJson.toString());

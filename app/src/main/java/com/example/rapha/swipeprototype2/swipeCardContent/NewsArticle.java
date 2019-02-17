@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,17 +15,27 @@ import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScrollingActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.api.ApiUtils;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.roomDatabase.ArticleLanguageLinkDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
+import org.joda.time.DateTime;
 import org.json.JSONObject;
 
-public class NewsArticle implements Parcelable, ISwipeCard {
+import java.util.Date;
+
+public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageCombination {
 
     public String sourceId;
     public String sourceName;
@@ -110,11 +122,13 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
         userReadArticle(swipeFragment.getActivity());
+        setLanguageCombination(swipeFragment);
     }
     @Override
     public void dislike(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
         userReadArticle(swipeFragment.getActivity());
+        setLanguageCombination(swipeFragment);
     }
 
     public void userReadArticle(Activity activity){
@@ -124,6 +138,58 @@ public class NewsArticle implements Parcelable, ISwipeCard {
             readArticle.hasBeenRead = true;
             newsArticleDbService.update(readArticle);
         }
+
+        private void setLanguageCombination(SwipeFragment swipeFragment){
+            LanguageCombinationData data = new LanguageCombinationData(this);
+            data.data = swipeFragment;
+
+	        boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
+            LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+            comboDbService.getAll().observe(swipeFragment.getActivity(), entries ->{
+                if(entries.isEmpty()){
+                    LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                    languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                }
+                for(int i = 0; i < entries.size(); i++){
+                    boolean alreadyExists = entries.get(i).german == currentLanguages[LanguageSettingsService.INDEX_GERMAN]
+                            && entries.get(i).french == currentLanguages[LanguageSettingsService.INDEX_FRENCH]
+                            && entries.get(i).russian == currentLanguages[LanguageSettingsService.INDEX_RUSSIAN]
+                            && entries.get(i).english == currentLanguages[LanguageSettingsService.INDEX_ENGLISH];
+                    if(alreadyExists){
+                        Log.d("offsets", "alreadyExists");
+                        data.insertedId = entries.get(i).id;
+                        onLanguageCombinationInsertFinished(data);
+                        break;
+                    }
+                    if(i == entries.size() - 1){
+                        Log.d("offsets", "end of loop");
+                        LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                        languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                    }
+                }
+            });
+
+        }
+
+
+
+    @Override
+    public void onLanguageCombinationInsertFinished(LanguageCombinationData data) {
+	    Log.d("offsets", "onLanguageCombinationInsertFinished");
+	    SwipeFragment swipeFragment = (SwipeFragment) data.data;
+	    if(!(swipeFragment == null)){
+            long insertedId = data.insertedId;
+            OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
+            if(!this.publishedAt.isEmpty()){
+                offsetDbService.saveRequestOffset(
+                        this.publishedAt,
+                        this.newsCategory,
+                        insertedId
+                );
+            }
+        }
+
+    }
 
 
     @Override
@@ -155,7 +221,8 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     @Override
     public String toString(){
         String ret = "";
-        ret += "Title: " + this.title;
+        ret += "published at: " + this.publishedAt;
+        ret += ", Title: " + this.title;
         return ret;
     }
 
@@ -198,4 +265,5 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         @Override
         public NewsArticle[] newArray(int size) { return new NewsArticle[size]; }
     };
+
 }

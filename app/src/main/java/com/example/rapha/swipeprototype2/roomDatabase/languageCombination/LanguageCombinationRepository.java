@@ -21,23 +21,30 @@ public class LanguageCombinationRepository {
         return this.dao.getAll();
     }
 
-    public void insert(LanguageCombinationRoomModel languageCombinationRoomModel){
-        new InsertAsyncTask(dao).execute(languageCombinationRoomModel);
+    public void insert(LanguageCombinationRoomModel languageCombinationRoomModel, LanguageCombinationData data){
+        new InsertAsyncTask(dao, data).execute(languageCombinationRoomModel);
     }
 
     public void update(LanguageCombinationRoomModel languageCombinationRoomModel){
         new UpdateAsyncTask(dao).execute(languageCombinationRoomModel);
     }
 
-    private static class InsertAsyncTask extends AsyncTask<LanguageCombinationRoomModel, Void, Void> {
-        private ILanguageCombinationDao dao;
-        private InsertAsyncTask(ILanguageCombinationDao dao){
+    private static class InsertAsyncTask extends AsyncTask<LanguageCombinationRoomModel, Void, LanguageCombinationData> {
+        ILanguageCombinationDao dao;
+        LanguageCombinationData data;
+        private InsertAsyncTask(ILanguageCombinationDao dao, LanguageCombinationData data){
             this.dao = dao;
+            this.data = data;
         }
         @Override
-        protected Void doInBackground(LanguageCombinationRoomModel... languageCombinationRoomModels) {
-            dao.insertOne(languageCombinationRoomModels[0]);
-            return null;
+        protected LanguageCombinationData doInBackground(LanguageCombinationRoomModel... languageCombinationRoomModels) {
+            data.insertedId = dao.insertOne(languageCombinationRoomModels[0]);
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(LanguageCombinationData data) {
+            data.inserter.onLanguageCombinationInsertFinished(data);
         }
     }
 

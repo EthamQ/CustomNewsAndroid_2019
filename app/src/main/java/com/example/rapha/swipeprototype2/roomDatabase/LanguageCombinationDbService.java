@@ -1,11 +1,17 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
+import android.util.Log;
 
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRepository;
+
+import java.util.List;
 
 public class LanguageCombinationDbService {
 
@@ -23,8 +29,9 @@ public class LanguageCombinationDbService {
         return instance;
     }
 
-    public int insertLanguageCombination(boolean[] languageCombination){
+    public int insertLanguageCombination(LanguageCombinationData data, boolean[] languageCombination){
         LanguageCombinationRoomModel combo = new LanguageCombinationRoomModel();
+        Log.d("eee", "insertLanguageCombination" + combo.id);
         final int indexEN = LanguageSettingsService.INDEX_ENGLISH;
         final int indexGER = LanguageSettingsService.INDEX_GERMAN;
         final int indexFR = LanguageSettingsService.INDEX_FRENCH;
@@ -43,7 +50,11 @@ public class LanguageCombinationDbService {
                 combo.russian = true;
             }
         }
-        repository.insert(combo);
+        repository.insert(combo, data);
         return combo.id;
+    }
+
+    public LiveData<List<LanguageCombinationRoomModel>> getAll(){
+        return repository.getAll();
     }
 }

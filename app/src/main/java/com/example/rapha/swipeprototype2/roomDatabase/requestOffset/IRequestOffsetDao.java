@@ -15,7 +15,7 @@ public interface IRequestOffsetDao {
     @Query("SELECT * FROM request_offset")
     LiveData<List<RequestOffsetRoomModel>> getAll();
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertOne(RequestOffsetRoomModel requestOffsetRoomModel);
 
     @Update

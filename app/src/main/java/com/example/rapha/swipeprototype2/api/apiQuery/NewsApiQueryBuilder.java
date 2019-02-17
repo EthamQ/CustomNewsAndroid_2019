@@ -92,6 +92,11 @@ public class NewsApiQueryBuilder {
         this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
     }
 
+    public void setDateTo(String dateIso8601){
+        String hashMapKey = QueryCategoryContainer.DateTo.hashMapKey;
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = dateIso8601;
+    }
+
     private void setLanguage(int languageId){
         this.languageId = languageId;
         String languageQueryString;

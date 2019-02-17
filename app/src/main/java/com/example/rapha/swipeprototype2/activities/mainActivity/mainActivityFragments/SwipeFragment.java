@@ -24,8 +24,12 @@ import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.loading.SwipeLoadingService;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ErrorSwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.IntroductionSwipeCard;
@@ -41,6 +45,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import pl.droidsonroids.gif.GifImageView;
 
@@ -77,6 +82,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
 
     // Contains all the user preferences fetched from the database (news category and its rating).
     public List<UserPreferenceRoomModel> liveCategoryRatings;
+
+    public String requestOffsetFinance;
+    public String requestOffsetFood;
+    public String requestOffsetPolitics;
+    public String requestOffsetMovie;
+    public String requestOffsetTechnology;
 
     public List<KeyWordRoomModel> livekeyWords;
 
@@ -180,7 +191,72 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         dbArticlesToAdd = new LinkedList<>();
+
+        debug();
     }
+
+    private void debug(){
+        OffsetDbService offsetDbService = OffsetDbService.getInstance(getActivity().getApplication());
+        offsetDbService.getAll().observe(getActivity(), entries ->{
+            for(int i = 0; i < entries.size(); i++){
+                Log.d("offsetss", entries.get(i).toString());
+            }
+        });
+
+        LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(getActivity().getApplication());
+        comboDbService.getAll().observe(getActivity(), entries ->{
+            for(int i = 0; i < entries.size(); i++){
+                Log.d("offsetss", entries.get(i).toString());
+            }
+        });
+
+
+        comboDbService.getAll().observe(getActivity(), combinations ->{
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
+            this.requestOffsetFood = "";
+            this.requestOffsetMovie = "";
+            this.requestOffsetFinance = "";
+            this.requestOffsetPolitics = "";
+            this.requestOffsetTechnology = "";
+            for(int i = 0; i < combinations.size(); i++){
+                final LanguageCombinationRoomModel currentCombination = combinations.get(i);
+                boolean combinationExists = currentCombination.german == currentLanguages[LanguageSettingsService.INDEX_GERMAN]
+                        && currentCombination.french == currentLanguages[LanguageSettingsService.INDEX_FRENCH]
+                        && currentCombination.russian == currentLanguages[LanguageSettingsService.INDEX_RUSSIAN]
+                        && currentCombination.english == currentLanguages[LanguageSettingsService.INDEX_ENGLISH];
+                if(combinationExists){
+                    offsetDbService.getAll().observe(getActivity(), offsets ->{
+                        for(int j = 0; j < offsets.size(); j++){
+                            if(offsets.get(j).languageCombination == currentCombination.id){
+                                if(offsets.get(j).categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
+                                    this.requestOffsetMovie = offsets.get(j).requestOffset;
+                                    Log.d("ofsss", "Swipe fragment set movies offset to: " + this.requestOffsetMovie);
+                                }
+                                if(offsets.get(j).categoryId == NewsCategoryContainer.Finance.CATEGORY_ID){
+                                    this.requestOffsetFinance = offsets.get(j).requestOffset;
+                                    Log.d("ofsss", "Swipe fragment set finance offset to: " + this.requestOffsetFinance);
+                                }
+                                if(offsets.get(j).categoryId == NewsCategoryContainer.Technology.CATEGORY_ID){
+                                    this.requestOffsetTechnology = offsets.get(j).requestOffset;
+                                    Log.d("ofsss", "Swipe fragment set technolgy offset to: " + this.requestOffsetTechnology);
+                                }
+                                if(offsets.get(j).categoryId == NewsCategoryContainer.Politics.CATEGORY_ID){
+                                    this.requestOffsetPolitics = offsets.get(j).requestOffset;
+                                    Log.d("ofsss", "Swipe fragment set politic offset to: " + this.requestOffsetPolitics);
+                                }
+                                if(offsets.get(j).categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
+                                    this.requestOffsetFood = offsets.get(j).requestOffset;
+                                    Log.d("ofsss", "Swipe fragment set food offset to: " + this.requestOffsetFood);
+                                }
+                            }
+                        }
+                        Log.d("ofsss", "============================");
+                    });
+                }
+            }
+        });
+    }
+
 
     public void initAdapter(){
         articlesArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
@@ -270,9 +346,13 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         }
     }
 
+
+
     public void storeArticlesInDatabase(LinkedList<NewsArticle>  articles){
         if(this != null){
             if(getActivity() != null){
+                NewsArticleDbService.getInstance(getActivity().getApplication())
+                        .deleteAllSwipedArticles();
                 NewsArticleDbService.getInstance(getActivity().getApplication())
                         .insertNewsArticles(articles);
             }
@@ -318,6 +398,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider {
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
+                Log.d("ofsss", swipeCardsList.get(0).toString());
                 Log.d("addedd", "card remove: " + swipeCardsList.get(0).toString());
                 swipeCardsList.remove(0);
                 Log.d("remove", "Card removed");

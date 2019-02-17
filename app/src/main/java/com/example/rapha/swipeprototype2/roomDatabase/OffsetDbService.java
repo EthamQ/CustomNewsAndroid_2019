@@ -1,6 +1,7 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
 import android.app.Application;
+import android.arch.lifecycle.LiveData;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
@@ -13,6 +14,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffse
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class OffsetDbService {
 
@@ -30,15 +32,16 @@ public class OffsetDbService {
         return instance;
     }
 
-    public int saveRequestOffset(int requestOffset, int categoryId, int languageCombinationId)
-    {
+    public void saveRequestOffset(String requestOffset, int categoryId, long languageCombinationId) {
         RequestOffsetRoomModel offsetModel = new RequestOffsetRoomModel();
         offsetModel.requestOffset = requestOffset;
         offsetModel.categoryId = categoryId;
         offsetModel.languageCombination = languageCombinationId;
-
         repository.insert(offsetModel);
-        return languageCombinationId;
+    }
+
+    public LiveData<List<RequestOffsetRoomModel>> getAll(){
+        return repository.getAll();
     }
 
 }
