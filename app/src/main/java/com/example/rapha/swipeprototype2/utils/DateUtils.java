@@ -25,6 +25,11 @@ public class DateUtils {
         return year + "-" + month + "-" + day;
     }
 
+    public static String dateToISO8601(String year, String month, String day, String hour, String minute, String second){
+        //TODO: handle missing leading zeros
+        return year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + "Z";
+    }
+
     /**
      * Subtracts "daysBefore" from the current date and returns the
      * calculated date in the format yyyy-MM-dd

@@ -10,13 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.introduction.IntroductionActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentStates.UserChangedLanguageState;
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -2,16 +2,11 @@ package com.example.rapha.swipeprototype2.roomDatabase;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
-import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.queryWords.QueryWordService;
-import com.example.rapha.swipeprototype2.roomDatabase.articleLanguageLink.ArticleLanguageLinkRoomModel;
-import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
-import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
-import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +33,14 @@ public class OffsetDbService {
         offsetModel.categoryId = categoryId;
         offsetModel.languageCombination = languageCombinationId;
         repository.insert(offsetModel);
+    }
+
+    public void update(RequestOffsetRoomModel offsetModel) {
+        repository.update(offsetModel);
+    }
+
+    public MutableLiveData<LinkedList<RequestOffsetRoomModel>> getOffsetsForLanguageCombination(MainActivity mainActivity, boolean[] languageCombination){
+        return repository.getDateOffsetsForLanguageCombination(mainActivity, languageCombination);
     }
 
     public LiveData<List<RequestOffsetRoomModel>> getAll(){

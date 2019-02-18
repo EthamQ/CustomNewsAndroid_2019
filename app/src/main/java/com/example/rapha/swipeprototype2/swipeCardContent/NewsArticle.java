@@ -27,12 +27,17 @@ import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordR
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
+import com.example.rapha.swipeprototype2.utils.DateUtils;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageCombination {
@@ -121,12 +126,15 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     @Override
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
-        userReadArticle(swipeFragment.getActivity());
-        setLanguageCombination(swipeFragment);
+        updateValuesAfterSwipe(swipeFragment);
     }
     @Override
     public void dislike(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
+        updateValuesAfterSwipe(swipeFragment);
+    }
+
+    public void updateValuesAfterSwipe(SwipeFragment swipeFragment) {
         userReadArticle(swipeFragment.getActivity());
         setLanguageCombination(swipeFragment);
     }
@@ -180,8 +188,20 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
             if(!(swipeFragment.getActivity() == null)){
                 OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
                 if(!this.publishedAt.isEmpty()){
+                    DateTime temp = new DateTime(this.publishedAt);
+                    temp = temp.minusMinutes(1);
+
+                    DecimalFormat df = new DecimalFormat("00");
+                    String year = temp.getYear() + "";
+                    String month = df.format(temp.getMonthOfYear());
+                    String day = df.format(temp.getDayOfMonth());
+                    String hour = df.format(temp.getHourOfDay());
+                    String minute = df.format(temp.getMinuteOfHour());
+                    String second = df.format(temp.getSecondOfMinute());
+                    String s = DateUtils.dateToISO8601(year, month, day, hour, minute, second);
+
                     offsetDbService.saveRequestOffset(
-                            this.publishedAt,
+                            s,
                             this.newsCategory,
                             insertedId
                     );

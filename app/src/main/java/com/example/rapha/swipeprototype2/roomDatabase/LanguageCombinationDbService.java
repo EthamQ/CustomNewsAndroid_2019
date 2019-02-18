@@ -57,4 +57,11 @@ public class LanguageCombinationDbService {
     public LiveData<List<LanguageCombinationRoomModel>> getAll(){
         return repository.getAll();
     }
+
+    public static boolean languageSelectionIsEqual(boolean[] currentLanguages, LanguageCombinationRoomModel currentCombination){
+        return currentCombination.german == currentLanguages[LanguageSettingsService.INDEX_GERMAN]
+                && currentCombination.french == currentLanguages[LanguageSettingsService.INDEX_FRENCH]
+                && currentCombination.russian == currentLanguages[LanguageSettingsService.INDEX_RUSSIAN]
+                && currentCombination.english == currentLanguages[LanguageSettingsService.INDEX_ENGLISH];
+    }
 }

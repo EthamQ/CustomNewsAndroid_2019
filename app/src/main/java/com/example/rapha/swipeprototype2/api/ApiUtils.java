@@ -1,17 +1,18 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
+import com.example.rapha.swipeprototype2.dataStorage.DateOffsetDataStorage;
 import com.example.rapha.swipeprototype2.languages.Language;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
-import com.example.rapha.swipeprototype2.roomDatabase.ArticleLanguageLinkDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
@@ -19,9 +20,9 @@ import com.example.rapha.swipeprototype2.utils.DateUtils;
 
 import org.joda.time.DateTime;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.LinkedList;
@@ -91,27 +92,11 @@ public class ApiUtils {
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
-        String requestOffset = "";
-        if(distribution.categoryId == NewsCategoryContainer.Politics.CATEGORY_ID){
-            requestOffset = swipeFragment.requestOffsetPolitics;
-        }
-        if(distribution.categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
-            requestOffset = swipeFragment.requestOffsetMovie;
-        }
-        if(distribution.categoryId == NewsCategoryContainer.Finance.CATEGORY_ID){
-            requestOffset = swipeFragment.requestOffsetFinance;
-        }
-        if(distribution.categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
-            requestOffset = swipeFragment.requestOffsetFood;
-        }
-        if(distribution.categoryId == NewsCategoryContainer.Technology.CATEGORY_ID){
-            requestOffset = swipeFragment.requestOffsetTechnology;
-        }
-
+        String requestOffset = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
         if(!requestOffset.isEmpty()){
             Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + requestOffset);
             queryBuilder.setDateTo(requestOffset);
-            checkDayEqual(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
+            resetOffsetIfToEqualFrom(swipeFragment, DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
         }
         else{
             Log.d("newswipe", "no offset set");
@@ -120,7 +105,7 @@ public class ApiUtils {
         return fetchedArticles;
     }
 
-    private static boolean checkDayEqual(String dateFrom, String dateTo, int categoryId){
+    private static void resetOffsetIfToEqualFrom(SwipeFragment swipeFragment, String dateFrom, String dateTo, int categoryId){
         DateTime from = new DateTime( dateFrom );
         DateTime to = new DateTime( dateTo );
         int dayFrom = from.getDayOfMonth();
@@ -129,9 +114,33 @@ public class ApiUtils {
         int monthTo = to.getMonthOfYear();
         if(dayFrom == dayTo && monthFrom == monthTo){
             Log.d("newswipe", "#### NO NEWS ARTICLES, ");
-            return true;
+            swipeFragment.languageComboDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
+                    Observer comboObserver = this;
+                    boolean[] currentSelection = LanguageSettingsService.loadChecked((MainActivity) swipeFragment.getActivity());
+                    for(int i = 0; i < languageCombinations.size(); i++){
+                        if(LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, languageCombinations.get(i))){
+                            int comboId = languageCombinations.get(i).id;
+                            swipeFragment.dateOffsetDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<RequestOffsetRoomModel>>() {
+                                @Override
+                                public void onChanged(@Nullable List<RequestOffsetRoomModel> requestOffsetRoomModels) {
+                                    for(int i = 0; i < requestOffsetRoomModels.size(); i++){
+                                        if(requestOffsetRoomModels.get(i).languageCombination == comboId && requestOffsetRoomModels.get(i).categoryId == categoryId){
+                                            requestOffsetRoomModels.get(i).requestOffset = "";
+                                            swipeFragment.dateOffsetDbService.update(requestOffsetRoomModels.get(i));
+                                            swipeFragment.languageComboDbService.getAll().removeObserver(comboObserver);
+                                            swipeFragment.dateOffsetDbService.getAll().removeObserver(this);
+                                        }
+                                    }
+                                }
+                            });
+
+                        }
+                    }
+                }
+            });
         }
-        return false;
     }
 
 
