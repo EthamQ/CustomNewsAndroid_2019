@@ -14,6 +14,10 @@ public class ArticleDataStorage {
         temporaryStoredArticles = articles;
     }
 
+    public static void clearData(){
+        temporaryStoredArticles.clear();
+    }
+
     public static ArrayList<ISwipeCard> getTemporaryStoredArticles(){
         return temporaryStoredArticles;
     }

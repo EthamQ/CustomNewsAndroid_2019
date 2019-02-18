@@ -5,6 +5,8 @@ import android.arch.lifecycle.LiveData;
 
 import com.example.rapha.swipeprototype2.queryWords.QueryWordService;
 import com.example.rapha.swipeprototype2.roomDatabase.articleLanguageLink.ArticleLanguageLinkRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.DeleteData;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.IDeletesArticle;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
@@ -40,8 +42,8 @@ public class NewsArticleDbService {
         insert(insert);
     }
 
-    public void deleteAllSwipedArticles(){
-        repository.deleteAllSwipeArticles();
+    public void deleteAllSwipedArticles(DeleteData deleteData){
+        repository.deleteAllSwipeArticles(deleteData);
     }
 
     public void deleteAllDailyArticles(){

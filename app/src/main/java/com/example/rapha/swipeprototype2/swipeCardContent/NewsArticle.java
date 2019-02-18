@@ -171,21 +171,21 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
 
         }
 
-
-
     @Override
     public void onLanguageCombinationInsertFinished(LanguageCombinationData data) {
 	    Log.d("offsets", "onLanguageCombinationInsertFinished");
 	    SwipeFragment swipeFragment = (SwipeFragment) data.data;
 	    if(!(swipeFragment == null)){
             long insertedId = data.insertedId;
-            OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
-            if(!this.publishedAt.isEmpty()){
-                offsetDbService.saveRequestOffset(
-                        this.publishedAt,
-                        this.newsCategory,
-                        insertedId
-                );
+            if(!(swipeFragment.getActivity() == null)){
+                OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
+                if(!this.publishedAt.isEmpty()){
+                    offsetDbService.saveRequestOffset(
+                            this.publishedAt,
+                            this.newsCategory,
+                            insertedId
+                    );
+                }
             }
         }
 
@@ -221,7 +221,8 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     @Override
     public String toString(){
         String ret = "";
-        ret += "published at: " + this.publishedAt;
+        ret += "category: : " + this.newsCategory;
+        ret += ", published at: " + this.publishedAt;
         ret += ", Title: " + this.title;
         return ret;
     }

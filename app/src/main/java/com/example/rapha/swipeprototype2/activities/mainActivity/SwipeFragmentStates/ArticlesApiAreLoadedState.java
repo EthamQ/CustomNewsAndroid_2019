@@ -3,7 +3,9 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.SwipeFragmentS
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.questionCards.QuestionCardService;
+import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 
 public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISwipeFragmentState {
 
@@ -38,13 +40,16 @@ public class ArticlesApiAreLoadedState extends SwipeFragmentState implements ISw
      * Save all articles we just loaded from the api in the database.
      */
     public void saveArticlesInDb() {
-//        if(swipeFragment != null){
+        if(swipeFragment != null){
 //            if(swipeFragment.getActivity() != null){
-//                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAllSwipeArticles();
+//                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication()).deleteAllSwipedArticles();
 //                NewsArticleDbService.getInstance(swipeFragment.getActivity().getApplication())
 //                        .insertNewsArticles(swipeFragment.apiArticlesToAdd);
 //            }
-//        }
+            changeStateTo(new NoArticlesState(swipeFragment));
+            ArticleDataStorage.clearData();
+            swipeFragment.swipeFragmentState.loadArticles();
+        }
     }
 
     @Override

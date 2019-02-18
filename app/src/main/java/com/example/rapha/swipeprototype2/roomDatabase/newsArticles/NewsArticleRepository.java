@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 
 import com.example.rapha.swipeprototype2.roomDatabase.AppDatabase;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
 
 import java.util.List;
 
@@ -35,12 +36,19 @@ public class NewsArticleRepository {
         new InsertNewsArticleAsyncTask(dao).execute(newsArticleRoomModel);
     }
 
-    public void deleteAllSwipeArticles(){
-        new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.SWIPE_CARDS);
+    public void deleteAllSwipeArticles(DeleteData deleteData){
+        new DeleteAllNewsArticlesAsyncTask (dao, deleteData).execute(NewsArticleRoomModel.SWIPE_CARDS);
     }
 
     public void deleteAllDailyArticles(){
-        new DeleteAllNewsArticlesAsyncTask (dao).execute(NewsArticleRoomModel.NEWS_OF_THE_DAY);
+        DeleteData deleteData = new DeleteData();
+        deleteData.deletesArticle = new IDeletesArticle(){
+            @Override
+            public void onDeleted(DeleteData data) {
+
+            }
+        };
+        new DeleteAllNewsArticlesAsyncTask (dao, deleteData).execute(NewsArticleRoomModel.NEWS_OF_THE_DAY);
     }
 
     public  LiveData<List<NewsArticleRoomModel>> getOneNewsArticle(String title, int articleType){
@@ -93,17 +101,24 @@ public class NewsArticleRepository {
         }
     }
 
-    private static class DeleteAllNewsArticlesAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private static class DeleteAllNewsArticlesAsyncTask extends AsyncTask<Integer, Void, DeleteData> {
 
         private INewsArticleDao dao;
+        DeleteData deleteData;
 
-        private DeleteAllNewsArticlesAsyncTask(INewsArticleDao dao){
+        private DeleteAllNewsArticlesAsyncTask(INewsArticleDao dao, DeleteData deleteData){
             this.dao = dao;
+            this.deleteData = deleteData;
         }
         @Override
-        protected Void doInBackground(Integer... integers) {
+        protected DeleteData doInBackground(Integer... integers) {
             dao.deleteAllNewsArticles(integers[0]);
-            return null;
+            return deleteData;
+        }
+
+        @Override
+        protected void onPostExecute(DeleteData deleteData) {
+            deleteData.deletesArticle.onDeleted(deleteData);
         }
     }
 

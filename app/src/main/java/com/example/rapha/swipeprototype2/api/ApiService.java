@@ -17,8 +17,8 @@ import java.util.List;
 public class ApiService {
 
     // How old should the news articles be? (days)
-    public static int AMOUNT_DAYS_BEFORE_TODAY = 7;
-    public static final int MAX_NUMBER_OF_ARTICLES = 100;
+    public static int AMOUNT_DAYS_BEFORE_TODAY = 14;
+    public static final int MAX_NUMBER_OF_ARTICLES = 30;
 
     /**
      * Retrieves news articles from the NewsApi and returns them in a list.

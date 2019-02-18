@@ -29,7 +29,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffse
         LanguageCombinationRoomModel.class,
         ArticleLanguageLinkRoomModel.class,
         RequestOffsetRoomModel.class
-}, version = 58, exportSchema = false)
+}, version = 65, exportSchema = false)
 @TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 

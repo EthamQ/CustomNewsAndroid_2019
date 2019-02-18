@@ -45,6 +45,7 @@ public class ApiUtils {
         LinkedList<Language> languages = new LinkedList<>();
         for(int languageIndex = LanguageSettingsService.INDEX_ENGLISH; languageIndex < languageSettings.length; languageIndex++){
             if(languageSettings[languageIndex]){
+                Log.d("newswipe", "request with language index: " + new Language(languageIndex).languageId);
                 languages.add(new Language(languageIndex));
             }
         }
@@ -65,10 +66,10 @@ public class ApiUtils {
                 DateTime date1 = new DateTime( a.publishedAt );
                 DateTime date2 = new DateTime( b.publishedAt );
                 if(date1.isBefore(date2)){
-                    return -1;
+                    return 1;
                 }
                 else if(date1.isAfter(date2)){
-                    return 1;
+                    return -1;
                 }
                 else return 0;
             }
@@ -108,11 +109,29 @@ public class ApiUtils {
         }
 
         if(!requestOffset.isEmpty()){
-            // Log.d("ofsss", "offset in query: " + requestOffset);
+            Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + requestOffset);
             queryBuilder.setDateTo(requestOffset);
+            checkDayEqual(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
+        }
+        else{
+            Log.d("newswipe", "no offset set");
         }
         LinkedList<NewsArticle> fetchedArticles = newsApi.queryNewsArticles(queryBuilder);
         return fetchedArticles;
+    }
+
+    private static boolean checkDayEqual(String dateFrom, String dateTo, int categoryId){
+        DateTime from = new DateTime( dateFrom );
+        DateTime to = new DateTime( dateTo );
+        int dayFrom = from.getDayOfMonth();
+        int monthFrom = from.getMonthOfYear();
+        int dayTo = to.getDayOfMonth();
+        int monthTo = to.getMonthOfYear();
+        if(dayFrom == dayTo && monthFrom == monthTo){
+            Log.d("newswipe", "#### NO NEWS ARTICLES, ");
+            return true;
+        }
+        return false;
     }
 
 
