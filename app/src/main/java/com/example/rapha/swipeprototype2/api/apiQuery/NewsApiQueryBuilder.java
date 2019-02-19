@@ -3,10 +3,9 @@ package com.example.rapha.swipeprototype2.api.apiQuery;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryUtils;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 public class NewsApiQueryBuilder {
     
@@ -71,7 +70,7 @@ public class NewsApiQueryBuilder {
      */
     public void setDateFrom(String year, String month, String day){
         String hashMapKey = QueryCategoryContainer.DateFrom.hashMapKey;
-        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateService.dateToISO8601(year, month, day);
     }
 
     public void setDateFrom(String ISO8601Date){
@@ -89,7 +88,7 @@ public class NewsApiQueryBuilder {
      */
     public void setDateTo(String year, String month, String day){
         String hashMapKey = QueryCategoryContainer.DateTo.hashMapKey;
-        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateUtils.dateToISO8601(year, month, day);
+        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateService.dateToISO8601(year, month, day);
     }
 
     public void setDateTo(String dateIso8601){

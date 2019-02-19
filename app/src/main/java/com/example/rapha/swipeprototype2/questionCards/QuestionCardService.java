@@ -6,7 +6,7 @@ import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.swipeCardContent.QuestionSwipeCard;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 import com.example.rapha.swipeprototype2.utils.CollectionService;
 
 import java.util.ArrayList;
@@ -64,7 +64,7 @@ public class QuestionCardService {
         }
         Date today = new Date();
         Date lastShown = keyWordRoomModel.shownToUser;
-        int dayDifference = DateUtils.daysBetween(lastShown, today);
+        int dayDifference = DateService.daysBetween(lastShown, today);
         Log.d("daydifference", "Today: " + today.toString() + "Shown: " + lastShown.toString() + "Difference: " + dayDifference);
         return dayDifference >= 7;
     }

@@ -2,14 +2,13 @@ package com.example.rapha.swipeprototype2.api;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.FilterNewsService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.http.HttpRequest;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -35,7 +34,7 @@ public class ApiService {
 
     public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language, int amount, int daysBefore) throws Exception{
         NewsApiQueryBuilder builder = new NewsApiQueryBuilder(language);
-        builder.setDateFrom(DateUtils.getDateBefore(daysBefore));
+        builder.setDateFrom(DateService.getDateBefore(daysBefore));
         builder.addQueryWord(queryWords);
         builder.setNumberOfNewsArticles(amount);
         builder.buildQuery();

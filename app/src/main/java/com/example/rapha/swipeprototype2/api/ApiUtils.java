@@ -16,7 +16,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffse
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
 import com.example.rapha.swipeprototype2.categoryDistribution.DistributionContainer;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 import org.joda.time.DateTime;
 
@@ -91,12 +91,12 @@ public class ApiUtils {
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
-        queryBuilder.setDateFrom(DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
+        queryBuilder.setDateFrom(DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
         String requestOffset = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
         if(!requestOffset.isEmpty()){
             Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + requestOffset);
             queryBuilder.setDateTo(requestOffset);
-            resetOffsetIfToEqualFrom(swipeFragment, DateUtils.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
+            resetOffsetIfToEqualFrom(swipeFragment, DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
         }
         else{
             Log.d("newswipe", "no offset set");

@@ -2,7 +2,7 @@ package com.example.rapha.swipeprototype2.sharedPreferencesAccess;
 
 import android.app.Activity;
 
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ public class SwipeTimeService {
     private static int INTERVALL_HOURS_RELAOD_SWIPE = 12;
 
     public static boolean forceApiReloadSwipe(Activity activity){
-        return DateUtils.hoursBetween(getLastLoaded(activity, TIME_OF_RELAOD_SWIPE), new Date()) > INTERVALL_HOURS_RELAOD_SWIPE;
+        return DateService.hoursBetween(getLastLoaded(activity, TIME_OF_RELAOD_SWIPE), new Date()) > INTERVALL_HOURS_RELAOD_SWIPE;
     }
 
     public static void saveLastLoaded(Activity activity, Date date){

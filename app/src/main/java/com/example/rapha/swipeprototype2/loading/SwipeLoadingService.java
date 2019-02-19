@@ -8,12 +8,17 @@ public class SwipeLoadingService {
 
     private static MutableLiveData<Boolean> languageChangeLoading = new MutableLiveData<>();
     private static MutableLiveData<Boolean> apiRequestLoading = new MutableLiveData<>();
+    private static MutableLiveData<Boolean> databaseLoading = new MutableLiveData<>();
 
-    public static void setLoadingLanguageChange(boolean loading){ languageChangeLoading.setValue(loading); }
+    public static void setLoadingLanguageChange(boolean loading){ languageChangeLoading.postValue(loading); }
 
     public static void setLoadingApiRequest(boolean loading){ apiRequestLoading.setValue(loading); }
+
+    public static void setLoadingDatabase(boolean loading){ databaseLoading.setValue(loading); }
 
     public static MutableLiveData<Boolean> getLoadingLanguageChange(){ return languageChangeLoading; }
 
     public static MutableLiveData<Boolean> getLoadingApiRequest(){ return apiRequestLoading; }
+
+    public static MutableLiveData<Boolean> getLoadingDatabase(){ return databaseLoading; }
 }

@@ -7,19 +7,25 @@ import android.os.AsyncTask;
 import com.example.rapha.swipeprototype2.roomDatabase.AppDatabase;
 
 import java.util.List;
+import android.arch.lifecycle.Observer;
 
 public class LanguageCombinationRepository {
 
     private ILanguageCombinationDao dao;
+    private LiveData<List<LanguageCombinationRoomModel>> allCombinations;
 
     public LanguageCombinationRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
         dao = database.languageCombinationDao();
+        allCombinations = dao.getAll();
     }
 
     public LiveData<List<LanguageCombinationRoomModel>> getAll(){
-        return this.dao.getAll();
+        return allCombinations;
     }
+     public void getAllRemoveObserver(Observer observer){
+        allCombinations.removeObserver(observer);
+     }
 
     public void insert(LanguageCombinationRoomModel languageCombinationRoomModel, LanguageCombinationData data){
         new InsertAsyncTask(dao, data).execute(languageCombinationRoomModel);

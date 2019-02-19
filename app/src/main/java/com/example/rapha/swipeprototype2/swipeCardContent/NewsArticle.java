@@ -1,11 +1,12 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,32 +14,23 @@ import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScrollingActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.api.ApiUtils;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.roomDatabase.ArticleLanguageLinkDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
-import org.joda.time.DateTime;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.List;
 
 public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageCombination {
 
@@ -144,11 +136,17 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     }
 
     public void updateValuesAfterSwipe(SwipeFragment swipeFragment) {
-        userReadArticle(swipeFragment.getActivity());
+        setArticleAsRead(swipeFragment.getActivity());
+        saveDateOffset(swipeFragment);
+    }
+
+    public void saveDateOffset(SwipeFragment swipeFragment){
+	    // After it has finished it will call onLanguageCombinationInsertFinished
+        // where the date offset is set
         setLanguageCombination(swipeFragment);
     }
 
-    public void userReadArticle(Activity activity){
+    public void setArticleAsRead(Activity activity){
 	    if(!(activity == null)){
             NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
             NewsArticleRoomModel readArticle =
@@ -165,29 +163,33 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
 
             boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
             LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-            comboDbService.getAll().observe(swipeFragment.getActivity(), entries ->{
-                if(entries.isEmpty()){
-                    LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-                    languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
-                }
-                for(int i = 0; i < entries.size(); i++){
-                    boolean alreadyExists = entries.get(i).german == currentLanguages[LanguageSettingsService.INDEX_GERMAN]
-                            && entries.get(i).french == currentLanguages[LanguageSettingsService.INDEX_FRENCH]
-                            && entries.get(i).russian == currentLanguages[LanguageSettingsService.INDEX_RUSSIAN]
-                            && entries.get(i).english == currentLanguages[LanguageSettingsService.INDEX_ENGLISH];
-                    if(alreadyExists){
-                        Log.d("offsets", "alreadyExists");
-                        data.insertedId = entries.get(i).id;
-                        onLanguageCombinationInsertFinished(data);
-                        break;
+            comboDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+                        @Override
+                        public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
+                            if(languageCombinations.isEmpty()){
+                                LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                                languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                                //comboDbService.getAllRemoveObserver(this);
+                            }
+                            for(int i = 0; i < languageCombinations.size(); i++){
+                                LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
+                                boolean alreadyExists = LanguageCombinationDbService.languageSelectionIsEqual(currentLanguages, currentCombination);
+                                boolean isLastIteration = i == languageCombinations.size() - 1;
+                                if(alreadyExists){
+                                    data.insertedId = currentCombination.id;
+                                    onLanguageCombinationInsertFinished(data);
+                                    //comboDbService.getAllRemoveObserver(this);
+                                    break;
+                                }
+                                if(isLastIteration){
+                                    LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                                    languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                                    //comboDbService.getAllRemoveObserver(this);
+                                }
+                            }
+                        }
                     }
-                    if(i == entries.size() - 1){
-                        Log.d("offsets", "end of loop");
-                        LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-                        languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
-                    }
-                }
-            });
+            );
         }
         }
 
@@ -200,20 +202,15 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
             if(!(swipeFragment.getActivity() == null)){
                 OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
                 if(!this.publishedAt.isEmpty()){
-                    DateTime temp = new DateTime(this.publishedAt);
-                    temp = temp.minusMinutes(1);
-
-                    DecimalFormat df = new DecimalFormat("00");
-                    String year = temp.getYear() + "";
-                    String month = df.format(temp.getMonthOfYear());
-                    String day = df.format(temp.getDayOfMonth());
-                    String hour = df.format(temp.getHourOfDay());
-                    String minute = df.format(temp.getMinuteOfHour());
-                    String second = df.format(temp.getSecondOfMinute());
-                    String s = DateUtils.dateToISO8601(year, month, day, hour, minute, second);
-
+                    // Because the api results will include articles published at
+                    // exactly the offset, we add a minute to exclude them
+                    Log.d("newswipe3", "############");
+                    Log.d("newswipe3", "Store offset in database: category: " + this.newsCategory + "offset: " + this.publishedAt);
+                    String dateOffset = DateService.subtractSecond(this.publishedAt, 1);
+                    Log.d("newswipe3", "After minute added: category: " + this.newsCategory + "offset: " + dateOffset);
+                    Log.d("newswipe3", "############");
                     offsetDbService.saveRequestOffset(
-                            s,
+                            dateOffset,
                             this.newsCategory,
                             insertedId
                     );
@@ -222,7 +219,6 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
         }
 
     }
-
 
     @Override
     public int getNewsCategory() {
@@ -246,9 +242,6 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
 		this.content = JSONUtils.getStringErrorHandled(articleJson, "content");
 		this.newsCategory = newsCategory;
 	}
-
-	public void setTotalAmountInThisQuery(int totalAmount){ this.totalAmountInThisQuery = totalAmount; }
-	public int getTotalAmountInThisQuery(){ return this.totalAmountInThisQuery; }
 
     @Override
     public String toString(){

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
@@ -39,6 +41,7 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.utils.CollectionService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
@@ -87,8 +90,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
     public boolean shouldReloadFragment = false;
     public boolean apiIsLoading = false;
+    boolean dbIsLoading = false;
     public boolean languageChangeIsLoading = false;
     public boolean languageShouldBeSwitched = false;
+
+    boolean[] previousLanguageSelection;
+    LinkedList<NewsArticle> remainingArticlesBeforeLoadingNewOnes = new LinkedList<>();
 
     public TextView leftIndicator;
     public TextView rightIndicator;
@@ -118,10 +125,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         setSwipeFunctionality();
         startObservingDatabaseData();
         startObservingLoadingStatus();
+        setVisibilitySwipeCards(false);
 
         if(ArticleDataStorage.temporaryArticlesExist()){
             swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
             swipeCardArrayAdapter.notifyDataSetChanged();
+            setVisibilitySwipeCards(true);
         } else{ loadFromDb(); }
 
         return view;
@@ -136,6 +145,33 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
+            if(loading){
+                new Thread(() -> {
+                        try {
+                            Thread.sleep(LoadingService.MAX_LOADING_TIME_MILLS);
+                            if(languageChangeIsLoading){
+                                mainActivity.runOnUiThread(() -> {
+                                    SwipeLoadingService.setLoadingLanguageChange(false);
+                                    swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
+                                    swipeCardArrayAdapter.notifyDataSetChanged();
+                                    LanguageSettingsService.saveChecked(mainActivity, previousLanguageSelection);
+                                    Context context = mainActivity.getApplicationContext();
+                                    CharSequence text = "Sorry something went wrong, please try it again later or check your internet connection";
+                                    int duration = Toast.LENGTH_LONG;
+                                    Toast toast = Toast.makeText(context, text, duration);
+                                    toast.show();
+                                    reloadFragment();
+                                });
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                }).start();
+            }
+        });
+        SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading ->{
+            dbIsLoading = loading;
+            setVisibilitySwipeCards(!loading);
         });
     }
 
@@ -160,10 +196,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                             Log.d("newswipe", "loadFromDb() onchanged");
                             Log.d("newswipe", "loadFromDb() onchanged article size: " + articleModels.size());
                             if(articleModels.isEmpty()){
+                                SwipeLoadingService.setLoadingApiRequest(true);
                                 loadFromApi();
                                 newsArticleDbService.getAllUnreadSwipeArticles().removeObserver(this);
                             }
                             else{
+                                SwipeLoadingService.setLoadingDatabase(true);
                                 swipeCardsList.addAll(newsArticleDbService.createNewsArticleList(articleModels, articleModels.size()));
                                 keyWordDbService.getAllKeyWords().observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
                                     @Override
@@ -173,6 +211,8 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                                                 swipeCardArrayAdapter.notifyDataSetChanged();
                                                 newsArticleDbService.getAllUnreadSwipeArticles().removeObserver(articleObserver);
                                                 keyWordDbService.getAllKeyWords().removeObserver(this);
+                                                SwipeLoadingService.setLoadingDatabase(false);
+                                                setVisibilitySwipeCards(true);
                                             }
                                     }
                                 });
@@ -193,6 +233,8 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                         mainActivity.runOnUiThread(() -> {
                             storeArticlesInDatabase(apiArticlesToAdd);
                             swipeCardsList.addAll(apiArticlesToAdd);
+                            swipeCardsList.addAll(apiArticlesToAdd);
+                            CollectionService.removeDuplicatesArticleList(swipeCardsList);
                             Logging.logSwipeCards(swipeCardsList, "newswipe2");
                             QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
                             SwipeLoadingService.setLoadingLanguageChange(false);
@@ -236,7 +278,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
-                if(swipeCardsList.size() == 1){
+                if(swipeCardsList.size() == 0 || swipeCardsList.size() == 1){
                     swipeCardsList.add(new ErrorSwipeCard());
                 }
                 Log.d("newswipe", "++++++++++++++++++++++++");
@@ -245,7 +287,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                 Log.d("newswipe", "articles leftIndicator: " + swipeCardsList.size());
 
                 Log.d("newswipe", "++++++++++++++++++++++++");
-                if(swipeCardsList.size() <= articlesAmountLoad && !apiIsLoading){
+                if(swipeCardsList.size() <= articlesAmountLoad && !apiIsLoading && !dbIsLoading){
+                    for(int i = 0; i < swipeCardsList.size(); i++){
+                        if(swipeCardsList.get(i) instanceof NewsArticle){
+                            remainingArticlesBeforeLoadingNewOnes.add((NewsArticle)swipeCardsList.get(i));
+                        }
+                    }
                     loadFromApi();
                 }
                 swipeCardArrayAdapter.notifyDataSetChanged();
@@ -281,8 +328,10 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             @Override
             public void onScroll(float scrollProgressPercent) {
                 Log.d("swipee", "on scroll detected");
-                ISwipeCard currentCard = swipeCardsList.get(0);
-                currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
+                if(!swipeCardsList.isEmpty()){
+                    ISwipeCard currentCard = swipeCardsList.get(0);
+                    currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
+                }
             }
         });
 
@@ -339,6 +388,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             dialog.setTitle("Select languages");
             final String[] languageItems = LanguageSettingsService.languageItems;
             final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
+            previousLanguageSelection = initialSelection;
             final boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
 
             dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) ->   {
@@ -399,6 +449,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
     private synchronized void startSwitchingLanguage(){
         if(languageShouldBeSwitched){
             languageShouldBeSwitched = false;
+            ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
             swipeCardsList.clear();
             shouldReloadFragment = true;
             loadFromApi();
@@ -406,9 +457,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
     }
 
     public void handleLoadingScreen(boolean loading, int loadingType){
-        int visibilityContent = loading ? View.INVISIBLE : View.VISIBLE;
-        view.findViewById(R.id.swipe_card).setVisibility(visibilityContent);
-        view.findViewById(R.id.button_languages).setVisibility(visibilityContent);
+        setVisibilitySwipeCards(!loading);
 
         int visibilityLoadingViews = loading ? GifImageView.VISIBLE : GifImageView.INVISIBLE;
         GifImageView loadingGif = view.findViewById(R.id.loading);
@@ -418,6 +467,12 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
         String loadingText = LoadingService.getLoadingText(loadingType);
         loadingInfo.setText(loadingText);
+    }
+
+    private void setVisibilitySwipeCards(boolean visible){
+        int visibilityContent = visible ? View.VISIBLE : View.INVISIBLE;
+        view.findViewById(R.id.swipe_card).setVisibility(visibilityContent);
+        view.findViewById(R.id.button_languages).setVisibility(visibilityContent);
     }
 
     /**

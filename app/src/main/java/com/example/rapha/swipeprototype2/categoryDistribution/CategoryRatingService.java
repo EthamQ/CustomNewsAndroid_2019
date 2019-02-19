@@ -10,7 +10,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPrefere
 public class CategoryRatingService {
 
     // The rating mustn't go lower than this value.
-    private static final int MIN_RATING = 3;
+    public static final int MIN_RATING = 5;
     private static final int MAX_RATING = 30;
 
     /**

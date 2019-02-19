@@ -31,7 +31,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRo
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
 import com.example.rapha.swipeprototype2.utils.CollectionService;
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -225,7 +225,7 @@ public class NewsOfTheDayFragment extends Fragment {
 
         TextView belowHeadlineDate = view.findViewById(R.id.news_of_the_day_date);
         Date lastReload = NewsOfTheDayTimeService.getDateLastLoadedArticles(getContext());
-        belowHeadlineDate.setText(DateUtils.makeDateReadable(lastReload));
+        belowHeadlineDate.setText(DateService.makeDateReadable(lastReload));
     }
 
     private void setTextNotEnoughTopics(){

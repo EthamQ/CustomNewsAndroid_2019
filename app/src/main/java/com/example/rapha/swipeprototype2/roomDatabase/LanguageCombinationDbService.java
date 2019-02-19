@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.roomDatabase;
 
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
@@ -57,6 +58,8 @@ public class LanguageCombinationDbService {
     public LiveData<List<LanguageCombinationRoomModel>> getAll(){
         return repository.getAll();
     }
+
+    public void getAllRemoveObserver(Observer observer){ repository.getAllRemoveObserver(observer); }
 
     public static boolean languageSelectionIsEqual(boolean[] currentLanguages, LanguageCombinationRoomModel currentCombination){
         return currentCombination.german == currentLanguages[LanguageSettingsService.INDEX_GERMAN]

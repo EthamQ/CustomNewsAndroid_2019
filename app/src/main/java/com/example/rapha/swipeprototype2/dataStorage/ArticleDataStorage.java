@@ -10,6 +10,16 @@ public class ArticleDataStorage {
     // articles here to immediately load and display when returning to the SwipeFragment.
     private static ArrayList<ISwipeCard> temporaryStoredArticles = new ArrayList<>();
 
+    public static ArrayList<ISwipeCard> getBackUpArticlesIfError() {
+        return backUpArticlesIfError;
+    }
+
+    public static void setBackUpArticlesIfError(ArrayList<ISwipeCard> backUpArticlesIfError) {
+        ArticleDataStorage.backUpArticlesIfError = backUpArticlesIfError;
+    }
+
+    private static ArrayList<ISwipeCard> backUpArticlesIfError = new ArrayList<>();
+
     public static void storeArticlesTemporarily(ArrayList<ISwipeCard> articles){
         temporaryStoredArticles = articles;
     }

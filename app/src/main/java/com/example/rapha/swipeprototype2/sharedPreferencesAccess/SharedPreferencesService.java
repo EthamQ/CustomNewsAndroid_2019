@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.example.rapha.swipeprototype2.utils.DateUtils;
+import com.example.rapha.swipeprototype2.utils.DateService;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ public class SharedPreferencesService {
         if(!(activity == null)){
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putLong(key, DateUtils.dateToLong(date));
+            editor.putLong(key, DateService.dateToLong(date));
             editor.commit();
         }
     }
@@ -24,7 +24,7 @@ public class SharedPreferencesService {
         if(!(context == null)){
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putLong(key, DateUtils.dateToLong(date));
+            editor.putLong(key, DateService.dateToLong(date));
             editor.commit();
         }
     }
@@ -50,9 +50,9 @@ public class SharedPreferencesService {
     public static Date getData(Activity activity, String key){
         if(!(activity == null)) {
             SharedPreferences sharedPreferences = activity.getPreferences(Context.MODE_PRIVATE);
-            long defaultLoad = DateUtils.dateToLong(new Date());
+            long defaultLoad = DateService.dateToLong(new Date());
             long dateMills = sharedPreferences.getLong(key, defaultLoad);
-            return DateUtils.longToDate(dateMills);
+            return DateService.longToDate(dateMills);
         } else return new Date();
     }
 
@@ -66,9 +66,9 @@ public class SharedPreferencesService {
     public static Date getDateDefault(Context context, String key){
         if(!(context == null)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            long defaultLoad = DateUtils.dateToLong(new Date());
+            long defaultLoad = DateService.dateToLong(new Date());
             long dateMills = sharedPreferences.getLong(key, defaultLoad);
-            return DateUtils.longToDate(dateMills);
+            return DateService.longToDate(dateMills);
         } else return new Date();
     }
 

@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
+import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRepository;
@@ -21,19 +22,19 @@ public class FillDatabase {
         NewsCategoryContainer newsNewsCategoryContainer = new NewsCategoryContainer();
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.finance.getCategoryID(),
-                newsNewsCategoryContainer.finance.getRating()));
+                CategoryRatingService.MIN_RATING));
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.food.getCategoryID(),
-                newsNewsCategoryContainer.food.getRating()));
+                CategoryRatingService.MIN_RATING));
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.movie.getCategoryID(),
-                newsNewsCategoryContainer.movie.getRating()));
+                CategoryRatingService.MIN_RATING));
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.politics.getCategoryID(),
-                newsNewsCategoryContainer.politics.getRating()));
+                CategoryRatingService.MIN_RATING));
         repository.insert(new UserPreferenceRoomModel(
                 newsNewsCategoryContainer.technology.getCategoryID(),
-                newsNewsCategoryContainer.technology.getRating()));
+                CategoryRatingService.MIN_RATING));
     }
 
     public static void fillKeyWords(KeyWordRepository repository){
