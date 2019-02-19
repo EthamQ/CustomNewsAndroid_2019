@@ -61,7 +61,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
     public MainActivity mainActivity;
     public View view;
 
-    // When this amount of articles is left in
+    // When this amount of articles is leftIndicator in
     // swipeCardsList we load new articles from the api
     public static final int articlesAmountLoad = 10;
 
@@ -89,6 +89,9 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
     public boolean apiIsLoading = false;
     public boolean languageChangeIsLoading = false;
     public boolean languageShouldBeSwitched = false;
+
+    public TextView leftIndicator;
+    public TextView rightIndicator;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -124,6 +127,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         return view;
     }
 
+
     public void startObservingLoadingStatus(){
         DailyNewsLoadingService.getLoading().observe(getActivity(),
                 loading -> handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS)
@@ -134,6 +138,9 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
         });
     }
+
+
+
 
     public void startObservingDatabaseData(){
         ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
@@ -221,10 +228,10 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality
-     * if the user swipes to the left or right etc.
+     * if the user swipes to the leftIndicator or rightIndicator etc.
      */
     public void setSwipeFunctionality(){
-        SwipeFlingAdapterView flingContainer = view.findViewById(R.id.frame);
+        SwipeFlingAdapterView flingContainer = view.findViewById(R.id.swipe_card);
         flingContainer.setAdapter(swipeCardArrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
@@ -235,7 +242,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                 Log.d("newswipe", "++++++++++++++++++++++++");
                 Log.d("newswipe", "article: " + swipeCardsList.get(0).toString());
                 swipeCardsList.remove(0);
-                Log.d("newswipe", "articles left: " + swipeCardsList.size());
+                Log.d("newswipe", "articles leftIndicator: " + swipeCardsList.size());
 
                 Log.d("newswipe", "++++++++++++++++++++++++");
                 if(swipeCardsList.size() <= articlesAmountLoad && !apiIsLoading){
@@ -252,6 +259,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             public void onLeftCardExit(Object dataObject) {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
                 swipedCard.dislike(SwipeFragment.this);
+                leftIndicator.setAlpha(0);
             }
 
             /**
@@ -262,6 +270,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             public void onRightCardExit(Object dataObject) {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
                 swipedCard.like(SwipeFragment.this);
+                rightIndicator.setAlpha(0);
             }
 
             @Override
@@ -271,9 +280,9 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
             @Override
             public void onScroll(float scrollProgressPercent) {
-//                View view = flingContainer.getSelectedView();
-//                view.findViewById(R.id.item_swipe_right_indicator).setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
-//                view.findViewById(R.id.item_swipe_left_indicator).setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+                Log.d("swipee", "on scroll detected");
+                ISwipeCard currentCard = swipeCardsList.get(0);
+                currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
             }
         });
 
@@ -298,13 +307,17 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
     public void initObjectsAndServices(){
         swipeCardsList = new ArrayList<>();
+        swipeCardArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         // Only add introduction card when the user just started the app.
         if(mainActivity.showIntroductionCard()){
             swipeCardsList.add(new IntroductionSwipeCard());
             mainActivity.introductionCardWasShown();
         }
+
+        leftIndicator = view.findViewById(R.id.swipe_left_indicator);
+        rightIndicator = view.findViewById(R.id.swipe_right_indicator);
+
         ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
-        swipeCardArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         dateOffsetDbService = OffsetDbService.getInstance(getActivity().getApplication());
@@ -394,7 +407,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
 
     public void handleLoadingScreen(boolean loading, int loadingType){
         int visibilityContent = loading ? View.INVISIBLE : View.VISIBLE;
-        view.findViewById(R.id.frame).setVisibility(visibilityContent);
+        view.findViewById(R.id.swipe_card).setVisibility(visibilityContent);
         view.findViewById(R.id.button_languages).setVisibility(visibilityContent);
 
         int visibilityLoadingViews = loading ? GifImageView.VISIBLE : GifImageView.INVISIBLE;

@@ -133,6 +133,15 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
         updateValuesAfterSwipe(swipeFragment);
     }
+    @Override
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) {
+	    TextView leftIndicator = swipeFragment.leftIndicator;
+        TextView rightIndicator = swipeFragment.rightIndicator;
+        leftIndicator.setText("Dislike");
+        rightIndicator.setText("Like");
+        leftIndicator.setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+        rightIndicator.setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+    }
 
     public void updateValuesAfterSwipe(SwipeFragment swipeFragment) {
         userReadArticle(swipeFragment.getActivity());
@@ -140,18 +149,21 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     }
 
     public void userReadArticle(Activity activity){
-        NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
+	    if(!(activity == null)){
+            NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
             NewsArticleRoomModel readArticle =
                     newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
             readArticle.hasBeenRead = true;
             newsArticleDbService.update(readArticle);
         }
+        }
 
         private void setLanguageCombination(SwipeFragment swipeFragment){
+	    if(!(swipeFragment.getActivity() == null)){
             LanguageCombinationData data = new LanguageCombinationData(this);
             data.data = swipeFragment;
 
-	        boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
             LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
             comboDbService.getAll().observe(swipeFragment.getActivity(), entries ->{
                 if(entries.isEmpty()){
@@ -176,7 +188,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
                     }
                 }
             });
-
+        }
         }
 
     @Override

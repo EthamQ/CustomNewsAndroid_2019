@@ -6,7 +6,7 @@ import java.util.Date;
 
 public class NewsOfTheDayTimeService {
 
-    private static String version = "36";
+    private static String version = "37";
     private static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 24;
     private static boolean testing = true;
