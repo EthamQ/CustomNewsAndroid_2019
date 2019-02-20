@@ -52,4 +52,15 @@ public class QuestionSwipeCard implements ISwipeCard {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
         QuestionCardRatingService.dislikeKeyWord(swipeFragment, this);
     }
+
+    @Override
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) {
+        TextView leftIndicator = swipeFragment.leftIndicator;
+        TextView rightIndicator = swipeFragment.rightIndicator;
+        leftIndicator.setText("No");
+        rightIndicator.setText("Yes");
+        leftIndicator.setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+        rightIndicator.setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+    }
+
 }

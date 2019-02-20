@@ -2,8 +2,11 @@ package com.example.rapha.swipeprototype2.utils;
 
 
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,5 +42,38 @@ public class CollectionService {
             }
         }
         return false;
+    }
+
+    public static void deleteEqualEntries(List<NewsArticle> checkEntries, List<NewsArticle> deleteEntries){
+        for(int i = 0; i < checkEntries.size(); i++){
+            for(int j = 0; j < deleteEntries.size(); j++){
+                if(checkEntries.get(i).title.equals(deleteEntries.get(j).title)){
+                        deleteEntries.remove(j);
+                }
+            }
+        }
+    }
+
+    public static void removeDuplicatesArticleList(List<ISwipeCard> articles) {
+        LinkedList<ISwipeCard> newList = new LinkedList<>();
+        for (ISwipeCard swipeCard : articles) {
+            // If this element is not present in newList
+            // then add it
+            if(swipeCard instanceof NewsArticle){
+                if(!containsTitle(newList, ((NewsArticle)swipeCard).title)) {
+                    newList.add(swipeCard);
+                }
+            }
+            else{
+                newList.add(swipeCard);
+            }
+
+        }
+        articles.clear();
+        articles.addAll(newList);
+    }
+
+    private static boolean containsTitle(final List<ISwipeCard> list, final String title){
+        return list.stream().filter(article -> article instanceof NewsArticle && ((NewsArticle)article).title.equals(title)).findFirst().isPresent();
     }
 }

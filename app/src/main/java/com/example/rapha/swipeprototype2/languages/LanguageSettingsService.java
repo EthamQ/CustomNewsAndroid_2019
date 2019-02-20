@@ -17,21 +17,25 @@ public class LanguageSettingsService {
     public static void saveChecked(MainActivity mainActivity, final boolean[] isChecked) {
         SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        for(Integer i = 0; i < isChecked.length; i++)
-        {
-            editor.putBoolean(i.toString(), isChecked[i]);
+        if(!(isChecked == null) && !(mainActivity == null)){
+            for(Integer i = 0; i < isChecked.length; i++)
+            {
+                editor.putBoolean(i.toString(), isChecked[i]);
+            }
+            editor.commit();
         }
-        editor.commit();
     }
 
-    public static boolean[] loadChecked(SwipeFragment swipeFragment) {
-        SharedPreferences sharedPreferences = swipeFragment.mainActivity.getPreferences(Context.MODE_PRIVATE);
+    public static boolean[] loadChecked(MainActivity mainActivity) {
         boolean [] languageCheckboxes = new boolean[languageItems.length];
-        for(Integer i = 0; i < languageItems.length; i++)
-        {
-            languageCheckboxes[i] = sharedPreferences.getBoolean(i.toString(), false);
+        if(mainActivity != null){
+            SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);
+            for(Integer i = 0; i < languageItems.length; i++)
+            {
+                languageCheckboxes[i] = sharedPreferences.getBoolean(i.toString(), false);
+            }
+            setDefaultEnglish(languageCheckboxes);
         }
-        setDefaultEnglish(languageCheckboxes);
         return languageCheckboxes;
     }
 

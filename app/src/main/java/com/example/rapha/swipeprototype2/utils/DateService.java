@@ -1,16 +1,20 @@
 package com.example.rapha.swipeprototype2.utils;
 
+import android.text.format.DateUtils;
+import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.Hours;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class DateUtils {
+public class DateService {
 
     /**
      * Given year, month and date it returns a String containing the date
@@ -23,6 +27,11 @@ public class DateUtils {
     public static String dateToISO8601(String year, String month, String day){
         //TODO: handle missing leading zeros
         return year + "-" + month + "-" + day;
+    }
+
+    public static String dateToISO8601(String year, String month, String day, String hour, String minute, String second){
+        //TODO: handle missing leading zeros
+        return year + "-" + month + "-" + day + "T" + hour + ":" + minute + ":" + second + "Z";
     }
 
     /**
@@ -67,6 +76,23 @@ public class DateUtils {
         return Hours.hoursBetween(dateJoda1, dateJoda2).getHours();
     }
 
+    public static String subtractSecond(String dateISO8601, int seconds){
+        int expectedLengthISOFormat = 20;
+        int startIndexSeconds = 17;
+        if(dateISO8601.length() == expectedLengthISOFormat){
+            String secondValueString = dateISO8601.substring(startIndexSeconds, startIndexSeconds + 2);
+            int secondValueInt = Integer.valueOf(secondValueString);
+            if(secondValueInt - seconds >= 0){
+                secondValueInt -= seconds;
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("00");
+            secondValueString = decimalFormat.format(secondValueInt);
+            String partBeforeSeconds = dateISO8601.substring(0, startIndexSeconds);
+            String partAfterSeconds = dateISO8601.substring(startIndexSeconds + 2, expectedLengthISOFormat);
+            String newDate = partBeforeSeconds + secondValueString + partAfterSeconds;
+            return newDate;
+        } else return dateISO8601;
+    }
 
     public static long dateToLong(Date date){
         return date.getTime();

@@ -7,12 +7,10 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
-import java.util.List;
-
 public class CategoryRatingService {
 
     // The rating mustn't go lower than this value.
-    private static final int MIN_RATING = 3;
+    public static final int MIN_RATING = 5;
     private static final int MAX_RATING = 30;
 
     /**
@@ -51,7 +49,7 @@ public class CategoryRatingService {
                             newRating--;
                         }
                         // Update in database.
-                        swipeFragment.dbService.updateUserPreference(new UserPreferenceRoomModel(
+                        swipeFragment.ratingDbService.updateUserPreference(new UserPreferenceRoomModel(
                                 swipedArticle.getNewsCategory(),
                                 newRating
                         ));

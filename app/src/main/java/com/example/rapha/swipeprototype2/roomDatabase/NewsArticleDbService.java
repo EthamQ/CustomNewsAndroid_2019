@@ -3,6 +3,10 @@ package com.example.rapha.swipeprototype2.roomDatabase;
 import android.app.Application;
 import android.arch.lifecycle.LiveData;
 
+import com.example.rapha.swipeprototype2.queryWords.QueryWordService;
+import com.example.rapha.swipeprototype2.roomDatabase.articleLanguageLink.ArticleLanguageLinkRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.DeleteData;
+import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.IDeletesArticle;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
@@ -38,8 +42,8 @@ public class NewsArticleDbService {
         insert(insert);
     }
 
-    public void deleteAllSwipedArticles(){
-        repository.deleteAllSwipeArticles();
+    public void deleteAllSwipedArticles(DeleteData deleteData){
+        repository.deleteAllSwipeArticles(deleteData);
     }
 
     public void deleteAllDailyArticles(){
@@ -153,8 +157,11 @@ public class NewsArticleDbService {
 
     public void insertNewsArticles(LinkedList<NewsArticle> newsArticles){
         for(int i = 0; i < newsArticles.size(); i++){
-            insert(createNewsArticleRoomModelToInsert(newsArticles.get(i)));
+            NewsArticle currentArticle = newsArticles.get(i);
+            insert(createNewsArticleRoomModelToInsert(currentArticle));
         }
     }
+
+
 
 }

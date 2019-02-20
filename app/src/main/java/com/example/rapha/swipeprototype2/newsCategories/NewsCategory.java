@@ -5,7 +5,7 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 
 public class NewsCategory {
 
-    private int rating = 3;
+    private int rating = 5;
     private int categoryID;
 
     public String[] DEFAULT_QUERY_STRINGS_EN;

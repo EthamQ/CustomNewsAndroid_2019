@@ -31,6 +31,8 @@ public class ErrorSwipeCard implements ISwipeCard {
     @Override
     public void dislike(SwipeFragment swipeFragment) { }
     @Override
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) { }
+    @Override
     public void onClick(Activity activity) { }
 
 }

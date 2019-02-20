@@ -44,6 +44,8 @@ public class IntroductionSwipeCard implements ISwipeCard {
     public void like(SwipeFragment swipeFragment) { }
     @Override
     public void dislike(SwipeFragment swipeFragment) { }
+    @Override
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) { }
 
 
 }

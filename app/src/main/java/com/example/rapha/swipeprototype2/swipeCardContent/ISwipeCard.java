@@ -12,6 +12,7 @@ public interface ISwipeCard {
     void setSwipeCardView(View convertView);
     void like(SwipeFragment swipeFragment);
     void dislike(SwipeFragment swipeFragment);
+    void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent);
     int getNewsCategory();
     String toString();
 }

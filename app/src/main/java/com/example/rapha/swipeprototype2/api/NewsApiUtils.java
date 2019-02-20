@@ -26,7 +26,6 @@ public class NewsApiUtils {
             JSONObject articleJson = JSONUtils.getArrayEntryFromJson(newsArticlesJson, jsonArticleKey, i);
             NewsArticle newsArticle = new NewsArticle();
             newsArticle.setArticleProperties(articleJson, newsCategory);
-            newsArticle.setTotalAmountInThisQuery(getTotalResults(newsArticlesJson));
             if(newsArticle != null){
                 newsArticles.add(newsArticle);
             }

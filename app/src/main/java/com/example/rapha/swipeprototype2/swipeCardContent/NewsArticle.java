@@ -1,29 +1,38 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.app.Activity;
+import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScrollingActivity;
-import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
-import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
+import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
-import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.roomDatabase.OffsetDbService;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.IInsertsLanguageCombination;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationData;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
+import com.example.rapha.swipeprototype2.utils.DateService;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
-public class NewsArticle implements Parcelable, ISwipeCard {
+import java.util.List;
+
+public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageCombination {
 
     public String sourceId;
     public String sourceName;
@@ -109,22 +118,107 @@ public class NewsArticle implements Parcelable, ISwipeCard {
     @Override
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
-        userReadArticle(swipeFragment.getActivity());
+        updateValuesAfterSwipe(swipeFragment);
     }
     @Override
     public void dislike(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsNotInteresting(swipeFragment, this);
-        userReadArticle(swipeFragment.getActivity());
+        updateValuesAfterSwipe(swipeFragment);
+    }
+    @Override
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) {
+	    TextView leftIndicator = swipeFragment.leftIndicator;
+        TextView rightIndicator = swipeFragment.rightIndicator;
+        leftIndicator.setText("Dislike");
+        rightIndicator.setText("Like");
+        leftIndicator.setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
+        rightIndicator.setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
     }
 
-    public void userReadArticle(Activity activity){
-        NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
+    public void updateValuesAfterSwipe(SwipeFragment swipeFragment) {
+        setArticleAsRead(swipeFragment.getActivity());
+        saveDateOffset(swipeFragment);
+    }
+
+    public void saveDateOffset(SwipeFragment swipeFragment){
+	    // After it has finished it will call onLanguageCombinationInsertFinished
+        // where the date offset is set
+        setLanguageCombination(swipeFragment);
+    }
+
+    public void setArticleAsRead(Activity activity){
+	    if(!(activity == null)){
+            NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(activity.getApplication());
             NewsArticleRoomModel readArticle =
                     newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
             readArticle.hasBeenRead = true;
             newsArticleDbService.update(readArticle);
         }
+        }
 
+        private void setLanguageCombination(SwipeFragment swipeFragment){
+	    if(!(swipeFragment.getActivity() == null)){
+            LanguageCombinationData data = new LanguageCombinationData(this);
+            data.data = swipeFragment;
+
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
+            LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+            comboDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+                        @Override
+                        public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
+                            if(languageCombinations.isEmpty()){
+                                LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                                languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                                //comboDbService.getAllRemoveObserver(this);
+                            }
+                            for(int i = 0; i < languageCombinations.size(); i++){
+                                LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
+                                boolean alreadyExists = LanguageCombinationDbService.languageSelectionIsEqual(currentLanguages, currentCombination);
+                                boolean isLastIteration = i == languageCombinations.size() - 1;
+                                if(alreadyExists){
+                                    data.insertedId = currentCombination.id;
+                                    onLanguageCombinationInsertFinished(data);
+                                    //comboDbService.getAllRemoveObserver(this);
+                                    break;
+                                }
+                                if(isLastIteration){
+                                    LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
+                                    languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
+                                    //comboDbService.getAllRemoveObserver(this);
+                                }
+                            }
+                        }
+                    }
+            );
+        }
+        }
+
+    @Override
+    public void onLanguageCombinationInsertFinished(LanguageCombinationData data) {
+	    Log.d("offsets", "onLanguageCombinationInsertFinished");
+	    SwipeFragment swipeFragment = (SwipeFragment) data.data;
+	    if(!(swipeFragment == null)){
+            long insertedId = data.insertedId;
+            if(!(swipeFragment.getActivity() == null)){
+                OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
+                if(!this.publishedAt.isEmpty()){
+                    // Because the api results will include articles published at
+                    // exactly the offset, we add a minute to exclude them
+                    Log.d("newswipe3", "############");
+                    Log.d("newswipe3", "Store offset in database: category: " + this.newsCategory + "offset: " + this.publishedAt);
+                    String dateOffset = DateService.subtractSecond(this.publishedAt, 1);
+                    Log.d("newswipe3", "After minute added: category: " + this.newsCategory + "offset: " + dateOffset);
+                    Log.d("newswipe3", "############");
+                    offsetDbService.saveRequestOffset(
+                            dateOffset,
+                            this.newsCategory,
+                            insertedId
+                    );
+                }
+            }
+        }
+
+    }
 
     @Override
     public int getNewsCategory() {
@@ -149,13 +243,12 @@ public class NewsArticle implements Parcelable, ISwipeCard {
 		this.newsCategory = newsCategory;
 	}
 
-	public void setTotalAmountInThisQuery(int totalAmount){ this.totalAmountInThisQuery = totalAmount; }
-	public int getTotalAmountInThisQuery(){ return this.totalAmountInThisQuery; }
-
     @Override
     public String toString(){
         String ret = "";
-        ret += "Title: " + this.title;
+        ret += "category: : " + this.newsCategory;
+        ret += ", published at: " + this.publishedAt;
+        ret += ", Title: " + this.title;
         return ret;
     }
 
@@ -198,4 +291,5 @@ public class NewsArticle implements Parcelable, ISwipeCard {
         @Override
         public NewsArticle[] newArray(int size) { return new NewsArticle[size]; }
     };
+
 }

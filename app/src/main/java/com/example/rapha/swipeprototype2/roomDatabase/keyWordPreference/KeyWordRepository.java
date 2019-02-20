@@ -16,7 +16,7 @@ public class KeyWordRepository {
 
     public KeyWordRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
-        dao = database.keyWordDaoDao();
+        dao = database.keyWordDao();
         allKeyWords = dao.getAllKeyWords();
         allLikedKeyWords = dao.getKeyWordsByStatus(KeyWordRoomModel.LIKED);
     }
