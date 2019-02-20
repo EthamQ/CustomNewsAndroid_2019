@@ -134,14 +134,14 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         }
 
         if(articlesForKeyword.size() > 0){
+            storeDateLastLoadedData();
             String foundWithKeyWord = (String) info.getDataOfRequester();
             storeArticlesInDatabase(articlesForKeyword, foundWithKeyWord);
         }
 
         // Send notification when all responses have arrived
         if(numberOfReceivedResponses == numberOfSentRequests){
-                DailyNewsLoadingService.setLoading(false);
-                storeDateLastLoadedData();
+            DailyNewsLoadingService.setLoading(false);
                 NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
         }
     }

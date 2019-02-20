@@ -85,6 +85,9 @@ public class DateService {
             if(secondValueInt - seconds >= 0){
                 secondValueInt -= seconds;
             }
+            else{
+                return subtractMinute(dateISO8601, 1);
+            }
             DecimalFormat decimalFormat = new DecimalFormat("00");
             secondValueString = decimalFormat.format(secondValueInt);
             String partBeforeSeconds = dateISO8601.substring(0, startIndexSeconds);
@@ -93,6 +96,46 @@ public class DateService {
             return newDate;
         } else return dateISO8601;
     }
+
+    public static String subtractMinute(String dateISO8601, int minutes){
+        int expectedLengthISOFormat = 20;
+        int startIndexMinutes = 11;
+        if(dateISO8601.length() == expectedLengthISOFormat){
+            String minuteValueString = dateISO8601.substring(startIndexMinutes, startIndexMinutes + 2);
+            int minuteValueInt = Integer.valueOf(minuteValueString);
+            if(minuteValueInt - minutes >= 0){
+                minuteValueInt -= minutes;
+            }
+            else{
+                return subtractHour(dateISO8601, 1);
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("00");
+            minuteValueString = decimalFormat.format(minuteValueInt);
+            String partBeforeMinutes = dateISO8601.substring(0, startIndexMinutes);
+            String partAfterMinutes = dateISO8601.substring(startIndexMinutes + 2, expectedLengthISOFormat);
+            String newDate = partBeforeMinutes + minuteValueString + partAfterMinutes;
+            return newDate;
+        } else return dateISO8601;
+    }
+
+    public static String subtractHour(String dateISO8601, int hours){
+        int expectedLengthISOFormat = 20;
+        int startIndexHour = 14;
+        if(dateISO8601.length() == expectedLengthISOFormat){
+            String hourValueString = dateISO8601.substring(startIndexHour, startIndexHour + 2);
+            int hourValueInt = Integer.valueOf(hourValueString);
+            if(hourValueInt - hours >= 0){
+                hourValueInt -= hours;
+            }
+            DecimalFormat decimalFormat = new DecimalFormat("00");
+            hourValueString = decimalFormat.format(hourValueInt);
+            String partBeforeHour = dateISO8601.substring(0, startIndexHour);
+            String partAfterHour = dateISO8601.substring(startIndexHour + 2, expectedLengthISOFormat);
+            String newDate = partBeforeHour + hourValueString + partAfterHour;
+            return newDate;
+        } else return dateISO8601;
+    }
+
 
     public static long dateToLong(Date date){
         return date.getTime();

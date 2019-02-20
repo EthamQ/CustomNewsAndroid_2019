@@ -6,6 +6,7 @@ import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class DateOffsetDataStorage {
 
@@ -42,7 +43,7 @@ public class DateOffsetDataStorage {
         }
     }
 
-    public static void setDateOffsets(LinkedList<RequestOffsetRoomModel> offsets){
+    public static void setDateOffsets(List<RequestOffsetRoomModel> offsets){
         for(int i = 0; i < offsets.size(); i++){
             // Offset data is retrieved when the http requests are build.
             setOffsetForCategory(

@@ -19,6 +19,7 @@ import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
+import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.example.rapha.swipeprototype2.temporaryDataStorage.ArticleDataStorage;
 import com.example.rapha.swipeprototype2.temporaryDataStorage.DateOffsetDataStorage;
@@ -116,23 +117,23 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
 
         initObjectsAndServices();
-        setLanguageDialog();
-        setSwipeFunctionality();
         startObservingDatabaseData();
         startObservingLoadingStatus();
-        DateOffsetDataStorage.resetData();
-        loadAndStoreDateOffsets();
+        setLanguageDialog();
+        setSwipeFunctionality();
 
         // Don't display swipe cards until there is data.
         setVisibilitySwipeCards(false);
 
         // When leaving the fragment all swipe cards are temporarily stored
         // and still available when again opening the fragment.
-        if(ArticleDataStorage.temporaryArticlesExist()){
+        if (ArticleDataStorage.temporaryArticlesExist()) {
             swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
             swipeCardArrayAdapter.notifyDataSetChanged();
             setVisibilitySwipeCards(true);
-        } else{ loadArticlesFromDb(); }
+        } else {
+            loadArticlesFromDb();
+        }
 
         return view;
     }
@@ -143,10 +144,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
      * Look if the user changed the language.
      * Set variables or react on the loading status.
      */
-    public void startObservingLoadingStatus(){
+    public void startObservingLoadingStatus() {
         SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> apiIsLoading = loading);
 
-        SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading ->{
+        SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading -> {
             dbIsLoading = loading;
             setVisibilitySwipeCards(!loading);
         });
@@ -160,14 +161,14 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
-            if(loading){
+            if (loading) {
                 SwipeLoadingService.reactOnLanguageChangeUnsuccessful(this);
             }
         });
     }
 
-    public void startObservingDatabaseData(){
-        if(mainActivity != null){
+    public void startObservingDatabaseData() {
+        if (mainActivity != null) {
             // Observer ratings
             ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
 
@@ -179,10 +180,47 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
 //            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
 //            dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages)
 //                    .observe(mainActivity, offsets -> {
-//                        if(!offsets.isEmpty()){
+//                        if (!offsets.isEmpty() && !languageChangeIsLoading) {
 //                            DateOffsetDataStorage.setDateOffsets(offsets);
 //                        }
 //                    });
+
+
+
+
+
+            DateOffsetDataStorage.resetData();
+            LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
+            allLanguageCombinationsLiveData.observe(mainActivity, languageCombinations -> {
+                    boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
+                    int[] languageCombinationId = new int[1];
+                    for (int i = 0; i < languageCombinations.size(); i++) {
+                        LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
+                        boolean languageIsActive = LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, currentCombination);
+                        if (languageIsActive) {
+                            languageCombinationId[0] = currentCombination.id;
+                        }
+                    }
+
+                    LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData = dateOffsetDbService.getAll();
+                    dateOffsetsLiveData.observe(mainActivity, allOffsets ->{
+                        List<RequestOffsetRoomModel> relevantDateOffsets = new LinkedList();
+                        for (int i = 0; i < allOffsets.size(); i++) {
+                            RequestOffsetRoomModel currentOffset = allOffsets.get(i);
+                            boolean isRelevant = currentOffset.languageCombination == languageCombinationId[0];
+                            if (isRelevant) {
+                                relevantDateOffsets.add(currentOffset);
+                            }
+                        }
+                        if(!languageChangeIsLoading){
+                            DateOffsetDataStorage.setDateOffsets(relevantDateOffsets);
+                        }
+
+                    });
+
+
+
+            });
         }
     }
 
@@ -210,7 +248,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                 });
     }
 
-    private void onDbArticlesLoaded(){
+    private void onDbArticlesLoaded() {
         LiveData<List<KeyWordRoomModel>> allTopicsLiveData = keyWordDbService.getAllKeyWords();
         allTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
             @Override
@@ -225,37 +263,38 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         });
     }
 
-    public void loadArticlesFromApi(){
+    public void loadArticlesFromApi() {
         SwipeLoadingService.setLoadingApiRequest(true);
         Log.d("newswipe", "loadArticlesFromApi()");
-            Thread thread = new Thread(() -> {
-                    try {
-                        LinkedList<NewsArticle> apiArticlesToAdd =
-                                ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
-                        Log.d("newswipe", "articles from api call: " + apiArticlesToAdd.size());
-                        mainActivity.runOnUiThread(() -> {
-                            storeArticlesInDatabase(apiArticlesToAdd);
-                            swipeCardsList.addAll(apiArticlesToAdd);
-                            CollectionService.removeDuplicatesArticleList(swipeCardsList);
-                            Logging.logSwipeCards(swipeCardsList, "newswipe2");
-                            QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
-                            SwipeLoadingService.resetLoading();
-                            reloadFragment();
-                        });
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-            });
-            thread.start();
+        Thread thread = new Thread(() -> {
+            try {
+                LinkedList<NewsArticle> apiArticlesToAdd =
+                        ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
+                Log.d("newswipe", "articles from api call: " + apiArticlesToAdd.size());
+                mainActivity.runOnUiThread(() -> {
+                    storeArticlesInDatabase(apiArticlesToAdd);
+                    swipeCardsList.addAll(apiArticlesToAdd);
+                    CollectionService.removeDuplicatesArticleList(swipeCardsList);
+                    Logging.logSwipeCards(swipeCardsList, "newswipe2");
+                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
+                    SwipeLoadingService.resetLoading();
+                    reloadFragment();
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        thread.start();
     }
 
     /**
      * Deletes all articles that belong to this fragment from the database.
      * When they are deleted onDeleted is called where the new articles are stored in the database.
+     *
      * @param articles The articles to store in the database.
      */
-    public void storeArticlesInDatabase(LinkedList<NewsArticle> articles){
-        if(mainActivity != null){
+    public void storeArticlesInDatabase(LinkedList<NewsArticle> articles) {
+        if (mainActivity != null) {
             DeleteData deleteData = new DeleteData();
             deleteData.deletesArticle = this;
             deleteData.data = articles;
@@ -268,11 +307,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
      * Called when all swipe articles from the database are deleted.
      * Inserts all articles that were passed to the delete operation as data
      * into the database.
+     *
      * @param deleteData
      */
     @Override
     public void onDeleted(DeleteData deleteData) {
-        if(mainActivity != null){
+        if (mainActivity != null) {
             NewsArticleDbService.getInstance(mainActivity.getApplication())
                     .insertNewsArticles((LinkedList<NewsArticle>) deleteData.data);
         }
@@ -282,13 +322,13 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
      * Sets the functionality for the flingContainer which handles the functionality
      * if the user swipes to the left or right or clicks on a swipe cards.
      */
-    public void setSwipeFunctionality(){
+    public void setSwipeFunctionality() {
         SwipeFlingAdapterView flingContainer = view.findViewById(R.id.swipe_card);
         flingContainer.setAdapter(swipeCardArrayAdapter);
         flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
-                if(swipeCardsList.size() == 0 || swipeCardsList.size() == 1){
+                if (swipeCardsList.size() == 0 || swipeCardsList.size() == 1) {
                     swipeCardsList.add(new ErrorSwipeCard());
                 }
                 Log.d("newswipe", "++++++++++++++++++++++++");
@@ -298,7 +338,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
 
                 Log.d("newswipe", "++++++++++++++++++++++++");
                 boolean alreadyLoadingData = apiIsLoading || dbIsLoading;
-                if(swipeCardsList.size() <= ARTICLE_MINIMUM_BEFORE_LOADING && !alreadyLoadingData){
+                if (swipeCardsList.size() <= ARTICLE_MINIMUM_BEFORE_LOADING && !alreadyLoadingData) {
                     loadArticlesFromApi();
                 }
                 swipeCardArrayAdapter.notifyDataSetChanged();
@@ -306,18 +346,16 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
 
             @Override
             public void onLeftCardExit(Object dataObject) {
-                final ISwipeCard swipedCard = (ISwipeCard)dataObject;
+                final ISwipeCard swipedCard = (ISwipeCard) dataObject;
                 swipedCard.dislike(SwipeFragment.this);
                 leftIndicator.setAlpha(0);
-                loadAndStoreDateOffsets();
             }
 
             @Override
             public void onRightCardExit(Object dataObject) {
-                final ISwipeCard swipedCard = (ISwipeCard)dataObject;
+                final ISwipeCard swipedCard = (ISwipeCard) dataObject;
                 swipedCard.like(SwipeFragment.this);
                 rightIndicator.setAlpha(0);
-                loadAndStoreDateOffsets();
             }
 
             @Override
@@ -328,7 +366,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
             @Override
             public void onScroll(float scrollProgressPercent) {
                 Log.d("swipee", "on scroll detected");
-                if(!swipeCardsList.isEmpty()){
+                if (!swipeCardsList.isEmpty()) {
                     ISwipeCard currentCard = swipeCardsList.get(0);
                     currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
                 }
@@ -343,17 +381,17 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
              */
             @Override
             public void onItemClicked(int itemPosition, Object dataObject) {
-                ISwipeCard clickedArticle = (ISwipeCard)dataObject;
+                ISwipeCard clickedArticle = (ISwipeCard) dataObject;
                 clickedArticle.onClick(mainActivity);
             }
         });
     }
 
-    public void initObjectsAndServices(){
+    public void initObjectsAndServices() {
         swipeCardsList = new ArrayList<>();
         swipeCardArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         // Only add introduction card when the user just started the app.
-        if(mainActivity.showIntroductionCard()){
+        if (mainActivity.showIntroductionCard()) {
             swipeCardsList.add(new IntroductionSwipeCard());
             mainActivity.introductionCardWasShown();
         }
@@ -374,7 +412,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
      * an alert dialog that makes it possible for the user to select in which languages
      * he wants to see his news.
      */
-    public void setLanguageDialog(){
+    public void setLanguageDialog() {
         Button button = view.findViewById(R.id.button_languages);
 
         button.setOnClickListener(view -> {
@@ -386,15 +424,39 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
             LanguageSelectionDataStorage.backUpPreviousLanguageSelection(initialSelection);
             final boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
 
-            dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) ->   {
+            dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) -> {
                 currentSelection[position] = isChecked;
                 LanguageSettingsService.saveChecked(mainActivity, currentSelection);
             });
 
             dialog.setPositiveButton("Confirm choice", (positiveDialog, which) -> {
-                if(LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)){
+                if (LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)) {
                     SwipeLoadingService.setLoadingLanguageChange(true);
-                    loadArticlesForOtherLanguage();
+                    LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
+                    allLanguageCombinationsLiveData.observe(mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
+                                @Override
+                                public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
+                                    if(languageCombinations.isEmpty()){
+                                        loadArticlesForOtherLanguage(-1);
+                                    }
+                                    for (int i = 0; i < languageCombinations.size(); i++) {
+                                        LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
+                                        boolean alreadyExists = LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, currentCombination);
+                                        if (alreadyExists) {
+                                            // The currently active language combination exists in database.
+                                            // Just pass its id to on insert finished without inserting it again.
+                                            int comboId = currentCombination.id;
+                                            loadArticlesForOtherLanguage(comboId);
+                                            break;
+                                        }
+                                        else if(i == languageCombinations.size() - 1){
+                                            loadArticlesForOtherLanguage(-1);
+                                        }
+                                    }
+                                    allLanguageCombinationsLiveData.removeObserver(this);
+                                }
+                            });
+
                 }
                 positiveDialog.cancel();
             });
@@ -409,60 +471,36 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         });
     }
 
-    public void loadArticlesForOtherLanguage(){
-        if(mainActivity != null){
-            DateOffsetDataStorage.resetData();
-            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
-            LiveData<LinkedList<RequestOffsetRoomModel>> dateOffsetsLiveData
-                    = dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages);
-            dateOffsetsLiveData.observe(mainActivity, new Observer<LinkedList<RequestOffsetRoomModel>>() {
-                @Override
-                public void onChanged(@Nullable LinkedList<RequestOffsetRoomModel> offsets) {
-                    if(!offsets.isEmpty()){
-                        DateOffsetDataStorage.setDateOffsets(offsets);
-                        ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
-                        swipeCardsList.clear();
-                        loadArticlesFromApi();
-                        dateOffsetsLiveData.removeObserver(this);
-                    }
-                }
-            });
-        }
-    }
+    public void loadArticlesForOtherLanguage(int combinationId) {
 
-    public void loadAndStoreDateOffsets(){
-        if(mainActivity != null){
-            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
-            LiveData<LinkedList<RequestOffsetRoomModel>> dateOffsetsLiveData
-                    = dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages);
-            dateOffsetsLiveData.observe(mainActivity, new Observer<LinkedList<RequestOffsetRoomModel>>() {
-                @Override
-                public void onChanged(@Nullable LinkedList<RequestOffsetRoomModel> offsets) {
-                    if(!offsets.isEmpty()){
-                        for(int i = 0; i < offsets.size(); i++){
-                            Log.d("newswipe", "$$$" + "cat: " + offsets.get(i).categoryId + ", offset: " + offsets.get(i).requestOffset + ", combo: " + offsets.get(i).languageCombination);
-                        }
-                        DateOffsetDataStorage.setDateOffsets(offsets);
-                        dateOffsetsLiveData.removeObserver(this);
-                    }
-                }
-            });
-        }
-
-        LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveDat
+        if(mainActivity !=null) {
+        DateOffsetDataStorage.resetData();
+        LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData
                 = dateOffsetDbService.getAll();
-        dateOffsetsLiveDat.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
+        dateOffsetsLiveData.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {
-                if(!offsets.isEmpty()){
-                    for(int i = 0; i < offsets.size(); i++){
-                        Log.d("newswipe", "&&&" + "cat: " + offsets.get(i).categoryId + ", offset: " + offsets.get(i).requestOffset + ", combo: " + offsets.get(i).languageCombination);
+                List<RequestOffsetRoomModel> relevantOffsets = new LinkedList<>();
+                for (int i = 0; i < offsets.size(); i++) {
+                    RequestOffsetRoomModel o = offsets.get(i);
+                    if(o.languageCombination == combinationId){
+                        relevantOffsets.add(o);
                     }
-                    dateOffsetsLiveDat.removeObserver(this);
                 }
+
+                if(!relevantOffsets.isEmpty()){
+                    DateOffsetDataStorage.setDateOffsets(relevantOffsets);
+                }
+                ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
+                swipeCardsList.clear();
+                loadArticlesFromApi();
+                dateOffsetsLiveData.removeObserver(this);
             }
         });
     }
+}
+
+
 
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);

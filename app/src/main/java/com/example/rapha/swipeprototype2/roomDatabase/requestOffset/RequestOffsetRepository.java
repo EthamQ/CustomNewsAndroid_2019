@@ -19,7 +19,6 @@ import java.util.List;
 public class RequestOffsetRepository {
 
     private IRequestOffsetDao dao;
-    private static MutableLiveData<LinkedList<RequestOffsetRoomModel>> offsetsForCombinationId = new MutableLiveData<>();
 
     public RequestOffsetRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
@@ -39,6 +38,7 @@ public class RequestOffsetRepository {
     }
 
     public MutableLiveData<LinkedList<RequestOffsetRoomModel>> getDateOffsetsForLanguageCombination(MainActivity mainActivity, boolean[] languageCombination){
+        MutableLiveData<LinkedList<RequestOffsetRoomModel>> offsetsForCombinationId = new MutableLiveData<>();
         LanguageCombinationDbService languageComboDbService = LanguageCombinationDbService.getInstance(mainActivity.getApplication());
         languageComboDbService.getAll().observe(mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
                     @Override
@@ -47,7 +47,7 @@ public class RequestOffsetRepository {
                             final LanguageCombinationRoomModel currentCombination = combinations.get(i);
                             boolean combinationExists = LanguageCombinationDbService.languageSelectionIsEqual(languageCombination, currentCombination);
                             if(combinationExists && !(mainActivity == null)){
-                                setDateOffsetsForLanguageCombinationId(mainActivity, currentCombination.id);
+                                setDateOffsetsForLanguageCombinationId(mainActivity, currentCombination.id, offsetsForCombinationId);
                                 languageComboDbService.getAll().removeObserver(this);
                             }
                         }
@@ -57,7 +57,7 @@ public class RequestOffsetRepository {
         return offsetsForCombinationId;
     }
 
-    private void setDateOffsetsForLanguageCombinationId(MainActivity mainActivity, int combinationId){
+    private void setDateOffsetsForLanguageCombinationId(MainActivity mainActivity, int combinationId, MutableLiveData<LinkedList<RequestOffsetRoomModel>> offsetsForCombinationId){
         OffsetDbService dateOffsetDbService = OffsetDbService.getInstance(mainActivity.getApplication());
         dateOffsetDbService.getAll().observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
             @Override

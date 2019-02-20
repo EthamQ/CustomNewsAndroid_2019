@@ -1,5 +1,6 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -91,12 +92,19 @@ public class ApiUtils {
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
-        queryBuilder.setDateFrom(DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY));
-        String requestOffset = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
-        if(!requestOffset.isEmpty()){
-            Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + requestOffset);
-            queryBuilder.setDateTo(requestOffset);
-            resetOffsetIfToEqualFrom(swipeFragment, DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), requestOffset, distribution.categoryId);
+        String dateFrom = DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY);
+        queryBuilder.setDateFrom(dateFrom);
+        String dateTo = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
+        if(!dateTo.isEmpty()){
+            if(dateToAndFromEqual(dateFrom, dateTo)){
+                Log.d("newswipe", "#### NO NEWS ARTICLES, ");
+                Log.d("newswipe", "no offset set");
+                resetOffsetIfToEqualFrom(swipeFragment, DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), dateTo, distribution.categoryId);
+            }
+            else{
+                Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + dateTo);
+                queryBuilder.setDateTo(dateTo);
+            }
         }
         else{
             Log.d("newswipe", "no offset set");
@@ -105,16 +113,20 @@ public class ApiUtils {
         return fetchedArticles;
     }
 
-    private static void resetOffsetIfToEqualFrom(SwipeFragment swipeFragment, String dateFrom, String dateTo, int categoryId){
+    private static boolean dateToAndFromEqual(String dateFrom, String dateTo){
         DateTime from = new DateTime( dateFrom );
         DateTime to = new DateTime( dateTo );
         int dayFrom = from.getDayOfMonth();
         int monthFrom = from.getMonthOfYear();
         int dayTo = to.getDayOfMonth();
         int monthTo = to.getMonthOfYear();
-        if(dayFrom == dayTo && monthFrom == monthTo){
-            Log.d("newswipe", "#### NO NEWS ARTICLES, ");
-            swipeFragment.languageComboDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+        return dayFrom == dayTo && monthFrom == monthTo;
+    }
+
+    private static void resetOffsetIfToEqualFrom(SwipeFragment swipeFragment, String dateFrom, String dateTo, int categoryId){
+        LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = swipeFragment.languageComboDbService.getAll();
+        LiveData<List<RequestOffsetRoomModel>> allDateOffsetsLiveData = swipeFragment.dateOffsetDbService.getAll();
+            allLanguageCombinationsLiveData.observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
                 @Override
                 public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
                     Observer comboObserver = this;
@@ -122,25 +134,23 @@ public class ApiUtils {
                     for(int i = 0; i < languageCombinations.size(); i++){
                         if(LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, languageCombinations.get(i))){
                             int comboId = languageCombinations.get(i).id;
-                            swipeFragment.dateOffsetDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<RequestOffsetRoomModel>>() {
+                            allDateOffsetsLiveData.observe(swipeFragment.getActivity(), new Observer<List<RequestOffsetRoomModel>>() {
                                 @Override
                                 public void onChanged(@Nullable List<RequestOffsetRoomModel> requestOffsetRoomModels) {
                                     for(int i = 0; i < requestOffsetRoomModels.size(); i++){
                                         if(requestOffsetRoomModels.get(i).languageCombination == comboId && requestOffsetRoomModels.get(i).categoryId == categoryId){
                                             requestOffsetRoomModels.get(i).requestOffset = "";
                                             swipeFragment.dateOffsetDbService.update(requestOffsetRoomModels.get(i));
-                                            swipeFragment.languageComboDbService.getAll().removeObserver(comboObserver);
-                                            swipeFragment.dateOffsetDbService.getAll().removeObserver(this);
+                                            allDateOffsetsLiveData.removeObserver(this);
+                                            allLanguageCombinationsLiveData.removeObserver(comboObserver);
                                         }
                                     }
                                 }
                             });
-
                         }
                     }
                 }
             });
-        }
     }
 
 

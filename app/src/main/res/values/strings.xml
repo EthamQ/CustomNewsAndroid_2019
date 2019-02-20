@@ -158,7 +158,9 @@
     </string>
 
     <string name="not_enough_topics_news_of_the_day">
-        Answer at least 5 questions with yes to see your news of the day
+        Answer at least 5 questions with yes to see your news of the day.
+        Answering a question with yes means swipe through the cards and when you are asked a question swipe it
+        to the right.
     </string>
 
 

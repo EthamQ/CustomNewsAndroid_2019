@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.arch.lifecycle.Observer;
+import android.widget.Toast;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
@@ -51,14 +52,15 @@ import static android.content.Context.JOB_SCHEDULER_SERVICE;
  */
 public class NewsOfTheDayFragment extends Fragment {
 
+    public MainActivity mainActivity;
+    public static final int ARTICLE_MINIMUM = 5;
     View view;
-    MainActivity mainActivity;
     ArrayList<NewsArticle> articlesOfTheDay = new ArrayList();
     ListView articleListView;
     NewsOfTheDayListAdapter adapter;
     NewsArticleDbService newsArticleDbService;
     KeyWordDbService keyWordDbService;
-    public static final int ARTICLE_MINIMUM = 5;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -141,6 +143,9 @@ public class NewsOfTheDayFragment extends Fragment {
         int visibilityLoadingGif = isLoading ? FrameLayout.VISIBLE : FrameLayout.INVISIBLE;
         GifImageView loadingGif = view.findViewById(R.id.news_of_the_day_loading);
         loadingGif.setVisibility(visibilityLoadingGif);
+
+        TextView loadingText = view.findViewById(R.id.news_of_the_day_loading_text);
+        loadingText.setVisibility(visibilityLoadingGif);
     }
 
 
@@ -173,7 +178,10 @@ public class NewsOfTheDayFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
                 boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
-                if(!topics.isEmpty() && enoughTopics){
+                if(!enoughTopics){
+                    setTextNotEnoughTopics();
+                }
+                else if(!topics.isEmpty()){
                     for(int i = 0; i < topics.size(); i++){
                         // Get articles for every topic and add them to the view.
                         addArticleForTopicToView(topics.get(i).keyWord);
@@ -193,25 +201,27 @@ public class NewsOfTheDayFragment extends Fragment {
      * @param topic
      */
     private void addArticleForTopicToView(String topic){
-        LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
-                newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
-        articlesForTopicLiveData.observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
-                if(!articlesForTopic.isEmpty()){
-                    NewsArticleRoomModel modelToAdd = articlesForTopic.get(0);
-                    if(!modelToAdd.hasBeenRead){
-                        newsArticleDbService.setAsRead(modelToAdd);
+        if(mainActivity != null){
+            LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
+                    newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
+            articlesForTopicLiveData.observe(mainActivity, new Observer<List<NewsArticleRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
+                    if(!articlesForTopic.isEmpty()){
+                        NewsArticleRoomModel modelToAdd = articlesForTopic.get(0);
+                        if(!modelToAdd.hasBeenRead){
+                            newsArticleDbService.setAsRead(modelToAdd);
+                        }
+                        NewsArticle articleToAdd = newsArticleDbService.createNewsArticle(modelToAdd);
+                        articlesOfTheDay.add(articleToAdd);
+                        adapter.notifyDataSetChanged();
+                        DimensionService.setListViewHeightBasedOnItems(articleListView, true);
+                        setTextArticlesLoaded();
+                        articlesForTopicLiveData.removeObserver(this);
                     }
-                    NewsArticle articleToAdd = newsArticleDbService.createNewsArticle(modelToAdd);
-                    articlesOfTheDay.add(articleToAdd);
-                    adapter.notifyDataSetChanged();
-                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
-                    setTextArticlesLoaded();
-                    articlesForTopicLiveData.removeObserver(this);
                 }
-            }
-        });
+            });
+        }
     }
 
     /**

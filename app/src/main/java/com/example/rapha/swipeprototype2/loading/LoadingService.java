@@ -2,7 +2,7 @@ package com.example.rapha.swipeprototype2.loading;
 
 public class LoadingService {
 
-    public static final int MAX_LOADING_TIME_MILLS = 7000;
+    public static final int MAX_LOADING_TIME_MILLS_DEFAULT = 7000;
 
     public static String getLoadingText(int loadingType){
         switch(loadingType){

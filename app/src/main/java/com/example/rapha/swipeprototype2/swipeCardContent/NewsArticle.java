@@ -1,6 +1,7 @@
 package com.example.rapha.swipeprototype2.swipeCardContent;
 
 import android.app.Activity;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -153,57 +154,52 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
                     newsArticleDbService.createNewsArticleRoomModelToUpdate(this);
             readArticle.hasBeenRead = true;
             newsArticleDbService.update(readArticle);
-        }
-        }
+	    }
+	}
 
         private void setLanguageCombination(SwipeFragment swipeFragment){
-	    if(!(swipeFragment.getActivity() == null)){
-            LanguageCombinationData data = new LanguageCombinationData(this);
-            data.data = swipeFragment;
-
+	    if(swipeFragment.mainActivity != null){
+            LanguageCombinationData dataToPassToOnFinished = new LanguageCombinationData(this);
+            dataToPassToOnFinished.data = swipeFragment;
             boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
-            LanguageCombinationDbService comboDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-            comboDbService.getAll().observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+            LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = swipeFragment.languageComboDbService.getAll();
+            allLanguageCombinationsLiveData.observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
                         @Override
                         public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
                             if(languageCombinations.isEmpty()){
-                                LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-                                languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
-                                //comboDbService.getAllRemoveObserver(this);
+                                swipeFragment.languageComboDbService.insertLanguageCombination(dataToPassToOnFinished, currentLanguages);
                             }
                             for(int i = 0; i < languageCombinations.size(); i++){
                                 LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
                                 boolean alreadyExists = LanguageCombinationDbService.languageSelectionIsEqual(currentLanguages, currentCombination);
-                                boolean isLastIteration = i == languageCombinations.size() - 1;
                                 if(alreadyExists){
-                                    data.insertedId = currentCombination.id;
-                                    onLanguageCombinationInsertFinished(data);
-                                    //comboDbService.getAllRemoveObserver(this);
+                                    // The currently active language combination exists in database.
+                                    // Just pass its id to on insert finished without inserting it again.
+                                    dataToPassToOnFinished.insertedId = currentCombination.id;
+                                    onLanguageCombinationInsertFinished(dataToPassToOnFinished);
                                     break;
                                 }
-                                if(isLastIteration){
-                                    LanguageCombinationDbService languageCombinationDbService = LanguageCombinationDbService.getInstance(swipeFragment.getActivity().getApplication());
-                                    languageCombinationDbService.insertLanguageCombination(data, currentLanguages);
-                                    //comboDbService.getAllRemoveObserver(this);
+                                if(i == languageCombinations.size() - 1){
+                                    swipeFragment.languageComboDbService.insertLanguageCombination(dataToPassToOnFinished, currentLanguages);
                                 }
                             }
+                            allLanguageCombinationsLiveData.removeObserver(this);
                         }
                     }
             );
         }
-        }
+	}
 
     @Override
-    public void onLanguageCombinationInsertFinished(LanguageCombinationData data) {
-	    Log.d("offsets", "onLanguageCombinationInsertFinished");
-	    SwipeFragment swipeFragment = (SwipeFragment) data.data;
-	    if(!(swipeFragment == null)){
-            long insertedId = data.insertedId;
-            if(!(swipeFragment.getActivity() == null)){
+    public void onLanguageCombinationInsertFinished(LanguageCombinationData dataToPassToOnFinished) {
+        SwipeFragment swipeFragment = (SwipeFragment) dataToPassToOnFinished.data;
+        long insertedId = dataToPassToOnFinished.insertedId;
+	    if(swipeFragment != null){
+            if(swipeFragment.getActivity() != null){
                 OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
                 if(!this.publishedAt.isEmpty()){
                     // Because the api results will include articles published at
-                    // exactly the offset, we add a minute to exclude them
+                    // exactly the offset, we subtract a minute to exclude them in the next call
                     Log.d("newswipe3", "############");
                     Log.d("newswipe3", "Store offset in database: category: " + this.newsCategory + "offset: " + this.publishedAt);
                     String dateOffset = DateService.subtractSecond(this.publishedAt, 1);
