@@ -233,7 +233,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                         mainActivity.runOnUiThread(() -> {
                             storeArticlesInDatabase(apiArticlesToAdd);
                             swipeCardsList.addAll(apiArticlesToAdd);
-                            swipeCardsList.addAll(apiArticlesToAdd);
                             CollectionService.removeDuplicatesArticleList(swipeCardsList);
                             Logging.logSwipeCards(swipeCardsList, "newswipe2");
                             QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);

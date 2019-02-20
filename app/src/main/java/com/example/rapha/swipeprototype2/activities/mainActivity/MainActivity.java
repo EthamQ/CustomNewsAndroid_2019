@@ -11,6 +11,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Home");
+        toolbar.setTitle("Swipe");
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -58,14 +59,21 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-    }
 
-    @Override
-    public void onStart(){
+        String menuFragment = getIntent().getStringExtra("menuFragment");
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.your_placeholder, new SwipeFragment());
+        if(menuFragment != null){
+            switch(menuFragment){
+                case "newsOfTheDayFragment":
+                    fragmentTransaction.replace(R.id.your_placeholder, new NewsOfTheDayFragment()); break;
+                default:
+                    fragmentTransaction.replace(R.id.your_placeholder, new SwipeFragment()); break;
+            }
+        } else{
+            fragmentTransaction.replace(R.id.your_placeholder, new SwipeFragment());
+        }
         fragmentTransaction.commit();
-        super.onStart();
+
     }
 
     @Override
