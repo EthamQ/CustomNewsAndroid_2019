@@ -98,6 +98,7 @@ public class NewsOfTheDayFragment extends Fragment {
             clickedArticle.onClick(getActivity());
         });
 
+        // Just for test purposes, remove later
         Button debug = view.findViewById(R.id.debug_button);
         debug.setOnClickListener(view -> {
             scheduleArticleRequests(); DailyNewsLoadingService.setLoading(true);});

@@ -143,13 +143,10 @@ public class NewsArticleDbService {
         return newsArticle;
     }
 
-    public LinkedList<NewsArticle> createNewsArticleList(List<NewsArticleRoomModel> dbModels, int limit){
-        if(limit > dbModels.size()){
-            limit = dbModels.size();
-        }
+    public LinkedList<NewsArticle> createNewsArticleList(List<NewsArticleRoomModel> dbModels){
         LinkedList<NewsArticle> articleList = new LinkedList<>();
 
-        for (int i = 0; i < limit; i++){
+        for (int i = 0; i < dbModels.size(); i++){
             articleList.add(createNewsArticle(dbModels.get(i)));
         }
         return articleList;

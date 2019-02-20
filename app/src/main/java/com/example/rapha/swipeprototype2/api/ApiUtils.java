@@ -7,7 +7,7 @@ import android.util.Log;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.apiQuery.NewsApiQueryBuilder;
-import com.example.rapha.swipeprototype2.dataStorage.DateOffsetDataStorage;
+import com.example.rapha.swipeprototype2.temporaryDataStorage.DateOffsetDataStorage;
 import com.example.rapha.swipeprototype2.languages.Language;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.roomDatabase.LanguageCombinationDbService;

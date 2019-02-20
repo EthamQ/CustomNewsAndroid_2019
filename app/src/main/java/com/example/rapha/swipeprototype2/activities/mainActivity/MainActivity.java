@@ -11,7 +11,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,7 +21,7 @@ import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFra
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.StatisticFragment;
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-import com.example.rapha.swipeprototype2.dataStorage.StatusDataStorage;
+import com.example.rapha.swipeprototype2.temporaryDataStorage.StatusDataStorage;
 
 
 public class MainActivity extends AppCompatActivity

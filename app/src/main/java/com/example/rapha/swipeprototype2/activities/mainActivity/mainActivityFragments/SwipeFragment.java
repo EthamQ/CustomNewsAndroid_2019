@@ -1,11 +1,11 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -14,14 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
-import com.example.rapha.swipeprototype2.dataStorage.ArticleDataStorage;
-import com.example.rapha.swipeprototype2.dataStorage.DateOffsetDataStorage;
+import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
+import com.example.rapha.swipeprototype2.temporaryDataStorage.ArticleDataStorage;
+import com.example.rapha.swipeprototype2.temporaryDataStorage.DateOffsetDataStorage;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.loading.LoadingService;
@@ -41,6 +41,7 @@ import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.example.rapha.swipeprototype2.temporaryDataStorage.LanguageSelectionDataStorage;
 import com.example.rapha.swipeprototype2.utils.CollectionService;
 import com.example.rapha.swipeprototype2.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
@@ -59,44 +60,37 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment implements IKeyWordProvider, IDeletesArticle {
+public class SwipeFragment extends Fragment implements IDeletesArticle {
 
     public MainActivity mainActivity;
     public View view;
 
-    // When this amount of articles is leftIndicator in
-    // swipeCardsList we load new articles from the api
-    public static final int articlesAmountLoad = 10;
+    // When this amount of swipe cards is left we load new articles from the api.
+    public static final int ARTICLE_MINIMUM_BEFORE_LOADING = 10;
 
-    // How many articles to load in the beginning from the db.
-    public static final int articlesAmountLoadFromDb = ApiService.MAX_NUMBER_OF_ARTICLES;
-
-    // Adapter for the fling Container (swipe functionality)
+    // Adapter for the swipe cards plug in.
     public NewsArticleAdapter swipeCardArrayAdapter;
 
-    // "swipeCardsList" is added to the "swipeCardArrayAdapter" and contains
-    // the news articles to be displayed
+    // ArrayList for the swipe card adapter.
     public ArrayList<ISwipeCard> swipeCardsList;
 
-    // Contains all the user preferences fetched from the database (news category and its rating).
+    // Up to date data from observables to pass to other functions.
     public List<UserPreferenceRoomModel> liveCategoryRatings;
     public List<KeyWordRoomModel> liveKeyWords;
 
+    // Database services.
     public RatingDbService ratingDbService;
     public NewsArticleDbService newsArticleDbService;
     public KeyWordDbService keyWordDbService;
     public OffsetDbService dateOffsetDbService;
     public LanguageCombinationDbService languageComboDbService;
 
-    public boolean shouldReloadFragment = false;
+    // Booleans tracking the state.
     public boolean apiIsLoading = false;
     boolean dbIsLoading = false;
     public boolean languageChangeIsLoading = false;
-    public boolean languageShouldBeSwitched = false;
 
-    boolean[] previousLanguageSelection;
-    LinkedList<NewsArticle> remainingArticlesBeforeLoadingNewOnes = new LinkedList<>();
-
+    // Text to display when swiping left or right.
     public TextView leftIndicator;
     public TextView rightIndicator;
 
@@ -120,124 +114,130 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
+
         initObjectsAndServices();
         setLanguageDialog();
         setSwipeFunctionality();
         startObservingDatabaseData();
         startObservingLoadingStatus();
+
+        // Don't display swipe cards until there is data.
         setVisibilitySwipeCards(false);
 
+        // When leaving the fragment all swipe cards are temporarily stored
+        // and still available when again opening the fragment.
         if(ArticleDataStorage.temporaryArticlesExist()){
             swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
             swipeCardArrayAdapter.notifyDataSetChanged();
             setVisibilitySwipeCards(true);
-        } else{ loadFromDb(); }
+        } else{ loadArticlesFromDb(); }
 
         return view;
     }
 
 
+    /**
+     * Look if articles are loaded from the api or database.
+     * Look if the user changed the language.
+     * Set variables or react on the loading status.
+     */
     public void startObservingLoadingStatus(){
-        DailyNewsLoadingService.getLoading().observe(getActivity(),
-                loading -> handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS)
-        );
         SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> apiIsLoading = loading);
-        SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
-            languageChangeIsLoading = loading;
-            handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
-            if(loading){
-                new Thread(() -> {
-                        try {
-                            Thread.sleep(LoadingService.MAX_LOADING_TIME_MILLS);
-                            if(languageChangeIsLoading){
-                                mainActivity.runOnUiThread(() -> {
-                                    SwipeLoadingService.setLoadingLanguageChange(false);
-                                    swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
-                                    swipeCardArrayAdapter.notifyDataSetChanged();
-                                    LanguageSettingsService.saveChecked(mainActivity, previousLanguageSelection);
-                                    Context context = mainActivity.getApplicationContext();
-                                    CharSequence text = "Sorry something went wrong, please try it again later or check your internet connection";
-                                    int duration = Toast.LENGTH_LONG;
-                                    Toast toast = Toast.makeText(context, text, duration);
-                                    toast.show();
-                                    reloadFragment();
-                                });
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                }).start();
-            }
-        });
+
         SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading ->{
             dbIsLoading = loading;
             setVisibilitySwipeCards(!loading);
         });
+
+        // Show a loading screen when news of the day are loaded
+        // because it prevents other database operations.
+        DailyNewsLoadingService.getLoading().observe(getActivity(),
+                loading -> handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS)
+        );
+
+        SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
+            languageChangeIsLoading = loading;
+            handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
+            if(loading){
+                SwipeLoadingService.reactOnLanguageChangeUnsuccessful(this);
+            }
+        });
     }
-
-
-
 
     public void startObservingDatabaseData(){
-        ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
-        keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
-        keepOffsetUpToDate();
-    }
+        if(mainActivity != null){
+            // Observer ratings
+            ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
 
-    public void loadFromDb(){
-            Log.d("newswipe", "loadFromDb()");
-            final NewsArticleDbService newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-            newsArticleDbService.getAllUnreadSwipeArticles().observe(
-                    getActivity(),
-                    new Observer<List<NewsArticleRoomModel>>() {
-                        @Override
-                        public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
-                            final Observer articleObserver = this;
-                            Log.d("newswipe", "loadFromDb() onchanged");
-                            Log.d("newswipe", "loadFromDb() onchanged article size: " + articleModels.size());
-                            if(articleModels.isEmpty()){
-                                SwipeLoadingService.setLoadingApiRequest(true);
-                                loadFromApi();
-                                newsArticleDbService.getAllUnreadSwipeArticles().removeObserver(this);
-                            }
-                            else{
-                                SwipeLoadingService.setLoadingDatabase(true);
-                                swipeCardsList.addAll(newsArticleDbService.createNewsArticleList(articleModels, articleModels.size()));
-                                keyWordDbService.getAllKeyWords().observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
-                                    @Override
-                                    public void onChanged(@Nullable List<KeyWordRoomModel> keyWords) {
-                                            if(!keyWords.isEmpty()){
-                                                QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
-                                                swipeCardArrayAdapter.notifyDataSetChanged();
-                                                newsArticleDbService.getAllUnreadSwipeArticles().removeObserver(articleObserver);
-                                                keyWordDbService.getAllKeyWords().removeObserver(this);
-                                                SwipeLoadingService.setLoadingDatabase(false);
-                                                setVisibilitySwipeCards(true);
-                                            }
-                                    }
-                                });
-                            }
+            // Observe all topics
+            keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
+
+            // Observer date offsets for current language selection
+            DateOffsetDataStorage.resetData();
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
+            dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages)
+                    .observe(mainActivity, offsets -> {
+                        if(!offsets.isEmpty()){
+                            DateOffsetDataStorage.setDateOffsets(offsets);
                         }
                     });
+        }
     }
 
-    public void loadFromApi(){
+    public void loadArticlesFromDb() {
+        Log.d("newswipe", "loadArticlesFromDb()");
+        LiveData<List<NewsArticleRoomModel>> unreadArticlesLiveData = newsArticleDbService.getAllUnreadSwipeArticles();
+        unreadArticlesLiveData.observe(
+                getActivity(),
+                new Observer<List<NewsArticleRoomModel>>() {
+                    @Override
+                    public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
+                        final Observer articleObserver = this;
+                        Log.d("newswipe", "loadArticlesFromDb() onchanged");
+                        Log.d("newswipe", "loadArticlesFromDb() onchanged article size: " + articleModels.size());
+                        if (articleModels.isEmpty()) {
+                            SwipeLoadingService.setLoadingApiRequest(true);
+                            loadArticlesFromApi();
+                        } else {
+                            SwipeLoadingService.setLoadingDatabase(true);
+                            swipeCardsList.addAll(newsArticleDbService.createNewsArticleList(articleModels));
+                            onDbArticlesLoaded();
+                        }
+                        unreadArticlesLiveData.removeObserver(this);
+                    }
+                });
+    }
+
+    private void onDbArticlesLoaded(){
+        LiveData<List<KeyWordRoomModel>> allTopicsLiveData = keyWordDbService.getAllKeyWords();
+        allTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
+                if (!topics.isEmpty()) {
+                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
+                    swipeCardArrayAdapter.notifyDataSetChanged();
+                    SwipeLoadingService.setLoadingDatabase(false);
+                    allTopicsLiveData.removeObserver(this);
+                }
+            }
+        });
+    }
+
+    public void loadArticlesFromApi(){
         SwipeLoadingService.setLoadingApiRequest(true);
-        Log.d("newswipe", "loadFromApi()");
+        Log.d("newswipe", "loadArticlesFromApi()");
             Thread thread = new Thread(() -> {
                     try {
                         LinkedList<NewsArticle> apiArticlesToAdd =
                                 ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
                         Log.d("newswipe", "articles from api call: " + apiArticlesToAdd.size());
-                        Log.d("newswipe", "first article from api call: " + apiArticlesToAdd.get(0).toString());
                         mainActivity.runOnUiThread(() -> {
                             storeArticlesInDatabase(apiArticlesToAdd);
                             swipeCardsList.addAll(apiArticlesToAdd);
                             CollectionService.removeDuplicatesArticleList(swipeCardsList);
                             Logging.logSwipeCards(swipeCardsList, "newswipe2");
                             QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
-                            SwipeLoadingService.setLoadingLanguageChange(false);
-                            SwipeLoadingService.setLoadingApiRequest(false);
+                            SwipeLoadingService.resetLoading();
                             reloadFragment();
                         });
                     } catch (Exception e) {
@@ -247,29 +247,38 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             thread.start();
     }
 
+    /**
+     * Deletes all articles that belong to this fragment from the database.
+     * When they are deleted onDeleted is called where the new articles are stored in the database.
+     * @param articles The articles to store in the database.
+     */
     public void storeArticlesInDatabase(LinkedList<NewsArticle> articles){
-        if(this != null){
-            if(getActivity() != null){
-                DeleteData deleteData = new DeleteData();
-                deleteData.deletesArticle = this;
-                deleteData.data = articles;
-                NewsArticleDbService.getInstance(getActivity().getApplication())
-                        .deleteAllSwipedArticles(deleteData);
-            }
+        if(mainActivity != null){
+            DeleteData deleteData = new DeleteData();
+            deleteData.deletesArticle = this;
+            deleteData.data = articles;
+            NewsArticleDbService.getInstance(mainActivity.getApplication())
+                    .deleteAllSwipedArticles(deleteData);
         }
     }
 
+    /**
+     * Called when all swipe articles from the database are deleted.
+     * Inserts all articles that were passed to the delete operation as data
+     * into the database.
+     * @param deleteData
+     */
     @Override
     public void onDeleted(DeleteData deleteData) {
-        if(!(getActivity() == null)){
-            NewsArticleDbService.getInstance(getActivity().getApplication())
+        if(mainActivity != null){
+            NewsArticleDbService.getInstance(mainActivity.getApplication())
                     .insertNewsArticles((LinkedList<NewsArticle>) deleteData.data);
         }
     }
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality
-     * if the user swipes to the leftIndicator or rightIndicator etc.
+     * if the user swipes to the left or right or clicks on a swipe cards.
      */
     public void setSwipeFunctionality(){
         SwipeFlingAdapterView flingContainer = view.findViewById(R.id.swipe_card);
@@ -286,21 +295,13 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                 Log.d("newswipe", "articles leftIndicator: " + swipeCardsList.size());
 
                 Log.d("newswipe", "++++++++++++++++++++++++");
-                if(swipeCardsList.size() <= articlesAmountLoad && !apiIsLoading && !dbIsLoading){
-                    for(int i = 0; i < swipeCardsList.size(); i++){
-                        if(swipeCardsList.get(i) instanceof NewsArticle){
-                            remainingArticlesBeforeLoadingNewOnes.add((NewsArticle)swipeCardsList.get(i));
-                        }
-                    }
-                    loadFromApi();
+                boolean alreadyLoadingData = apiIsLoading || dbIsLoading;
+                if(swipeCardsList.size() <= ARTICLE_MINIMUM_BEFORE_LOADING && !alreadyLoadingData){
+                    loadArticlesFromApi();
                 }
                 swipeCardArrayAdapter.notifyDataSetChanged();
             }
 
-            /**
-             * Gives the swiped news card a minus rating in the database.
-             * @param dataObject The swiped news card.
-             */
             @Override
             public void onLeftCardExit(Object dataObject) {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
@@ -308,10 +309,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
                 leftIndicator.setAlpha(0);
             }
 
-            /**
-             * Gives the swiped news card a minus rating in the database.
-             * @param dataObject The swiped news card.
-             */
             @Override
             public void onRightCardExit(Object dataObject) {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
@@ -348,11 +345,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         });
     }
 
-    @Override
-    public List<KeyWordRoomModel> getCurrentKeyWords() {
-        return liveKeyWords;
-    }
-
     public void initObjectsAndServices(){
         swipeCardsList = new ArrayList<>();
         swipeCardArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
@@ -387,7 +379,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             dialog.setTitle("Select languages");
             final String[] languageItems = LanguageSettingsService.languageItems;
             final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
-            previousLanguageSelection = initialSelection;
+            LanguageSelectionDataStorage.backUpPreviousLanguageSelection(initialSelection);
             final boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
 
             dialog.setMultiChoiceItems(languageItems, currentSelection, (dialogInterface, position, isChecked) ->   {
@@ -398,8 +390,7 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
             dialog.setPositiveButton("Confirm choice", (positiveDialog, which) -> {
                 if(LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)){
                     SwipeLoadingService.setLoadingLanguageChange(true);
-                    languageShouldBeSwitched = true;
-                    keepOffsetUpToDate();
+                    loadArticlesForOtherLanguage();
                 }
                 positiveDialog.cancel();
             });
@@ -414,6 +405,26 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         });
     }
 
+    public void loadArticlesForOtherLanguage(){
+        if(mainActivity != null){
+            DateOffsetDataStorage.resetData();
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
+            LiveData<LinkedList<RequestOffsetRoomModel>> dateOffsetsLiveData
+                    = dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages);
+            dateOffsetsLiveData.observe(mainActivity, new Observer<LinkedList<RequestOffsetRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable LinkedList<RequestOffsetRoomModel> offsets) {
+                    if(!offsets.isEmpty()){
+                        DateOffsetDataStorage.setDateOffsets(offsets);
+                        ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
+                        swipeCardsList.clear();
+                        loadArticlesFromApi();
+                        dateOffsetsLiveData.removeObserver(this);
+                    }
+                }
+            });
+        }
+    }
 
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);
@@ -425,34 +436,6 @@ public class SwipeFragment extends Fragment implements IKeyWordProvider, IDelete
         mListener = null;
         ArticleDataStorage.clearData();
         ArticleDataStorage.storeArticlesTemporarily(this.swipeCardsList);
-    }
-
-    public void keepOffsetUpToDate(){
-        DateOffsetDataStorage.resetData();
-        boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
-        dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages).observe(getActivity(), offsets -> {
-            for(int j = 0; j < offsets.size(); j++){
-                // Offset data is retrieved when the http requests are build.
-                DateOffsetDataStorage.setOffsetForCategory(offsets.get(j).categoryId, offsets.get(j).requestOffset);
-
-                // Before switching the language you need current offset data.
-                // When switching the language keepOffsetUpToDate() is called.
-                boolean lastIteration = j == offsets.size() - 1;
-                if(languageShouldBeSwitched && lastIteration){
-                    startSwitchingLanguage();
-                }
-            }
-        });
-    }
-
-    private synchronized void startSwitchingLanguage(){
-        if(languageShouldBeSwitched){
-            languageShouldBeSwitched = false;
-            ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
-            swipeCardsList.clear();
-            shouldReloadFragment = true;
-            loadFromApi();
-        }
     }
 
     public void handleLoadingScreen(boolean loading, int loadingType){

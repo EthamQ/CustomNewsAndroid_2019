@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.dataStorage;
+package com.example.rapha.swipeprototype2.temporaryDataStorage;
 
 import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 

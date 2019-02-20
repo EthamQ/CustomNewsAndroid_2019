@@ -1,6 +1,9 @@
-package com.example.rapha.swipeprototype2.dataStorage;
+package com.example.rapha.swipeprototype2.temporaryDataStorage;
 
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
+
+import java.util.LinkedList;
 
 public class DateOffsetDataStorage {
 
@@ -33,6 +36,16 @@ public class DateOffsetDataStorage {
         }
         if(categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
             requestOffsetFood = requestOffset;
+        }
+    }
+
+    public static void setDateOffsets(LinkedList<RequestOffsetRoomModel> offsets){
+        for(int i = 0; i < offsets.size(); i++){
+            // Offset data is retrieved when the http requests are build.
+            setOffsetForCategory(
+                    offsets.get(i).categoryId,
+                    offsets.get(i).requestOffset
+            );
         }
     }
 
