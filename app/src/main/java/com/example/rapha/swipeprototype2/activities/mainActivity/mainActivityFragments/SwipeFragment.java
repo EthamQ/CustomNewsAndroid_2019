@@ -60,7 +60,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment implements IDeletesArticle {
+public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWordProvider {
 
     public MainActivity mainActivity;
     public View view;
@@ -120,6 +120,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
         setSwipeFunctionality();
         startObservingDatabaseData();
         startObservingLoadingStatus();
+        DateOffsetDataStorage.resetData();
+        loadAndStoreDateOffsets();
 
         // Don't display swipe cards until there is data.
         setVisibilitySwipeCards(false);
@@ -172,15 +174,15 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
             // Observe all topics
             keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
 
-            // Observer date offsets for current language selection
-            DateOffsetDataStorage.resetData();
-            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
-            dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages)
-                    .observe(mainActivity, offsets -> {
-                        if(!offsets.isEmpty()){
-                            DateOffsetDataStorage.setDateOffsets(offsets);
-                        }
-                    });
+//            // Observer date offsets for current language selection
+//            DateOffsetDataStorage.resetData();
+//            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
+//            dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages)
+//                    .observe(mainActivity, offsets -> {
+//                        if(!offsets.isEmpty()){
+//                            DateOffsetDataStorage.setDateOffsets(offsets);
+//                        }
+//                    });
         }
     }
 
@@ -307,6 +309,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
                 swipedCard.dislike(SwipeFragment.this);
                 leftIndicator.setAlpha(0);
+                loadAndStoreDateOffsets();
             }
 
             @Override
@@ -314,6 +317,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
                 final ISwipeCard swipedCard = (ISwipeCard)dataObject;
                 swipedCard.like(SwipeFragment.this);
                 rightIndicator.setAlpha(0);
+                loadAndStoreDateOffsets();
             }
 
             @Override
@@ -426,6 +430,40 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
         }
     }
 
+    public void loadAndStoreDateOffsets(){
+        if(mainActivity != null){
+            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
+            LiveData<LinkedList<RequestOffsetRoomModel>> dateOffsetsLiveData
+                    = dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages);
+            dateOffsetsLiveData.observe(mainActivity, new Observer<LinkedList<RequestOffsetRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable LinkedList<RequestOffsetRoomModel> offsets) {
+                    if(!offsets.isEmpty()){
+                        for(int i = 0; i < offsets.size(); i++){
+                            Log.d("newswipe", "$$$" + "cat: " + offsets.get(i).categoryId + ", offset: " + offsets.get(i).requestOffset + ", combo: " + offsets.get(i).languageCombination);
+                        }
+                        DateOffsetDataStorage.setDateOffsets(offsets);
+                        dateOffsetsLiveData.removeObserver(this);
+                    }
+                }
+            });
+        }
+
+        LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveDat
+                = dateOffsetDbService.getAll();
+        dateOffsetsLiveDat.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {
+                if(!offsets.isEmpty()){
+                    for(int i = 0; i < offsets.size(); i++){
+                        Log.d("newswipe", "&&&" + "cat: " + offsets.get(i).categoryId + ", offset: " + offsets.get(i).requestOffset + ", combo: " + offsets.get(i).languageCombination);
+                    }
+                    dateOffsetsLiveDat.removeObserver(this);
+                }
+            }
+        });
+    }
+
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);
     }
@@ -501,6 +539,11 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public List<KeyWordRoomModel> getCurrentKeyWords() {
+        return liveKeyWords;
     }
 
 

@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.temporaryDataStorage;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
 
@@ -22,6 +24,7 @@ public class DateOffsetDataStorage {
     }
 
     public static void setOffsetForCategory(int categoryId, String requestOffset){
+        Log.d("newswipe", "SET OFFSET IN STORAGE: cat: " + categoryId + ", offset: " +requestOffset);
         if(categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
             requestOffsetMovie = requestOffset;
         }
