@@ -148,7 +148,6 @@ public class NewsOfTheDayFragment extends Fragment {
         loadingText.setVisibility(visibilityLoadingGif);
     }
 
-
     /**
      * If the fragment hasn't loaded data before initialize and start the
      * request scheduler which loads articles and stores them in the database

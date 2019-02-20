@@ -19,6 +19,8 @@ import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.api.ApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
+import com.example.rapha.swipeprototype2.languages.LanguageCombinationService;
+import com.example.rapha.swipeprototype2.requestDateOffset.DateOffsetService;
 import com.example.rapha.swipeprototype2.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.example.rapha.swipeprototype2.temporaryDataStorage.ArticleDataStorage;
@@ -175,51 +177,22 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
             // Observe all topics
             keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
 
-//            // Observer date offsets for current language selection
-//            DateOffsetDataStorage.resetData();
-//            boolean[] currentLanguages = LanguageSettingsService.loadChecked(mainActivity);
-//            dateOffsetDbService.getOffsetsForLanguageCombination(mainActivity, currentLanguages)
-//                    .observe(mainActivity, offsets -> {
-//                        if (!offsets.isEmpty() && !languageChangeIsLoading) {
-//                            DateOffsetDataStorage.setDateOffsets(offsets);
-//                        }
-//                    });
-
-
-
-
-
             DateOffsetDataStorage.resetData();
             LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
             allLanguageCombinationsLiveData.observe(mainActivity, languageCombinations -> {
-                    boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
-                    int[] languageCombinationId = new int[1];
-                    for (int i = 0; i < languageCombinations.size(); i++) {
-                        LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
-                        boolean languageIsActive = LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, currentCombination);
-                        if (languageIsActive) {
-                            languageCombinationId[0] = currentCombination.id;
-                        }
+                boolean[] currentSelection = LanguageSettingsService.loadChecked(mainActivity);
+                int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
+                LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData = dateOffsetDbService.getAll();
+                dateOffsetsLiveData.observe(mainActivity, allOffsets ->{
+                    List<RequestOffsetRoomModel> relevantDateOffsets =
+                            DateOffsetService.getOffsetsForLanguageCombinationId(
+                                    allOffsets ,
+                                    languageCombinationId
+                            );
+                    if(!languageChangeIsLoading){
+                        DateOffsetDataStorage.setDateOffsets(relevantDateOffsets);
                     }
-
-                    LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData = dateOffsetDbService.getAll();
-                    dateOffsetsLiveData.observe(mainActivity, allOffsets ->{
-                        List<RequestOffsetRoomModel> relevantDateOffsets = new LinkedList();
-                        for (int i = 0; i < allOffsets.size(); i++) {
-                            RequestOffsetRoomModel currentOffset = allOffsets.get(i);
-                            boolean isRelevant = currentOffset.languageCombination == languageCombinationId[0];
-                            if (isRelevant) {
-                                relevantDateOffsets.add(currentOffset);
-                            }
-                        }
-                        if(!languageChangeIsLoading){
-                            DateOffsetDataStorage.setDateOffsets(relevantDateOffsets);
-                        }
-
-                    });
-
-
-
+                });
             });
         }
     }
@@ -436,23 +409,9 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                     allLanguageCombinationsLiveData.observe(mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
                                 @Override
                                 public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
-                                    if(languageCombinations.isEmpty()){
-                                        loadArticlesForOtherLanguage(-1);
-                                    }
-                                    for (int i = 0; i < languageCombinations.size(); i++) {
-                                        LanguageCombinationRoomModel currentCombination = languageCombinations.get(i);
-                                        boolean alreadyExists = LanguageCombinationDbService.languageSelectionIsEqual(currentSelection, currentCombination);
-                                        if (alreadyExists) {
-                                            // The currently active language combination exists in database.
-                                            // Just pass its id to on insert finished without inserting it again.
-                                            int comboId = currentCombination.id;
-                                            loadArticlesForOtherLanguage(comboId);
-                                            break;
-                                        }
-                                        else if(i == languageCombinations.size() - 1){
-                                            loadArticlesForOtherLanguage(-1);
-                                        }
-                                    }
+                                    int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
+                                    loadArticlesForOtherLanguage(languageCombinationId);
+                                    Log.d("iddd", "from function: " + languageCombinationId);
                                     allLanguageCombinationsLiveData.removeObserver(this);
                                 }
                             });
@@ -472,35 +431,41 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
     }
 
     public void loadArticlesForOtherLanguage(int combinationId) {
-
+        Log.d("iddd", "in bad way: " + combinationId);
         if(mainActivity !=null) {
-        DateOffsetDataStorage.resetData();
-        LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData
-                = dateOffsetDbService.getAll();
-        dateOffsetsLiveData.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {
-                List<RequestOffsetRoomModel> relevantOffsets = new LinkedList<>();
-                for (int i = 0; i < offsets.size(); i++) {
-                    RequestOffsetRoomModel o = offsets.get(i);
-                    if(o.languageCombination == combinationId){
-                        relevantOffsets.add(o);
-                    }
-                }
-
-                if(!relevantOffsets.isEmpty()){
-                    DateOffsetDataStorage.setDateOffsets(relevantOffsets);
-                }
+            DateOffsetDataStorage.resetData();
+            if(combinationId < 0){
                 ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                 swipeCardsList.clear();
                 loadArticlesFromApi();
-                dateOffsetsLiveData.removeObserver(this);
             }
-        });
+            else{
+                LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData
+                        = dateOffsetDbService.getAll();
+                dateOffsetsLiveData.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
+                    @Override
+                    public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {
+                        List<RequestOffsetRoomModel> relevantOffsets =
+                                DateOffsetService.getOffsetsForLanguageCombinationId(
+                                        offsets,
+                                        combinationId
+                                );
+
+                        if(relevantOffsets.isEmpty()){
+                            DateOffsetDataStorage.resetData();
+                        }
+                        else{
+                            DateOffsetDataStorage.setDateOffsets(relevantOffsets);
+                        }
+                        ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
+                        swipeCardsList.clear();
+                        loadArticlesFromApi();
+                        dateOffsetsLiveData.removeObserver(this);
+                    }
+                });
+            }
     }
 }
-
-
 
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);
