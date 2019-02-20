@@ -2,13 +2,13 @@ package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFr
 
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
+import android.arch.lifecycle.LiveData;
 import android.content.ComponentName;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +30,6 @@ import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordR
 import com.example.rapha.swipeprototype2.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
-import com.example.rapha.swipeprototype2.utils.CollectionService;
 import com.example.rapha.swipeprototype2.utils.DateService;
 
 import java.util.ArrayList;
@@ -53,6 +52,7 @@ import static android.content.Context.JOB_SCHEDULER_SERVICE;
 public class NewsOfTheDayFragment extends Fragment {
 
     View view;
+    MainActivity mainActivity;
     ArrayList<NewsArticle> articlesOfTheDay = new ArrayList();
     ListView articleListView;
     NewsOfTheDayListAdapter adapter;
@@ -80,50 +80,80 @@ public class NewsOfTheDayFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_news_of_the_day, container, false);
-        init();
+        initObjectsAndServices();
+        observeLoadingStatus();
         loadArticles();
-        boolean[] last = new boolean[1];
-        DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
-                handleLoading(loading);
-                reloadFragmentAfterLoadingData(last[0], loading);
-                last[0] = loading;
-                });
         return view;
     }
 
-    private void reloadFragmentAfterLoadingData(boolean lastLoadingValue, boolean currentLoadingValue){
-        if(!(getActivity() == null) && lastLoadingValue != currentLoadingValue && !currentLoadingValue){
-            if(!(NewsOfTheDayFragment.this.getActivity() == null)){
-                ((MainActivity) NewsOfTheDayFragment.this.getActivity()).changeFragmentTo(R.id.nav_news);
-            }
-        }
-    }
-
-    private void init(){
+    private void initObjectsAndServices(){
+        mainActivity = (MainActivity) getActivity();
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         articleListView = view.findViewById(R.id.articleList);
         adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
         articleListView.setAdapter(adapter);
         articleListView.setOnItemClickListener((arg0, view, position, arg3) -> {
-                NewsArticle clickedArticle = (NewsArticle)articleListView.getItemAtPosition(position);
-                clickedArticle.onClick(getActivity());
+            NewsArticle clickedArticle = (NewsArticle)articleListView.getItemAtPosition(position);
+            clickedArticle.onClick(getActivity());
         });
 
         Button debug = view.findViewById(R.id.debug_button);
-        debug.setOnClickListener(view -> {initArticleRequestScheduler(); DailyNewsLoadingService.setLoading(true);});
+        debug.setOnClickListener(view -> {
+            scheduleArticleRequests(); DailyNewsLoadingService.setLoading(true);});
     }
 
+    /**
+     * Observes if the fragment is currently loading data
+     * and shows a loading icon or reloads the fragment after data was loaded.
+     */
+    private void observeLoadingStatus(){
+        // Array because has to be final.
+        final boolean[] lastLoadingStatus = new boolean[1];
+        DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
+            handleLoading(loading);
+            // Reload if change from loading true to false.
+            reloadFragmentAfterLoadingData(lastLoadingStatus[0], loading);
+            lastLoadingStatus[0] = loading;
+        });
+    }
+
+    /**
+     * Reload the fragment if it previously loaded data and has finished loading.
+     * Sometimes needed to display the correct current data when it changed.
+     * @param lastLoadingValue
+     * @param currentLoadingValue
+     */
+    private void reloadFragmentAfterLoadingData(boolean lastLoadingValue, boolean currentLoadingValue){
+        boolean isLoading = currentLoadingValue;
+        boolean wasLoading = lastLoadingValue != currentLoadingValue;
+        if(mainActivity != null && wasLoading && !isLoading){
+            mainActivity.changeFragmentTo(R.id.nav_news);
+        }
+    }
+
+    /**
+     * Show a loading icon while new articles are loaded.
+     * @param isLoading
+     */
     private void handleLoading(boolean isLoading){
         int visibilityLoadingGif = isLoading ? FrameLayout.VISIBLE : FrameLayout.INVISIBLE;
         GifImageView loadingGif = view.findViewById(R.id.news_of_the_day_loading);
         loadingGif.setVisibility(visibilityLoadingGif);
     }
 
+
+    /**
+     * If the fragment hasn't loaded data before initialize and start the
+     * request scheduler which loads articles and stores them in the database
+     * in a certain intervall.
+     * If data has been loaded before retrieve it from the database.
+     */
     private void loadArticles(){
+        // If once successfully loaded data first time loading will be false.
         boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
         if(firstTimeLoading){
-            initArticleRequestScheduler();
+            scheduleArticleRequests();
             setTextNotEnoughTopics();
         }
         else{
@@ -131,7 +161,63 @@ public class NewsOfTheDayFragment extends Fragment {
         }
     }
 
-    private void initArticleRequestScheduler(){
+    /**
+     * Get topics marked as topic of the day from the database, get corresponding articles
+     * for every topic, add one article for every topic to the list view.
+     */
+    private void loadArticlesFromDatabase(){
+        // Get topics marked as topic of the day.
+        LiveData<List<KeyWordRoomModel>> topicsOfTheDayLiveData = keyWordDbService.getAllKeyWordsArticlesOfTheDay();
+        topicsOfTheDayLiveData.observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
+                boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
+                if(!topics.isEmpty() && enoughTopics){
+                    for(int i = 0; i < topics.size(); i++){
+                        // Get articles for every topic and add them to the view.
+                        addArticleForTopicToView(topics.get(i).keyWord);
+                    }
+                    topicsOfTheDayLiveData.removeObserver(this);
+                }
+            }
+        });
+    }
+
+    /**
+     * Get all articles from the database that have been found with the corresponding topic
+     * and aren't archived.
+     * Add the first entry to the view.
+     * Articles that have once been added to the view are set as read.
+     * The scheduler will mark read articles as archived whe loading new articles.
+     * @param topic
+     */
+    private void addArticleForTopicToView(String topic){
+        LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
+                newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
+        articlesForTopicLiveData.observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
+            @Override
+            public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
+                if(!articlesForTopic.isEmpty()){
+                    NewsArticleRoomModel modelToAdd = articlesForTopic.get(0);
+                    if(!modelToAdd.hasBeenRead){
+                        newsArticleDbService.setAsRead(modelToAdd);
+                    }
+                    NewsArticle articleToAdd = newsArticleDbService.createNewsArticle(modelToAdd);
+                    articlesOfTheDay.add(articleToAdd);
+                    adapter.notifyDataSetChanged();
+                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
+                    setTextArticlesLoaded();
+                    articlesForTopicLiveData.removeObserver(this);
+                }
+            }
+        });
+    }
+
+    /**
+     * Creates a job scheduler which immediately requests articles of the day
+     * from the api. Once initialized it will periodically repeat this request.
+     */
+    private void scheduleArticleRequests(){
         ComponentName componentName = new ComponentName(this.getActivity(), NewsOfTheDayJobScheduler.class);
         JobInfo info = new JobInfo.Builder(NewsOfTheDayTimeService.SCHEDULER_ID, componentName)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
@@ -142,83 +228,9 @@ public class NewsOfTheDayFragment extends Fragment {
         int resultCode = scheduler.schedule(info);
     }
 
-    private void loadArticlesFromDatabase(){
-        // Start the chain of different database requests.
-        getTopicsOfTheDay();
-    }
-
     /**
-     * Get all topics that are marked as topics of the day from the database.
-     * Pass them to getArticlesForTopics().
+     * If articles are successfully loaded display the date when the articles were loaded.
      */
-    private void getTopicsOfTheDay(){
-        keyWordDbService.getAllKeyWordsArticlesOfTheDay().observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
-                boolean articlesHaveBeenAdded = !articlesOfTheDay.isEmpty();
-                boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
-                if(!enoughTopics){
-                    setTextNotEnoughTopics();
-                }
-                if(!articlesHaveBeenAdded && enoughTopics){
-                    String[] topicsTemp = new String[topics.size()];
-                    for(int i = 0; i < topics.size(); i++){
-                        final String currentTopic = topics.get(i).keyWord;
-                        topicsTemp[i] = currentTopic;
-                    }
-                    getArticlesForTopics(topicsTemp);
-                    keyWordDbService.getAllKeyWordsArticlesOfTheDay().removeObserver(this);
-                }
-            }
-        });
-    }
-
-    /**
-     * Request the articles for every topic from the database and
-     * pass them to addArticlesToListView() when done.
-     * @param topics
-     */
-    private void getArticlesForTopics(String[] topics){
-        NewsArticle[] articles = new NewsArticle[topics.length];
-        for(int i = 0; i < topics.length; i++){
-            String currentTopic = topics[i];
-            int currentIndex = i;
-            newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).observe(getActivity(), new Observer<List<NewsArticleRoomModel>>() {
-                @Override
-                public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForKeyWord) {
-                    articles[currentIndex] = articlesForKeyWord.isEmpty()?
-                            new NewsArticle() : newsArticleDbService.createNewsArticle(articlesForKeyWord.get(0));
-                    if(!CollectionService.arrayHasNullValues(articles)){
-                        addArticlesToListView(articles);
-                    }
-                    newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(currentTopic).removeObserver(this);
-                }
-            });
-        }
-    }
-
-
-    /**
-     * Add every article to the array that belongs to the list view.
-     * Set all articles as hasBeenRead = true in the database.
-     * @param articles
-     */
-    private void addArticlesToListView(NewsArticle[] articles){
-        if(articlesOfTheDay.isEmpty()){
-            for(int i = 0; i < articles.length; i++){
-                if(!articles[i].title.isEmpty()){
-
-                    articlesOfTheDay.add(articles[i]);
-                    newsArticleDbService.setAsRead(newsArticleDbService.createNewsArticleRoomModelToUpdate(articles[i]));
-                    adapter.notifyDataSetChanged();
-                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
-                    setTextArticlesLoaded();
-                    Log.d("archived", "Add to view: " + "archived: " + articles[i].archived + ", read: " + articles[i].hasBeenRead +", title: " +  articles[i].title);
-                }
-            }
-        }
-    }
-
     private void setTextArticlesLoaded(){
         TextView belowHeadline = view.findViewById(R.id.news_of_the_day_info);
         belowHeadline.setText("Last update ");
@@ -228,6 +240,10 @@ public class NewsOfTheDayFragment extends Fragment {
         belowHeadlineDate.setText(DateService.makeDateReadable(lastReload));
     }
 
+    /**
+     * If the user hasn't liked enough topics yet display a text informing him
+     * that he has to like topics (answer questions with yes) first.
+     */
     private void setTextNotEnoughTopics(){
         TextView belowHeadline = view.findViewById(R.id.news_of_the_day_date);
         belowHeadline.setText(R.string.not_enough_topics_news_of_the_day);
