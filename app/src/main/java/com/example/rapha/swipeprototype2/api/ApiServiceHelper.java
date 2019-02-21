@@ -39,10 +39,11 @@ public class ApiServiceHelper {
      * @throws Exception
      */
     public static LinkedList<NewsArticle> buildNewsArticlesList(SwipeFragment swipeFragment, DistributionContainer distributionContainer)throws Exception{
+        Log.d("aaaa", "buildNewsArticlesList: ");
         // To store all the articles from the different api calls.
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
         LinkedList<Distribution> distribution = distributionContainer.getDistributionAsLinkedList();
-
+        Log.d("aaaa", "languageSettings: ");
         boolean[] languageSettings = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
         LinkedList<Language> languages = new LinkedList<>();
         for(int languageIndex = LanguageSettingsService.INDEX_ENGLISH; languageIndex < languageSettings.length; languageIndex++){
@@ -51,13 +52,15 @@ public class ApiServiceHelper {
                 languages.add(new Language(languageIndex));
             }
         }
-
+        Log.d("aaaa", "distribution: ");
         // Api call for every category and its distribution.
         for(int i = 0; i < distribution.size(); i++){
             Distribution currentDistribution = distribution.get(i);
+            Log.d("bbb", "distribution cat: " + currentDistribution.categoryId);
             // One Api call for every selected language
             currentDistribution.balanceWithLanguageDistribution(languages.size());
             for(int j = 0; j < languages.size(); j++){
+                Log.d("aaaa", "addall: ");
                 newsArticles.addAll(buildQueryAndFetchArticlesFromApi(swipeFragment, currentDistribution, languages.get(j)));
             }
         }
@@ -74,6 +77,7 @@ public class ApiServiceHelper {
             else return 0;
         });
 
+        Log.d("aaaa", "newsArticles size: " + newsArticles.size());
         return newsArticles;
     }
 
@@ -85,6 +89,7 @@ public class ApiServiceHelper {
      * @throws Exception
      */
     private static LinkedList<NewsArticle> buildQueryAndFetchArticlesFromApi(SwipeFragment swipeFragment, Distribution distribution, Language language)throws Exception{
+        Log.d("iii", "marker0: " + distribution.categoryId);
         NewsApi newsApi = new NewsApi();
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment.liveKeyWords);
@@ -107,6 +112,7 @@ public class ApiServiceHelper {
             Log.d("newswipe", "no offset set");
         }
         LinkedList<NewsArticle> fetchedArticles = newsApi.queryNewsArticles(queryBuilder);
+        Log.d("aaaa", "fetched size: " + fetchedArticles.size());
         return fetchedArticles;
     }
 

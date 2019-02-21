@@ -19,7 +19,7 @@ public class ApiService {
     public static final int MAX_NUMBER_OF_ARTICLES = 100;
 
     /**
-     * Request articles from the api, query for the values given as input parameters.
+     * More flexibility when requesting articles from the api.
      * It is void because it will call a callback function when the articles are retrieved.
      * The class that defines this callback function is defined in the HttpRequest object.
      * @param httpRequest

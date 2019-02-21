@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.newsCategories;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.example.rapha.swipeprototype2.api.ApiService;
+import com.example.rapha.swipeprototype2.api.SwipeApiService;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 import java.util.LinkedList;
@@ -17,9 +18,12 @@ public class NewsCategoryContainerHelper {
      * @return
      */
     public static int calculateDistribution(NewsCategory newsCategory, int totalRating){
-        double percentage = ((double)newsCategory.getRating() / (double)totalRating);
-        int totalAmount = ApiService.MAX_NUMBER_OF_ARTICLES;
+        int categoryRating = newsCategory.getRating() < 10 ? 10 : newsCategory.getRating();
+        double percentage = ((double)categoryRating / (double)totalRating);
+        int totalAmount = SwipeApiService.AMOUNT_REQUEST_FROM_API;
         int result = (int)(percentage * totalAmount);
+        boolean resultTooBig = result > ApiService.MAX_NUMBER_OF_ARTICLES;
+        result = resultTooBig ? ApiService.MAX_NUMBER_OF_ARTICLES : result;
         return result;
     }
 

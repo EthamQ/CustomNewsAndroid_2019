@@ -275,6 +275,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
                     reloadFragment();
                 });
             } catch (Exception e) {
+                Log.d("popopo", "ERROR: " + e.toString());
                 e.printStackTrace();
             }
         });

@@ -29,6 +29,7 @@ public class NewsApi {
 	    int languageId = queryBuilder.getLanguageId();
 	    Log.d("displayy", "query news articles id: " + languageId);
 	    queryBuilder.buildQuery();
+		Log.d("bbb", "querybuild: " + queryBuilder.getQuery());
 	    String urlForApi = URL_ALL_NEWS_API + ApiKey.API_KEY_NEWS_API + queryBuilder.getQuery();
 		Log.d("newswipe", "category: " + queryBuilder.getNewsCategory() + ", received query:  " + urlForApi);
 	    Log.d("URL", urlForApi);

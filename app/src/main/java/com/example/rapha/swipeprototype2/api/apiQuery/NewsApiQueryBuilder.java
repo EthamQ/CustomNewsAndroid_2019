@@ -35,6 +35,7 @@ public class NewsApiQueryBuilder {
      * @param newsCategory
      */
     public void setQueryCategory(int newsCategory, List<KeyWordRoomModel> allTopics){
+        Log.d("iii", "query cat:: " + newsCategory);
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
@@ -57,11 +58,15 @@ public class NewsApiQueryBuilder {
      */
     private void addQueryStrings(QueryCategory queryCategory, String[] queryWords){
         for (int i = 0; i < queryWords.length; i++){
+            Log.d("jopp","Received query word: " + queryWords[i]);
             queryCategory.queryString += queryWords[i];
-            if(!(i == queryWords.length - 1)){
-                queryCategory.queryString += " OR ";
+            if(queryWords[i].length() > 0){
+                if(!(i == queryWords.length - 1)){
+                    queryCategory.queryString += " OR ";
+                }
             }
         }
+        Log.d("jopp","querystring: " + queryCategory.queryString);
     }
 
     public int getNewsCategory(){return this.newsCategory;}

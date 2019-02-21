@@ -22,6 +22,8 @@ public class NewsCategoryContainer {
     public final Technology technology;
     public final Sport sport;
     public final Health health;
+    public final Crime crime;
+    public final Science science;
 
     public final LinkedList<NewsCategory> allCategories = new LinkedList<>();
 
@@ -33,7 +35,8 @@ public class NewsCategoryContainer {
         technology = new Technology();
         sport = new Sport();
         health = new Health();
-
+        crime = new Crime();
+        science = new Science();
 
         allCategories.add(finance);
         allCategories.add(food);
@@ -42,6 +45,8 @@ public class NewsCategoryContainer {
         allCategories.add(technology);
         allCategories.add(sport);
         allCategories.add(health);
+        allCategories.add(crime);
+        allCategories.add(science);
     }
 
     /**
@@ -75,6 +80,9 @@ public class NewsCategoryContainer {
                 case Food.CATEGORY_ID: return new Food();
                 case Technology.CATEGORY_ID: return new Technology();
                 case Sport.CATEGORY_ID: return new Sport();
+                case Health.CATEGORY_ID: return new Health();
+                case Crime.CATEGORY_ID: return new Crime();
+                case Science.CATEGORY_ID: return new Science();
                 default: return new NewsCategory();
             }
     }
@@ -138,7 +146,7 @@ public class NewsCategoryContainer {
 
         public Movie(){
             this.setCategoryID(CATEGORY_ID);
-            this.displayName = "Movie";
+            this.displayName = "Movies";
             this.USER_DETERMINED_QUERY_STRINGS_EN = MOVIE_QUERY_STRINGS_EN;
             this.DEFAULT_QUERY_STRINGS_EN = MOVIE_DEFAULT_QUERY_STRINGS_EN;
         }
@@ -191,20 +199,19 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 5;
 
-        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
-                "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey",
-                "Tour de france", "Bike"
+        public static final String[] SPORT_QUERY_STRINGS_EN = new String[] {
+                "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey", "Bike"
         };
 
-        public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "sport", "score", "tournament", "championship"
+        public static final String[] SPORT_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "sport", "score", "tournament", "championship", "race"
         };
 
         public Sport(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Sport";
-            this.USER_DETERMINED_QUERY_STRINGS_EN = TECHNOLOGY_QUERY_STRINGS_EN;
-            this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = SPORT_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = SPORT_DEFAULT_QUERY_STRINGS_EN;
         }
     }
 
@@ -212,19 +219,59 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 6;
 
-        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
-                ""
+        public static final String[] HEALTH_QUERY_STRINGS_EN = new String[] {
+                "Healthcare", "Fitness"
         };
 
-        public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "health", "fitness", "doctor", "healthcare"
+        public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "health", "fitness", "doctor",
         };
 
         public Health(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Health";
-            this.USER_DETERMINED_QUERY_STRINGS_EN = TECHNOLOGY_QUERY_STRINGS_EN;
-            this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = HEALTH_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = HEALTH_DEFAULT_QUERY_STRINGS_EN;
+        }
+    }
+
+    public static class Crime extends NewsCategory{
+
+        public static final int CATEGORY_ID = 7;
+
+        public static final String[] HEALTH_QUERY_STRINGS_EN = new String[] {
+                "Murder", "Police"
+        };
+
+        public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "kill", "crime", "prison", "jail", "choke", "steal", "shoot"
+        };
+
+        public Crime(){
+            this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Crime";
+            this.USER_DETERMINED_QUERY_STRINGS_EN = HEALTH_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = HEALTH_DEFAULT_QUERY_STRINGS_EN;
+        }
+    }
+
+    public static class Science extends NewsCategory{
+
+        public static final int CATEGORY_ID = 8;
+
+        public static final String[] SCIENCE_QUERY_STRINGS_EN = new String[] {
+                "Physics", "Climate change", "Biology", "Chemistry", "Genetics", "Illness", "Virus"
+        };
+
+        public static final String[] SCIENCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "science", "scientist", "study", "atom", "laboratory"
+        };
+
+        public Science(){
+            this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Science";
+            this.USER_DETERMINED_QUERY_STRINGS_EN = SCIENCE_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = SCIENCE_DEFAULT_QUERY_STRINGS_EN;
         }
     }
 }

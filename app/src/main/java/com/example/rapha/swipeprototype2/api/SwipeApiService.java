@@ -10,6 +10,8 @@ import java.util.List;
 
 public class SwipeApiService {
 
+    public static final int AMOUNT_REQUEST_FROM_API = 200;
+
     /**
      * Retrieves news articles from the NewsApi and returns them in a list.
      * The number of articles per category are already calculated and the list

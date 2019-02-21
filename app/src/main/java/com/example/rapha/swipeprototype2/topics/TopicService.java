@@ -23,6 +23,7 @@ public class TopicService {
      */
     public static String[] getTopicsTranslated(List<KeyWordRoomModel> allTopics, NewsCategory newsCategory, int languageId){
         Log.d("topiccc", "getTopicsTranslated for language: " + languageId);
+        Log.d("eeeee", "translate id: " + newsCategory.getCategoryID());
         switch(languageId){
             case LanguageSettingsService.INDEX_ENGLISH:
                 return getTopicsForCategoryInEnglish(allTopics, newsCategory);
@@ -51,8 +52,10 @@ public class TopicService {
      * @return
      */
     public static String[] getTopicsForCategory(List<KeyWordRoomModel> allTopics, int categoryId, int languageId){
+        Log.d("iii", "getTopicsForCategory: " + categoryId);
         NewsCategory categoryToQuery = NewsCategoryContainer.getCategory(categoryId);
-        return TopicService.getTopicsTranslated(allTopics, categoryToQuery, languageId);
+        String[] topicsTranslated = getTopicsTranslated(allTopics, categoryToQuery, languageId);
+        return topicsTranslated;
     }
 
     /**
@@ -65,6 +68,7 @@ public class TopicService {
      * @return
      */
     public static String[] getTopicsForCategoryInEnglish(List<KeyWordRoomModel> allTopics, NewsCategory newsCategory){
+        Log.d("eeeeee", "getTopicsForCategoryInEnglish: " + newsCategory.getCategoryID() + ", topics size: " + allTopics.size());
         // Get query strings that the user prefers or hasn't set yet.
         LinkedList<KeyWordRoomModel> keyWords = new LinkedList<>();
         for(int i = 0; i < allTopics.size(); i++){
@@ -74,13 +78,16 @@ public class TopicService {
                 transformSingleTopicToMultipleWords(allTopics, keyWords, i);
             }
         }
+        Log.d("eeeeee", "getTopicsForCategoryInEnglish return: " + newsCategory.getCategoryID() + ", topics size: " + allTopics.size());
         return  combineDefaultAndUserPreferredTopics(newsCategory, keyWords);
     }
 
     private static String[] combineDefaultAndUserPreferredTopics(NewsCategory newsCategory, LinkedList<KeyWordRoomModel> userPreferredKeyWords){
+        Log.d("ffffff", "combineDefaultAndUserPreferredTopics1: " + newsCategory.getCategoryID());
+        Log.d("ffffff", "combineDefaultAndUserPreferredTopics2: " + newsCategory.getCategoryID() +", "+ newsCategory.DEFAULT_QUERY_STRINGS_EN );
         // Combine user preferred and default query strings in one array.
         String[] queryWords = new String[userPreferredKeyWords.size() + newsCategory.DEFAULT_QUERY_STRINGS_EN.length];
-
+        Log.d("ffffff", "combineDefaultAndUserPreferredTopics3: " + newsCategory.getCategoryID());
         // Add user preferred query strings.
         for(int i = 0; i < userPreferredKeyWords.size(); i++){
             queryWords[i] = userPreferredKeyWords.get(i).keyWord;

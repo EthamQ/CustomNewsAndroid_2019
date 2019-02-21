@@ -140,7 +140,7 @@ public class StatisticFragment extends Fragment {
                     datapoints[2] = new DataPoint(2, category.getRating());
                     xAxisName[2] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
                 }
-                if(category.getNewsCategoryId() == NewsCategoryContainer.Technology.CATEGORY_ID){
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Science.CATEGORY_ID){
                     datapoints[3] = new DataPoint(3, category.getRating());
                     xAxisName[3] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
                 }
@@ -149,7 +149,13 @@ public class StatisticFragment extends Fragment {
                     xAxisName[4] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
                 }
             }
-            setGraph(graphView, datapoints, xAxisName, true);
+            try{
+                setGraph(graphView, datapoints, xAxisName, true);
+            }
+            catch(Exception e){
+
+            }
+
         });
     }
 
@@ -169,14 +175,23 @@ public class StatisticFragment extends Fragment {
                     datapoints[1] = new DataPoint(1, category.getRating());
                     xAxisName[1] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
                 }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Crime.CATEGORY_ID){
+                    datapoints[2] = new DataPoint(2, category.getRating());
+                    xAxisName[2] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Technology.CATEGORY_ID){
+                    datapoints[3] = new DataPoint(3, category.getRating());
+                    xAxisName[3] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
             }
-            datapoints[2] = new DataPoint(2, 0);
-            xAxisName[2] = "";
-            datapoints[3] = new DataPoint(3, 0);
-            xAxisName[3] = "";
             datapoints[4] = new DataPoint(4, 0);
             xAxisName[4] = "";
-            setGraph(graphView, datapoints, xAxisName, false);
+            try{
+                setGraph(graphView, datapoints, xAxisName, false);
+            }
+            catch(Exception e){
+
+            }
         });
     }
 

@@ -56,7 +56,7 @@ public class SwipeLoadingService {
         Context context = mainActivity.getApplicationContext();
         new Thread(() -> {
             try {
-                Thread.sleep(15000);
+                Thread.sleep(12000);
                 if(!getLastLanguageChangeJobSuccess()){
                     mainActivity.runOnUiThread(() -> {
                         SwipeLoadingService.setLoadingLanguageChange(false);

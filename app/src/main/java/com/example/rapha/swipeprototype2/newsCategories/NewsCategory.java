@@ -5,8 +5,8 @@ public class NewsCategory {
     private int rating = 5;
     private int categoryID;
 
-    public String[] DEFAULT_QUERY_STRINGS_EN;
-    public String[] USER_DETERMINED_QUERY_STRINGS_EN;
+    public String[] DEFAULT_QUERY_STRINGS_EN = new String[]{""};
+    public String[] USER_DETERMINED_QUERY_STRINGS_EN = new String[]{""};
 
     public String displayName;
 
