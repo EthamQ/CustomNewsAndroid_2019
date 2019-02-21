@@ -144,11 +144,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
     /**
      * Look if articles are loaded from the api or database.
      * Look if the user changed the language.
-     * Set variables or react on the loading status.
+     * React on the loading status.
      */
     public void startObservingLoadingStatus() {
         SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> apiIsLoading = loading);
 
+        // Loading status database.
         SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading -> {
             dbIsLoading = loading;
             setVisibilitySwipeCards(!loading);
@@ -159,7 +160,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         DailyNewsLoadingService.getLoading().observe(getActivity(),
                 loading -> handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS)
         );
-
+        // Loading status changing language.
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
@@ -169,14 +170,18 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         });
     }
 
+    /**
+     * Observe data in the database and store it in variables whenever it changed.
+     */
     public void startObservingDatabaseData() {
         if (mainActivity != null) {
-            // Observer ratings
+            // Observer ratings.
             ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
 
-            // Observe all topics
+            // Observe all topics.
             keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
 
+            // Observe the date offset for the currently selected languages.
             DateOffsetDataStorage.resetData();
             LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
             allLanguageCombinationsLiveData.observe(mainActivity, languageCombinations -> {
@@ -184,19 +189,26 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                 int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
                 LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData = dateOffsetDbService.getAll();
                 dateOffsetsLiveData.observe(mainActivity, allOffsets ->{
-                    List<RequestOffsetRoomModel> relevantDateOffsets =
+                    List<RequestOffsetRoomModel> dateOffsetsForLanguageId =
                             DateOffsetService.getOffsetsForLanguageCombinationId(
                                     allOffsets ,
                                     languageCombinationId
                             );
+                    // If the language is changed this observable is observed once again at another place
+                    // Avoid setting data twice at this time.
                     if(!languageChangeIsLoading){
-                        DateOffsetDataStorage.setDateOffsets(relevantDateOffsets);
+                        DateOffsetDataStorage.setDateOffsets(dateOffsetsForLanguageId);
                     }
                 });
             });
         }
     }
 
+    /**
+     * Check if we have swipe articles in the database.
+     * If yes add them to the view, if no call another method to load them
+     * from the api.
+     */
     public void loadArticlesFromDb() {
         Log.d("newswipe", "loadArticlesFromDb()");
         LiveData<List<NewsArticleRoomModel>> unreadArticlesLiveData = newsArticleDbService.getAllUnreadSwipeArticles();
@@ -205,7 +217,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                 new Observer<List<NewsArticleRoomModel>>() {
                     @Override
                     public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
-                        final Observer articleObserver = this;
                         Log.d("newswipe", "loadArticlesFromDb() onchanged");
                         Log.d("newswipe", "loadArticlesFromDb() onchanged article size: " + articleModels.size());
                         if (articleModels.isEmpty()) {
@@ -221,6 +232,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                 });
     }
 
+    /**
+     * Called from loadArticlesFromDb() as soon as we received articles from the database.
+     * Add question cards to the list of articles and set database loading to false.
+     */
     private void onDbArticlesLoaded() {
         LiveData<List<KeyWordRoomModel>> allTopicsLiveData = keyWordDbService.getAllKeyWords();
         allTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
@@ -236,6 +251,11 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         });
     }
 
+    /**
+     * Request new articles from the api, store them in the database.
+     * Add question cards to the list of articles, remove duplicate articles.
+     * Reload this fragment.
+     */
     public void loadArticlesFromApi() {
         SwipeLoadingService.setLoadingApiRequest(true);
         Log.d("newswipe", "loadArticlesFromApi()");
@@ -263,6 +283,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
     /**
      * Deletes all articles that belong to this fragment from the database.
      * When they are deleted onDeleted is called where the new articles are stored in the database.
+     * The data that onDeleted receives is defined here.
      *
      * @param articles The articles to store in the database.
      */
@@ -381,13 +402,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
     }
 
     /**
-     * Set the OnClickListener for the language button so it displays
-     * an alert dialog that makes it possible for the user to select in which languages
-     * he wants to see his news.
+     * Set the OnClickListener for the button to select a language.
+     * When a new language is selected and confirmed load new
+     * articles from the api.
      */
     public void setLanguageDialog() {
         Button button = view.findViewById(R.id.button_languages);
-
         button.setOnClickListener(view -> {
             AlertDialog.Builder dialog = new
                     AlertDialog.Builder(mainActivity);
@@ -407,15 +427,13 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                     SwipeLoadingService.setLoadingLanguageChange(true);
                     LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
                     allLanguageCombinationsLiveData.observe(mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
-                                @Override
-                                public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
-                                    int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
-                                    loadArticlesForOtherLanguage(languageCombinationId);
-                                    Log.d("iddd", "from function: " + languageCombinationId);
-                                    allLanguageCombinationsLiveData.removeObserver(this);
-                                }
-                            });
-
+                        @Override
+                        public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
+                            int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
+                            loadArticlesForOtherLanguage(languageCombinationId);
+                            allLanguageCombinationsLiveData.removeObserver(this);
+                            }
+                    });
                 }
                 positiveDialog.cancel();
             });
@@ -430,11 +448,18 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         });
     }
 
-    public void loadArticlesForOtherLanguage(int combinationId) {
-        Log.d("iddd", "in bad way: " + combinationId);
+    /**
+     * Get the current date offsets that belong to the id of the newly selected
+     * language combination.
+     * Store the date offsets (date to) so the when the api to the query is formed the values
+     * can be retrieved.
+     * @param languageCombinationId The id of the newly selected language combination
+     *                              in the database.
+     */
+    public void loadArticlesForOtherLanguage(int languageCombinationId) {
         if(mainActivity !=null) {
             DateOffsetDataStorage.resetData();
-            if(combinationId < 0){
+            if(languageCombinationId < 0){
                 ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                 swipeCardsList.clear();
                 loadArticlesFromApi();
@@ -445,17 +470,17 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                 dateOffsetsLiveData.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
                     @Override
                     public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {
-                        List<RequestOffsetRoomModel> relevantOffsets =
+                        List<RequestOffsetRoomModel> dateOffsetsForLanguageCombination =
                                 DateOffsetService.getOffsetsForLanguageCombinationId(
                                         offsets,
-                                        combinationId
+                                        languageCombinationId
                                 );
 
-                        if(relevantOffsets.isEmpty()){
+                        if(dateOffsetsForLanguageCombination.isEmpty()){
                             DateOffsetDataStorage.resetData();
                         }
                         else{
-                            DateOffsetDataStorage.setDateOffsets(relevantOffsets);
+                            DateOffsetDataStorage.setDateOffsets(dateOffsetsForLanguageCombination);
                         }
                         ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                         swipeCardsList.clear();
@@ -464,13 +489,20 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                     }
                 });
             }
+        }
     }
-}
 
+    /**
+     * Open this fragment once again to reset the view eg.
+     */
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);
     }
 
+    /**
+     * Store the articles we currently display in the swipe cards temporarily
+     * in a service to retrieve them when we return to this fragment.
+     */
     @Override
     public void onDetach() {
         super.onDetach();
@@ -479,6 +511,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         ArticleDataStorage.storeArticlesTemporarily(this.swipeCardsList);
     }
 
+    /**
+     * If we are loading data it displays a loading gif and an info text
+     * what we are loading.
+     * @param loading
+     * @param loadingType
+     */
     public void handleLoadingScreen(boolean loading, int loadingType){
         setVisibilitySwipeCards(!loading);
 
@@ -492,6 +530,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         loadingInfo.setText(loadingText);
     }
 
+    /**
+     * Hide or show the swipe cards and the language button in the view.
+     * @param visible
+     */
     private void setVisibilitySwipeCards(boolean visible){
         int visibilityContent = visible ? View.VISIBLE : View.INVISIBLE;
         view.findViewById(R.id.swipe_card).setVisibility(visibilityContent);

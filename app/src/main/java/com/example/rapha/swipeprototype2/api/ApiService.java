@@ -32,6 +32,17 @@ public class ApiService {
         return ApiUtils.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 
+    /**
+     * More flexibility when requesting articles from the api.
+     * It is void because it will call a callback function when the articles are retrieved.
+     * The class that defines this callback function is defined in the HttpRequest object.
+     * @param httpRequest
+     * @param queryWords
+     * @param language
+     * @param amount
+     * @param daysBefore
+     * @throws Exception
+     */
     public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language, int amount, int daysBefore) throws Exception{
         NewsApiQueryBuilder builder = new NewsApiQueryBuilder(language);
         builder.setDateFrom(DateService.getDateBefore(daysBefore));
@@ -39,7 +50,6 @@ public class ApiService {
         builder.setNumberOfNewsArticles(amount);
         builder.buildQuery();
         NewsApi newsApi = new NewsApi();
-        Log.d("oftheday", "Query: " + builder.getQuery());
         newsApi.queryNewsArticlesAsync(httpRequest, builder);
     }
 }

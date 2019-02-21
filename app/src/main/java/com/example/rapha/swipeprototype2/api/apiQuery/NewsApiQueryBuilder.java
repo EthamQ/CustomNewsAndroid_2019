@@ -65,35 +65,9 @@ public class NewsApiQueryBuilder {
 
     public int getNewsCategory(){return this.newsCategory;}
 
-    /**
-     * Filters news articles by the date they were published.
-     * Expects the following format: setDateFrom(2018, 05, 11)
-     * -> add leading zeros!
-     * @param year
-     * @param month
-     * @param day
-     */
-    public void setDateFrom(String year, String month, String day){
-        String hashMapKey = QueryCategoryContainer.DateFrom.hashMapKey;
-        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateService.dateToISO8601(year, month, day);
-    }
-
     public void setDateFrom(String ISO8601Date){
         String hashMapKey = QueryCategoryContainer.DateFrom.hashMapKey;
         this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = ISO8601Date;
-    }
-
-    /**
-     * Filters news articles by the date they were published.
-     * Expects the following format: setDateFrom(2018, 05, 11)
-     * -> add leading zeros!
-     * @param year
-     * @param month
-     * @param day
-     */
-    public void setDateTo(String year, String month, String day){
-        String hashMapKey = QueryCategoryContainer.DateTo.hashMapKey;
-        this.categoryContainer.allQueryCategories.get(hashMapKey).queryString = DateService.dateToISO8601(year, month, day);
     }
 
     public void setDateTo(String dateIso8601){

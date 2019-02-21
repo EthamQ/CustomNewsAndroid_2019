@@ -62,19 +62,16 @@ public class ApiUtils {
             }
         }
 
-        Collections.sort(newsArticles, new Comparator<NewsArticle>() {
-            @Override
-            public int compare(NewsArticle a, NewsArticle b) {
-                DateTime date1 = new DateTime( a.publishedAt );
-                DateTime date2 = new DateTime( b.publishedAt );
-                if(date1.isBefore(date2)){
-                    return 1;
-                }
-                else if(date1.isAfter(date2)){
-                    return -1;
-                }
-                else return 0;
+        Collections.sort(newsArticles, (a, b) -> {
+            DateTime date1 = new DateTime( a.publishedAt );
+            DateTime date2 = new DateTime( b.publishedAt );
+            if(date1.isBefore(date2)){
+                return 1;
             }
+            else if(date1.isAfter(date2)){
+                return -1;
+            }
+            else return 0;
         });
 
         return newsArticles;
@@ -151,37 +148,7 @@ public class ApiUtils {
                     }
                 }
             });
-    }
-
-
-    /**
-     * Return the LinkedList that the function receives in random order.
-     * @param newsArticles
-     * @return
-     */
-    public static LinkedList<NewsArticle> orderRandomly(LinkedList<NewsArticle> newsArticles){
-        LinkedList<NewsArticle> randomOrderedList = new LinkedList<>();
-        while(newsArticles.size() > 0){
-            int randomIndex = ThreadLocalRandom.current().nextInt(0, newsArticles.size());
-            randomOrderedList.add(newsArticles.get(randomIndex));
-            newsArticles.remove(randomIndex);
         }
-        return randomOrderedList;
-    }
 
-    /**
-     * Return the LinkedList that the function receives in random order.
-     * @param newsArticles
-     * @return
-     */
-    public static LinkedList<NewsArticle> orderByDate(LinkedList<NewsArticle> newsArticles){
-        LinkedList<NewsArticle> randomOrderedList = new LinkedList<>();
-        while(newsArticles.size() > 0){
-            int randomIndex = ThreadLocalRandom.current().nextInt(0, newsArticles.size());
-            randomOrderedList.add(newsArticles.get(randomIndex));
-            newsArticles.remove(randomIndex);
-        }
-        return randomOrderedList;
-    }
 
 }

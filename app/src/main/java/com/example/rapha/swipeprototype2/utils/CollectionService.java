@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class CollectionService {
 
@@ -76,4 +77,5 @@ public class CollectionService {
     private static boolean containsTitle(final List<ISwipeCard> list, final String title){
         return list.stream().filter(article -> article instanceof NewsArticle && ((NewsArticle)article).title.equals(title)).findFirst().isPresent();
     }
+
 }
