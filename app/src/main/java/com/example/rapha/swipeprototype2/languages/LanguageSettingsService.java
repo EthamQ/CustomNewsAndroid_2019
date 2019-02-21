@@ -33,6 +33,11 @@ public class LanguageSettingsService {
         }
     }
 
+    /**
+     * Save the checked languages.
+     * @param context
+     * @param isChecked
+     */
     public static void saveChecked(Context context, final boolean[] isChecked) {
         if(!(isChecked == null) && context != null){
             for(Integer i = 0; i < isChecked.length; i++)
@@ -42,6 +47,11 @@ public class LanguageSettingsService {
         }
     }
 
+    /**
+     * Return which languages are currently selected by the user.
+     * @param context
+     * @return
+     */
     public static boolean[] loadChecked(Context context) {
         boolean [] languageCheckboxes = new boolean[languageItems.length];
         if(context != null){
@@ -74,7 +84,7 @@ public class LanguageSettingsService {
     }
 
     /**
-     * Load which languages were selected when we loaded new articles of the day the last time.
+     * Load which languages were currently selected when we loaded new articles of the day the last time.
      * @param context
      * @return
      */
@@ -90,19 +100,12 @@ public class LanguageSettingsService {
         return languageCheckboxes;
     }
 
-    private static void setDefaultEnglish(boolean [] languages){
-        boolean languageSet = false;
-        for(int i = 0; i < languages.length; i++){
-            if(languages[i]){
-                languageSet = true;
-                break;
-            }
-        }
-        if(!languageSet){
-            languages[LanguageSettingsService.INDEX_ENGLISH] = true;
-        }
-    }
-
+    /**
+     * Return wether or not the two language selections are equal.
+     * @param initialSelection
+     * @param newSelection
+     * @return
+     */
     public static boolean userChangedLanguage(boolean[] initialSelection, boolean[] newSelection){
         for(int i = 0; i < initialSelection.length; i++){
             if(initialSelection[i] != newSelection[i]){
@@ -112,7 +115,16 @@ public class LanguageSettingsService {
         return false;
     }
 
-    public static int[] generateLanguageDistributionNewsOfTheDay(Context context, int size, boolean[] languageSelection){
+    /**
+     * Generates an int array with the given size.
+     * At every position there will be a language id of the given language selection that is true (selected).
+     * They alternate, so if index 2 and 3 are true the returned array will look something like that:
+     * 23232323
+     * @param size
+     * @param languageSelection
+     * @return
+     */
+    public static int[] generateLanguageDistributionNewsOfTheDay(int size, boolean[] languageSelection){
         // Store the id for every active language in a list
         List<Integer> allActiveLanguageIds = new LinkedList<>();
         for(int id = 0; id < languageSelection.length; id++){
@@ -132,4 +144,21 @@ public class LanguageSettingsService {
         return languageDistribution;
     }
 
+    /**
+     * If all values of the boolean array are false set the index that
+     * represents english to true.
+     * @param languages
+     */
+    private static void setDefaultEnglish(boolean [] languages){
+        boolean languageSet = false;
+        for(int i = 0; i < languages.length; i++){
+            if(languages[i]){
+                languageSet = true;
+                break;
+            }
+        }
+        if(!languageSet){
+            languages[LanguageSettingsService.INDEX_ENGLISH] = true;
+        }
+    }
 }

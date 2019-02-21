@@ -1,8 +1,5 @@
 package com.example.rapha.swipeprototype2.newsCategories;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.SwipeFragment;
-
 public class NewsCategory {
 
     private int rating = 5;
@@ -27,12 +24,5 @@ public class NewsCategory {
     public int getRating() {
         return this.rating;
     }
-
-    public String[] getQueryStringsEnglish(IKeyWordProvider keyWordProvider){
-        return NewsCategoryUtils.getQueryStringsEnglish(keyWordProvider, this);
-    }
-
-
-
 
 }

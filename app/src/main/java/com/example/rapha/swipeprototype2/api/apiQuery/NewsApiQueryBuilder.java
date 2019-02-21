@@ -2,10 +2,11 @@ package com.example.rapha.swipeprototype2.api.apiQuery;
 
 import android.util.Log;
 
-import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.IKeyWordProvider;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
-import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryUtils;
-import com.example.rapha.swipeprototype2.utils.DateService;
+import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.topics.TopicService;
+
+import java.util.List;
 
 public class NewsApiQueryBuilder {
     
@@ -33,11 +34,11 @@ public class NewsApiQueryBuilder {
      * to the queryWord String.
      * @param newsCategory
      */
-    public void setQueryCategory(int newsCategory, IKeyWordProvider keyWordProvider){
+    public void setQueryCategory(int newsCategory, List<KeyWordRoomModel> allTopics){
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
         QueryCategory queryCategory = categoryContainer.allQueryCategories.get(hashMapKey);
-        String[] queryWords = NewsCategoryUtils.getQueryStrings(keyWordProvider, newsCategory, this.languageId);
+        String[] queryWords = TopicService.getTopicsForCategory(allTopics, newsCategory, this.languageId);
         addQueryStrings(queryCategory, queryWords);
     }
 

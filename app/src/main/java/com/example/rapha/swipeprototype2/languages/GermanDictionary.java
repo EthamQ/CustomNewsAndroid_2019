@@ -1,30 +1,14 @@
 package com.example.rapha.swipeprototype2.languages;
 
-import java.util.HashMap;
+public class GermanDictionary extends LanguageDictionary{
 
-public class German {
-
-    static HashMap<String, String> dictionary = new HashMap<>();
-
-    public German(){
+    public GermanDictionary(){
         this.createDictionary();
     }
 
-    public String[] translateToGerman(String[] english){
-        String[] translationArray = new String[english.length];
-        for(int i = 0; i < english.length; i++){
-            String translation = translateWordToGerman(english[i].toUpperCase());
-            translationArray[i] = translation.length() > 0 ? translation : english[i];
-        }
-        return translationArray;
-    }
 
-    private String translateWordToGerman(String english){
-        String translation = dictionary.get(english);
-        return translation != null ? translation : "";
-    }
-
-    private void createDictionary(){
+    @Override
+    protected void createDictionary(){
         // Finance related
         dictionary.put("Economy".toUpperCase(), "Wirtschaft");
         dictionary.put("finance".toUpperCase(), "Finanz");

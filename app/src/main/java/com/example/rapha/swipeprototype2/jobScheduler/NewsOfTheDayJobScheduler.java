@@ -89,7 +89,6 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                     numberOfSentRequests = topicsToLookFor.size();
                     // Provides a language id for every topic at the corresponding index.
                     int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
-                            getApplicationContext(),
                             topicsToLookFor.size(),
                             LanguageSettingsService.loadChecked(getApplicationContext())
                     );

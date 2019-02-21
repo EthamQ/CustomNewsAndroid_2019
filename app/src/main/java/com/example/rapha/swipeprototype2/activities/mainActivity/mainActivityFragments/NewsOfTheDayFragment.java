@@ -183,7 +183,6 @@ public class NewsOfTheDayFragment extends Fragment {
                 else if(!topics.isEmpty()){
                     // Provides a language id for every topic at the corresponding index.
                     int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
-                            mainActivity,
                             topics.size(),
                             LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity)
                     );
