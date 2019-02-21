@@ -1,5 +1,8 @@
 package com.example.rapha.swipeprototype2.api;
 
+import android.util.Log;
+
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 import com.example.rapha.swipeprototype2.utils.JSONUtils;
 
@@ -18,14 +21,19 @@ public class NewsApiUtils {
      * @return
      * @throws Exception
      */
-    public static LinkedList<NewsArticle> jsonToNewsArticleArray(JSONObject newsArticlesJson, int newsCategory)throws Exception{
+    public static LinkedList<NewsArticle> jsonToNewsArticleArray(JSONObject newsArticlesJson, int newsCategory, int languageId)throws Exception{
+        Log.d("displayy", "jsonToNewsArticleArray: " + languageId);
         String jsonArticleKey = "articles";
         int numberOfArticles = newsArticlesJson.getJSONArray(jsonArticleKey).length();
         LinkedList<NewsArticle> newsArticles = new LinkedList<>();
         for(int i = 0; i < numberOfArticles - 1; i++) {
             JSONObject articleJson = JSONUtils.getArrayEntryFromJson(newsArticlesJson, jsonArticleKey, i);
             NewsArticle newsArticle = new NewsArticle();
-            newsArticle.setArticleProperties(articleJson, newsCategory);
+            newsArticle.setArticleProperties(
+                    articleJson,
+                    newsCategory,
+                    LanguageSettingsService.getLanguageIdAsString(languageId)
+            );
             if(newsArticle != null){
                 newsArticles.add(newsArticle);
             }

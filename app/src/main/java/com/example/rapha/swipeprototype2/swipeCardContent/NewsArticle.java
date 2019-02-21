@@ -50,6 +50,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     public boolean archived;
 	public int newsCategory;
     public int articleType;
+    public String languageId;
 
 	// We send a query to the api. We get a JSON with news articles.
     // This number doesn't say how many news articles are in the JSON, but how many
@@ -163,7 +164,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
             dataToPassToOnFinished.data = swipeFragment;
             boolean[] currentLanguages = LanguageSettingsService.loadChecked(swipeFragment.mainActivity);
             LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = swipeFragment.languageComboDbService.getAll();
-            allLanguageCombinationsLiveData.observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {
+            allLanguageCombinationsLiveData.observe(swipeFragment.mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
                         @Override
                         public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
                             if(languageCombinations.isEmpty()){
@@ -228,7 +229,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
      * @param articleJson
      * @param newsCategory
      */
-	public void setArticleProperties(JSONObject articleJson, int newsCategory){
+	public void setArticleProperties(JSONObject articleJson, int newsCategory, String languageId){
 		this.author = JSONUtils.getStringErrorHandled(articleJson, "author");
 		this.title = JSONUtils.getStringErrorHandled(articleJson, "title");
 		this.description = JSONUtils.getStringErrorHandled(articleJson, "description");
@@ -237,6 +238,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
 		this.publishedAt = JSONUtils.getStringErrorHandled(articleJson, "publishedAt");
 		this.content = JSONUtils.getStringErrorHandled(articleJson, "content");
 		this.newsCategory = newsCategory;
+		this.languageId = languageId;
 	}
 
     @Override
@@ -253,7 +255,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     // Needed to pass a news Article to another Activity.
     // Uses only the necessary data and not every property (properties can be added though)
     public NewsArticle(Parcel in){
-        String[] data= new String[6];
+        String[] data= new String[7];
         in.readStringArray(data);
         this.title= data[0];
         this.author= data[1];
@@ -261,6 +263,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
         this.urlToImage= data[3];
         this.publishedAt= data[4];
         this.content= data[5];
+        this.languageId = data[6];
     }
 
     @Override
@@ -276,7 +279,8 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
                 this.url,
                 this.urlToImage,
                 this.publishedAt,
-                this.content
+                this.content,
+                this.languageId
         });
     }
 

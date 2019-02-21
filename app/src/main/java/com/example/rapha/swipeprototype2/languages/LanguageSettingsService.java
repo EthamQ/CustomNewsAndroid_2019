@@ -13,6 +13,20 @@ public class LanguageSettingsService {
     public static final int INDEX_GERMAN = 1;
     public static final int INDEX_RUSSIAN = 2;
     public static final int INDEX_FRENCH = 3;
+    public final static String GERMAN = "de";
+    public final static String ENGLISH = "en";
+    public final static String RUSSIAN = "ru";
+    public final static String FRENCH = "fr";
+
+    public static String getLanguageIdAsString(int languageId){
+        switch (languageId){
+            case INDEX_ENGLISH: return ENGLISH;
+            case INDEX_GERMAN: return GERMAN;
+            case INDEX_RUSSIAN : return RUSSIAN ;
+            case INDEX_FRENCH: return FRENCH;
+            default: return ENGLISH;
+        }
+    }
 
     public static void saveChecked(MainActivity mainActivity, final boolean[] isChecked) {
         SharedPreferences sharedPreferences = mainActivity.getPreferences(Context.MODE_PRIVATE);

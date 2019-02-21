@@ -128,7 +128,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
         JSONObject newsArticleJson = (JSONObject) info.getRequestResponse();
         try {
-            articlesForKeyword = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, -1);
+            articlesForKeyword = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, -1, -1);
         } catch (Exception e) {
             e.printStackTrace();
         }

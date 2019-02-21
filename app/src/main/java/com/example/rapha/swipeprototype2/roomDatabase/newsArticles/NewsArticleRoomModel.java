@@ -37,6 +37,7 @@ public class NewsArticleRoomModel {
     public boolean hasBeenRead = false;
     public boolean archived = false;
     public String foundWithKeyWord;
+    public String languageId;
 
     public NewsArticleRoomModel(){
         this.sourceId = "";
@@ -48,6 +49,7 @@ public class NewsArticleRoomModel {
         this.publishedAt = "";
         this.content = "";
         this.newsCategory = 0;
+        this.languageId = "";
         this.articleType = SWIPE_CARDS;
     }
 

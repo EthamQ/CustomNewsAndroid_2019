@@ -99,7 +99,7 @@ public class ApiUtils {
             if(dateToAndFromEqual(dateFrom, dateTo)){
                 Log.d("newswipe", "#### NO NEWS ARTICLES, ");
                 Log.d("newswipe", "no offset set");
-                resetOffsetIfToEqualFrom(swipeFragment, DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY), dateTo, distribution.categoryId);
+                resetOffsetIfToEqualFrom(swipeFragment, distribution.categoryId);
             }
             else{
                 Log.d("newswipe", "category: " + distribution.categoryId + ", offset in query: " + dateTo);
@@ -123,7 +123,7 @@ public class ApiUtils {
         return dayFrom == dayTo && monthFrom == monthTo;
     }
 
-    private static void resetOffsetIfToEqualFrom(SwipeFragment swipeFragment, String dateFrom, String dateTo, int categoryId){
+    private static void resetOffsetIfToEqualFrom(SwipeFragment swipeFragment, int categoryId){
         LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = swipeFragment.languageComboDbService.getAll();
         LiveData<List<RequestOffsetRoomModel>> allDateOffsetsLiveData = swipeFragment.dateOffsetDbService.getAll();
             allLanguageCombinationsLiveData.observe(swipeFragment.getActivity(), new Observer<List<LanguageCombinationRoomModel>>() {

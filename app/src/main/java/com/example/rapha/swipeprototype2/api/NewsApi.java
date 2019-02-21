@@ -27,13 +27,15 @@ public class NewsApi {
 	 */
     public LinkedList<NewsArticle> queryNewsArticles(NewsApiQueryBuilder queryBuilder) throws Exception {
 	    int newsCategory = queryBuilder.getNewsCategory();
+	    int languageId = queryBuilder.getLanguageId();
+	    Log.d("displayy", "query news articles id: " + languageId);
 	    queryBuilder.buildQuery();
 	    String urlForApi = URL_ALL_NEWS_API + ApiKey.API_KEY_NEWS_API + queryBuilder.getQuery();
 		Log.d("newswipe", "category: " + queryBuilder.getNewsCategory() + ", received query:  " + urlForApi);
 	    Log.d("URL", urlForApi);
         JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
 		Log.d("oftheday", newsArticleJson.toString());
-        return NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, newsCategory);
+        return NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, newsCategory, languageId);
 	}
 
 	public void queryNewsArticlesAsync(HttpRequest httpRequest, NewsApiQueryBuilder queryBuilder) throws Exception {

@@ -115,6 +115,7 @@ public class NewsArticleDbService {
         dbModel.archived = newsArticle.archived;
         dbModel.hasBeenRead = newsArticle.hasBeenRead;
         dbModel.foundWithKeyWord = newsArticle.foundWithKeyWord;
+        dbModel.languageId = newsArticle.languageId;
         return dbModel;
     }
 
@@ -140,6 +141,7 @@ public class NewsArticleDbService {
         newsArticle.archived = dbModel.archived;
         newsArticle.hasBeenRead = dbModel.hasBeenRead;
         newsArticle.foundWithKeyWord = dbModel.foundWithKeyWord;
+        newsArticle.languageId = dbModel.languageId;
         return newsArticle;
     }
 

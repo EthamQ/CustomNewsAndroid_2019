@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity
         } else if(id == R.id.nav_news){
             toolbar.setTitle("News of the day");
             ft.replace(R.id.your_placeholder, new NewsOfTheDayFragment());
-            ft.commit();
+            ft.commitAllowingStateLoss();
         }
     }
 
