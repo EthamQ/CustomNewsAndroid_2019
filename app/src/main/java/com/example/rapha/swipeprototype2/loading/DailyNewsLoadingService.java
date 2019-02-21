@@ -29,7 +29,6 @@ public class DailyNewsLoadingService {
     }
 
     public static void reactOnLoadArticlesUnsuccessful(NewsOfTheDayFragment newsOfTheDayFragment){
-
         MainActivity mainActivity = newsOfTheDayFragment.mainActivity;
         Context context = mainActivity.getApplicationContext();
         new Thread(() -> {

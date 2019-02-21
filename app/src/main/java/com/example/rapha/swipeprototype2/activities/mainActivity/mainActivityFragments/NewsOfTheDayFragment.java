@@ -17,13 +17,13 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.arch.lifecycle.Observer;
-import android.widget.Toast;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.activities.viewElements.DimensionService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsOfTheDayListAdapter;
 import com.example.rapha.swipeprototype2.jobScheduler.NewsOfTheDayJobScheduler;
+import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
@@ -181,9 +181,19 @@ public class NewsOfTheDayFragment extends Fragment {
                     setTextNotEnoughTopics();
                 }
                 else if(!topics.isEmpty()){
+                    // Provides a language id for every topic at the corresponding index.
+                    int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
+                            mainActivity,
+                            topics.size(),
+                            LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity)
+                    );
+                    int languageArrayIndex = 0;
                     for(int i = 0; i < topics.size(); i++){
                         // Get articles for every topic and add them to the view.
-                        addArticleForTopicToView(topics.get(i).keyWord);
+                        addArticleForTopicToView(
+                                topics.get(i).keyWord,
+                                LanguageSettingsService.getLanguageIdAsString(languageIds[languageArrayIndex++])
+                        );
                     }
                     topicsOfTheDayLiveData.removeObserver(this);
                 }
@@ -199,7 +209,7 @@ public class NewsOfTheDayFragment extends Fragment {
      * The scheduler will mark read articles as archived whe loading new articles.
      * @param topic
      */
-    private void addArticleForTopicToView(String topic){
+    private void addArticleForTopicToView(String topic, String languageId){
         if(mainActivity != null){
             LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
                     newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
@@ -208,6 +218,13 @@ public class NewsOfTheDayFragment extends Fragment {
                 public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
                     if(!articlesForTopic.isEmpty()){
                         NewsArticleRoomModel modelToAdd = articlesForTopic.get(0);
+                        // Look if you find article with the language Id
+                        for(int i = 0; i < articlesForTopic.size(); i++){
+                            if(articlesForTopic.get(i).languageId.equals(languageId)){
+                                modelToAdd = articlesForTopic.get(i);
+                                break;
+                            }
+                        }
                         if(!modelToAdd.hasBeenRead){
                             newsArticleDbService.setAsRead(modelToAdd);
                         }

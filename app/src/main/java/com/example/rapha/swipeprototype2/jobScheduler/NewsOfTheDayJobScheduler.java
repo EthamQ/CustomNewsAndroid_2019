@@ -87,18 +87,30 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
             public void onChanged(@Nullable List<KeyWordRoomModel> topicsToLookFor) {
                 if(topicsToLookFor.size() >= NewsOfTheDayFragment.ARTICLE_MINIMUM){
                     numberOfSentRequests = topicsToLookFor.size();
+                    // Provides a language id for every topic at the corresponding index.
+                    int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
+                            getApplicationContext(),
+                            topicsToLookFor.size(),
+                            LanguageSettingsService.loadChecked(getApplicationContext())
+                    );
+                    // Store the current selected languages to still have them when
+                    // we load the articles from the database later
+                    LanguageSettingsService.saveCheckedLoadedNewsOfTheDay(getApplicationContext());
+                    int languageArrayIndex = 0;
                     for(int i = 0; i < topicsToLookFor.size(); i++) {
                         HttpRequestInfo httpRequestInfo = new HttpRequestInfo();
                         // So we can add the keyword it was fond with to the articles later.
                         httpRequestInfo.setDataOfRequester(topicsToLookFor.get(i).keyWord);
+                        httpRequestInfo.setInformationCode(languageIds[languageArrayIndex]);
                         httpRequestInfo.setContext(getApplicationContext());
                         HttpRequest httpRequest = new HttpRequest(NewsOfTheDayJobScheduler.this, httpRequestInfo);
+                        // So when we load the articles we know which keywords / topics to look for
                         keyWordDbService.setAsNewsOfTheDayKeyWord(topicsToLookFor.get(i));
                         String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
                             DailyNewsLoadingService.setLoading(true);
                             NewsOfTheDayApiService.getArticlesNewsApiByKeyWords(
-                                    httpRequest, keyWords, LanguageSettingsService.INDEX_ENGLISH
+                                    httpRequest, keyWords, languageIds[languageArrayIndex++]
                             );
                         } catch (Exception e) {
                             NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "catchblock", 2);
@@ -136,7 +148,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         if(articlesForKeyword.size() > 0){
             storeDateLastLoadedData();
             String foundWithKeyWord = (String) info.getDataOfRequester();
-            storeArticlesInDatabase(articlesForKeyword, foundWithKeyWord);
+            storeArticlesInDatabase(articlesForKeyword, foundWithKeyWord, info.getInformationCode());
         }
 
         // Send notification when all responses have arrived
@@ -153,12 +165,13 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         );
     }
 
-    private void storeArticlesInDatabase(LinkedList<NewsArticle> newsArticle, String foundWithKeyWord){
+    private void storeArticlesInDatabase(LinkedList<NewsArticle> newsArticle, String foundWithKeyWord, int languageId){
         for(int i = 0; i < newsArticle.size(); i++) {
             Log.d(TAG, "adds this article to db: " + newsArticle.get(i));
             NewsArticle articleToAdd = newsArticle.get(i);
             // We have set this value before so we know it's stored there.
             articleToAdd.foundWithKeyWord = foundWithKeyWord;
+            articleToAdd.languageId = LanguageSettingsService.getLanguageIdAsString(languageId);
             newsArticleDbService.insert(articleToAdd);
         }
     }
