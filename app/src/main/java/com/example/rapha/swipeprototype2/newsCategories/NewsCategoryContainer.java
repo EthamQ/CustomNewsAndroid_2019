@@ -3,6 +3,7 @@ package com.example.rapha.swipeprototype2.newsCategories;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.categoryDistribution.Distribution;
+import com.example.rapha.swipeprototype2.swipeCardContent.ISwipeCard;
 
 import java.util.LinkedList;
 
@@ -19,6 +20,8 @@ public class NewsCategoryContainer {
     public final Movie movie;
     public final Politics politics;
     public final Technology technology;
+    public final Sport sport;
+    public final Health health;
 
     public final LinkedList<NewsCategory> allCategories = new LinkedList<>();
 
@@ -28,12 +31,17 @@ public class NewsCategoryContainer {
         movie = new Movie();
         politics = new Politics();
         technology = new Technology();
+        sport = new Sport();
+        health = new Health();
+
 
         allCategories.add(finance);
         allCategories.add(food);
         allCategories.add(movie);
         allCategories.add(politics);
         allCategories.add(technology);
+        allCategories.add(sport);
+        allCategories.add(health);
     }
 
     /**
@@ -44,33 +52,17 @@ public class NewsCategoryContainer {
      */
     public LinkedList<Distribution> getCategoryDistribution(){
         LinkedList<Distribution> distributionList = new LinkedList<>();
-        int totalRating = this.finance.getRating()
-                + this.food.getRating()
-                + this.movie.getRating()
-                + this.politics.getRating()
-                + this.technology.getRating();
-        Log.d("RATING", "Total rating: " + totalRating);
 
-        // Instantiate a Distribution object for every category.
-        Distribution finance = new Distribution(this.finance.getCategoryID());
-        Distribution food = new Distribution(this.food.getCategoryID());
-        Distribution movie = new Distribution(this.movie.getCategoryID());
-        Distribution politics = new Distribution(this.politics.getCategoryID());
-        Distribution technology = new Distribution(this.technology.getCategoryID());
+        int totalRating = 0;
+        for(NewsCategory category: allCategories){
+            totalRating += category.getRating();
+        }
 
-        // Set the correct amount to be requested for every Distribution object.
-        finance.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.finance, totalRating);
-        food .amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.food , totalRating);
-        movie.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.movie, totalRating);
-        politics.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.politics, totalRating);
-        technology.amountToFetchFromApi = NewsCategoryContainerUtils.calculateDistribution(this.technology, totalRating);
-
-        // Add every distribution object to the LinkedList.
-        distributionList.add(finance);
-        distributionList.add(food);
-        distributionList.add(movie);
-        distributionList.add(politics);
-        distributionList.add(technology);
+        for(NewsCategory category: allCategories){
+            Distribution distribution = new Distribution(category.getCategoryID());
+            distribution.amountToFetchFromApi = NewsCategoryContainerHelper.calculateDistribution(category, totalRating);
+            distributionList.add(distribution);
+        }
 
         return distributionList;
     }
@@ -82,6 +74,7 @@ public class NewsCategoryContainer {
                 case Movie.CATEGORY_ID: return new Movie();
                 case Food.CATEGORY_ID: return new Food();
                 case Technology.CATEGORY_ID: return new Technology();
+                case Sport.CATEGORY_ID: return new Sport();
                 default: return new NewsCategory();
             }
     }
@@ -92,8 +85,8 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 2;
 
         public static final String[] FINANCE_QUERY_STRINGS_EN = new String[]{
-                "Economy", "Finance", "Stock market", "Wages", "Investment", "Jobs", "Taxes",
-                "Insurance"
+                "Startup", "Economy", "Finance", "Stock market", "Wages", "Investment", "Jobs", "Taxes",
+                "Insurance",
         };
 
         public static final String[] FINANCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
@@ -114,12 +107,12 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 4;
 
         public static final String[] FOOD_QUERY_STRINGS_EN = new String[] {
-                "Restaurant"
+                "Cooking", "Recipes", "Restaurant",
         };
 
         public static final String[] FOOD_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "pasta", "cook", "food", "meal", "delicious",
-                    "recipe", "vegetables", "tomato", "dinner", "pan"
+            "pasta", "food", "meal", "delicious",
+                "vegetables", "tomato", "dinner", "pan", "kitchen"
         };
 
         public Food(){
@@ -156,11 +149,12 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 0;
 
         public static final String[] POLITIC_QUERY_STRINGS_EN = new String[] {
-                "Trump", "Putin", "Macron", "Russia",
+                "Surveillance", "Trump", "Putin", "Macron", "Russia",
                 "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy", "German politics"
+
         };
         public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "politic", "president", "white house"
+            "politic", "president", "white house", "treaty"
         };
 
         public Politics(){
@@ -176,12 +170,12 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 1;
 
         public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
-                "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
-                "AI Artificial Intelligence", "Google", "Spotify", "Facebook", "Webdesign"
+                "Youtube", "Apple", "Smartphone", "Apps", "Android", "Programming", "Machine Learning",
+                "AI Artificial Intelligence", "Google", "Spotify", "Facebook", "Webdesign", "Drones"
         };
 
         public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "technology", "computer", "hacker", "mac"
+            "technology", "computer", "hacker", "mac", "hardware", "software", "screen"
         };
 
         public Technology(){
@@ -191,5 +185,46 @@ public class NewsCategoryContainer {
             this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
         }
 
+    }
+
+    public static class Sport extends NewsCategory{
+
+        public static final int CATEGORY_ID = 5;
+
+        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
+                "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey",
+                "Tour de france", "Bike"
+        };
+
+        public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "sport", "score", "tournament", "championship"
+        };
+
+        public Sport(){
+            this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Sport";
+            this.USER_DETERMINED_QUERY_STRINGS_EN = TECHNOLOGY_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
+        }
+    }
+
+    public static class Health extends NewsCategory{
+
+        public static final int CATEGORY_ID = 6;
+
+        public static final String[] TECHNOLOGY_QUERY_STRINGS_EN = new String[] {
+                ""
+        };
+
+        public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
+                "health", "fitness", "doctor", "healthcare"
+        };
+
+        public Health(){
+            this.setCategoryID(CATEGORY_ID);
+            this.displayName = "Health";
+            this.USER_DETERMINED_QUERY_STRINGS_EN = TECHNOLOGY_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN;
+        }
     }
 }

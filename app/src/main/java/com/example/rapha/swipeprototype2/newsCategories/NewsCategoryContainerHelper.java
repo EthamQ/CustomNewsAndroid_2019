@@ -6,7 +6,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordR
 
 import java.util.LinkedList;
 
-public class NewsCategoryContainerUtils {
+public class NewsCategoryContainerHelper {
 
     /**
      * Calculates how many news articles for the news category should be requested

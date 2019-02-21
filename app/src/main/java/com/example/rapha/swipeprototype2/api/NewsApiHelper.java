@@ -11,7 +11,7 @@ import org.json.JSONObject;
 
 import java.util.LinkedList;
 
-public class NewsApiUtils {
+public class NewsApiHelper {
 
     /**
      * Receives the entire JSON containing news articles from the NewsApi.

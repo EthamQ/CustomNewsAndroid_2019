@@ -7,7 +7,6 @@ import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.languages.TranslationService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
-import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
 import java.util.LinkedList;
@@ -96,7 +95,7 @@ public class TopicService {
 
 
     private static void transformSingleTopicToMultipleWords(List<KeyWordRoomModel> allTopics, LinkedList<KeyWordRoomModel> keyWords, int index){
-        QueryWordTransformation queryWordTransformation = new QueryWordTransformation();
+        TopicWordsTransformation queryWordTransformation = new TopicWordsTransformation();
         KeyWordRoomModel keyWordToAdd = allTopics.get(index);
         LinkedList<KeyWordRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
         for(int k = 0; k < transformedKeyWords.size(); k++){

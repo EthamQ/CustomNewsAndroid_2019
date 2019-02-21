@@ -1,4 +1,4 @@
-package com.example.rapha.swipeprototype2.newsCategories;
+package com.example.rapha.swipeprototype2.topics;
 
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 
@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public class QueryWordTransformation {
+public class TopicWordsTransformation {
 
     HashMap<String, LinkedList<String>> dictionary;
 
-    public QueryWordTransformation(){
+    public TopicWordsTransformation(){
         dictionary = new HashMap<>();
         initTransformDictionary();
     }
@@ -35,6 +35,18 @@ public class QueryWordTransformation {
         programming.add("Typescript");
         programming.add("Algorithm");
         dictionary.put("Programming".toUpperCase(), programming);
+
+        LinkedList<String> drones = new LinkedList<>();
+        programming.add("drone");
+        dictionary.put("drones".toUpperCase(), drones);
+
+        LinkedList<String> cooking = new LinkedList<>();
+        programming.add("cook");
+        dictionary.put("Cooking".toUpperCase(), cooking);
+
+        LinkedList<String> recipes = new LinkedList<>();
+        programming.add("recipe");
+        dictionary.put("Recipes".toUpperCase(), recipes);
     }
 
 

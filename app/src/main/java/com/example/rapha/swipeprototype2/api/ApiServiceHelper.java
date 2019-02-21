@@ -28,7 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 import java.util.LinkedList;
 
-public class ApiUtils {
+public class ApiServiceHelper {
 
     /**
      * Uses the previously calculated distribution to request the correct amount for every category

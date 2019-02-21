@@ -39,6 +39,7 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("tomato".toUpperCase(), "Tomate");
         dictionary.put("dinner".toUpperCase(), "Abendessen");
         dictionary.put("pan".toUpperCase(), "Pfanne");
+        dictionary.put("kitchen".toUpperCase(), "Küche");
 
         // Politics related
         dictionary.put("Russia".toUpperCase(), "Russland");
@@ -49,6 +50,8 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("president".toUpperCase(), "President");
         dictionary.put("white house".toUpperCase(), "Weißes Haus");
         dictionary.put("foreign policy".toUpperCase(), "Außenpolitik");
+        dictionary.put("treaty".toUpperCase(), "Abkommen");
+        dictionary.put("surveillance".toUpperCase(), "Überwachung");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "Film");
@@ -61,5 +64,7 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("Programming".toUpperCase(), "Programmieren");
         dictionary.put("AI Artificial Intelligence".toUpperCase(), "Künstliche Intelligenz");
         dictionary.put("technology".toUpperCase(), "Technology");
+        dictionary.put("screen".toUpperCase(), "Bildschirm");
+        dictionary.put("drone".toUpperCase(), "Drohne");
     }
 }

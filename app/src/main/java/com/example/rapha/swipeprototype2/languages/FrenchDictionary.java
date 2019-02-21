@@ -38,6 +38,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("tomato".toUpperCase(), "tomate");
         dictionary.put("dinner".toUpperCase(), "dîner");
         dictionary.put("pan".toUpperCase(), "poêle");
+        dictionary.put("kitchen".toUpperCase(), "cuisine");
 
         // Politics related
         dictionary.put("Russia".toUpperCase(), "Russie");
@@ -48,6 +49,8 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("president".toUpperCase(), "président");
         dictionary.put("white house".toUpperCase(), "Maison Blanche");
         dictionary.put("foreign policy".toUpperCase(), "politique étrangère");
+        dictionary.put("treaty".toUpperCase(), "traité");
+        dictionary.put("surveillance".toUpperCase(), "surveillance");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "film");
@@ -60,5 +63,6 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("Programming".toUpperCase(), "programm");
         dictionary.put("AI Artificial Intelligence".toUpperCase(), "intelligence artificielle");
         dictionary.put("technology".toUpperCase(), "technologie");
+        dictionary.put("screen".toUpperCase(), "écran");
     }
 }

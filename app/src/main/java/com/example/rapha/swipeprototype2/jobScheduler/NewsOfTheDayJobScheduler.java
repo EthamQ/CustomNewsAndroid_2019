@@ -7,14 +7,14 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment;
-import com.example.rapha.swipeprototype2.api.NewsApiUtils;
+import com.example.rapha.swipeprototype2.api.NewsApiHelper;
 import com.example.rapha.swipeprototype2.api.NewsOfTheDayApiService;
 import com.example.rapha.swipeprototype2.http.HttpRequest;
 import com.example.rapha.swipeprototype2.http.HttpRequestInfo;
 import com.example.rapha.swipeprototype2.http.IHttpRequester;
 import com.example.rapha.swipeprototype2.languages.LanguageSettingsService;
 import com.example.rapha.swipeprototype2.loading.DailyNewsLoadingService;
-import com.example.rapha.swipeprototype2.newsCategories.QueryWordTransformation;
+import com.example.rapha.swipeprototype2.topics.TopicWordsTransformation;
 import com.example.rapha.swipeprototype2.notifications.NewsOfTheDayNotificationService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
@@ -105,7 +105,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                         HttpRequest httpRequest = new HttpRequest(NewsOfTheDayJobScheduler.this, httpRequestInfo);
                         // So when we load the articles we know which keywords / topics to look for
                         keyWordDbService.setAsNewsOfTheDayKeyWord(topicsToLookFor.get(i));
-                        String[] keyWords = new QueryWordTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
+                        String[] keyWords = new TopicWordsTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
                             DailyNewsLoadingService.setLoading(true);
                             NewsOfTheDayApiService.getArticlesNewsApiByKeyWords(
@@ -139,7 +139,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
         JSONObject newsArticleJson = (JSONObject) info.getRequestResponse();
         try {
-            articlesForKeyword = NewsApiUtils.jsonToNewsArticleArray(newsArticleJson, -1, -1);
+            articlesForKeyword = NewsApiHelper.jsonToNewsArticleArray(newsArticleJson, -1, -1);
         } catch (Exception e) {
             e.printStackTrace();
         }

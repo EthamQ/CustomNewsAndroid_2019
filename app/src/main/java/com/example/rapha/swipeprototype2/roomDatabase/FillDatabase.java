@@ -1,5 +1,7 @@
 package com.example.rapha.swipeprototype2.roomDatabase;
 
+import android.util.Log;
+
 import com.example.rapha.swipeprototype2.categoryDistribution.CategoryRatingService;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategory;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
@@ -7,6 +9,7 @@ import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPrefere
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRepository;
 import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.example.rapha.swipeprototype2.swipeCardContent.NewsArticle;
 
 import java.util.LinkedList;
 
@@ -19,22 +22,20 @@ public class FillDatabase {
      * @param repository
      */
     public static void fillCategories(UserPreferenceRepository repository){
+
         NewsCategoryContainer newsNewsCategoryContainer = new NewsCategoryContainer();
-        repository.insert(new UserPreferenceRoomModel(
-                newsNewsCategoryContainer.finance.getCategoryID(),
-                CategoryRatingService.MIN_RATING));
-        repository.insert(new UserPreferenceRoomModel(
-                newsNewsCategoryContainer.food.getCategoryID(),
-                CategoryRatingService.MIN_RATING));
-        repository.insert(new UserPreferenceRoomModel(
-                newsNewsCategoryContainer.movie.getCategoryID(),
-                CategoryRatingService.MIN_RATING));
-        repository.insert(new UserPreferenceRoomModel(
-                newsNewsCategoryContainer.politics.getCategoryID(),
-                CategoryRatingService.MIN_RATING));
-        repository.insert(new UserPreferenceRoomModel(
-                newsNewsCategoryContainer.technology.getCategoryID(),
-                CategoryRatingService.MIN_RATING));
+        for(NewsCategory category : newsNewsCategoryContainer.allCategories){
+            Log.d("datapoint: ","fill in db: " + category.getCategoryID());
+            repository.insert(new UserPreferenceRoomModel(
+                    category.getCategoryID(),
+                    CategoryRatingService.MIN_RATING));
+        }
+
+        repository.getAllUserPreferences().observeForever(cats ->{
+            for(UserPreferenceRoomModel category : cats){
+                Log.d("datapoint: ","observed after fill: " + category.getNewsCategoryId());
+            }
+            });
     }
 
     public static void fillKeyWords(KeyWordRepository repository){

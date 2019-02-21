@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.activities.mainActivity.MainActivity;
 import com.example.rapha.swipeprototype2.api.ApiService;
+import com.example.rapha.swipeprototype2.api.SwipeApiService;
 import com.example.rapha.swipeprototype2.customAdapters.NewsArticleAdapter;
 import com.example.rapha.swipeprototype2.languages.LanguageCombinationService;
 import com.example.rapha.swipeprototype2.requestDateOffset.DateOffsetService;
@@ -63,7 +64,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWordProvider {
+public class SwipeFragment extends Fragment implements IDeletesArticle {
 
     public MainActivity mainActivity;
     public View view;
@@ -262,7 +263,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
         Thread thread = new Thread(() -> {
             try {
                 LinkedList<NewsArticle> apiArticlesToAdd =
-                        ApiService.getAllArticlesNewsApi(SwipeFragment.this, liveCategoryRatings);
+                        SwipeApiService.getAllArticlesApiForSwipeCards(SwipeFragment.this, liveCategoryRatings);
                 Log.d("newswipe", "articles from api call: " + apiArticlesToAdd.size());
                 mainActivity.runOnUiThread(() -> {
                     storeArticlesInDatabase(apiArticlesToAdd);
@@ -585,12 +586,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IKeyWord
                     + " must implement OnFragmentInteractionListener");
         }
     }
-
-    @Override
-    public List<KeyWordRoomModel> getCurrentKeyWords() {
-        return liveKeyWords;
-    }
-
 
     /**
      * This interface must be implemented by activities that contain this

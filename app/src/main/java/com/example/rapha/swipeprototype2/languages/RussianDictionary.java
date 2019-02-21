@@ -44,6 +44,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("tomato".toUpperCase(), "помидор");
         dictionary.put("dinner".toUpperCase(), "ужин");
         dictionary.put("pan".toUpperCase(), "сковорода");
+        dictionary.put("kitchen".toUpperCase(), "кухн");
 
         // Politics related
         dictionary.put("Russia".toUpperCase(), "росси");
@@ -54,6 +55,8 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("president".toUpperCase(), "президент");
         dictionary.put("white house".toUpperCase(), "Белый дом");
         dictionary.put("foreign policy".toUpperCase(), "внешн политик");
+        dictionary.put("treaty".toUpperCase(), "договор");
+        dictionary.put("surveillance".toUpperCase(), "наблюдение");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "фильм");
@@ -66,5 +69,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("Programming".toUpperCase(), "программир");
         dictionary.put("AI Artificial Intelligence".toUpperCase(), "искусственн интеллигенци");
         dictionary.put("technology".toUpperCase(), "технологи");
+        dictionary.put("screen".toUpperCase(), "экран");
+        dictionary.put("drone".toUpperCase(), "беспилотник");
     }
 }

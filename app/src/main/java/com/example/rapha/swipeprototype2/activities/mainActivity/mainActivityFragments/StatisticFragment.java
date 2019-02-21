@@ -1,13 +1,10 @@
 package com.example.rapha.swipeprototype2.activities.mainActivity.mainActivityFragments;
 
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,18 +17,16 @@ import com.example.rapha.swipeprototype2.activities.viewElements.DimensionServic
 import com.example.rapha.swipeprototype2.activities.viewElements.StatisticsFragmentDimensions;
 import com.example.rapha.swipeprototype2.customAdapters.TopicRowAdapter;
 import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryContainer;
+import com.example.rapha.swipeprototype2.newsCategories.NewsCategoryService;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.categoryRating.UserPreferenceRoomModel;
-import com.example.rapha.swipeprototype2.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -68,7 +63,8 @@ public class StatisticFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_statistic, container, false);
         statisticsFragmentDimensions = new StatisticsFragmentDimensions(this);
-        setGraph();
+        setFirstGraphView();
+        setSecondGraphView();
         setLikedTopics();
         return view;
     }
@@ -124,58 +120,95 @@ public class StatisticFragment extends Fragment {
         });
     }
 
+    public void setFirstGraphView(){
+        GraphView graphView = view.findViewById(R.id.graph1);
+        RatingDbService dbService = RatingDbService.getInstance(getActivity().getApplication());
+        dbService.getAllUserPreferences().observe(getActivity(), newsCategories -> {
+            DataPoint[] datapoints = new DataPoint[5];
+            String[] xAxisName = new String[5];
+
+            for(UserPreferenceRoomModel category : newsCategories){
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Finance.CATEGORY_ID){
+                    datapoints[0] = new DataPoint(0, category.getRating());
+                    xAxisName[0] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Politics.CATEGORY_ID){
+                    datapoints[1] = new DataPoint(1, category.getRating());
+                    xAxisName[1] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Food.CATEGORY_ID){
+                    datapoints[2] = new DataPoint(2, category.getRating());
+                    xAxisName[2] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Technology.CATEGORY_ID){
+                    datapoints[3] = new DataPoint(3, category.getRating());
+                    xAxisName[3] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Movie.CATEGORY_ID){
+                    datapoints[4] = new DataPoint(4, category.getRating());
+                    xAxisName[4] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+            }
+            setGraph(graphView, datapoints, xAxisName, true);
+        });
+    }
+
+    public void setSecondGraphView(){
+        GraphView graphView = view.findViewById(R.id.graph2);
+        RatingDbService dbService = RatingDbService.getInstance(getActivity().getApplication());
+        dbService.getAllUserPreferences().observe(getActivity(), newsCategories -> {
+            DataPoint[] datapoints = new DataPoint[5];
+            String[] xAxisName = new String[5];
+
+            for(UserPreferenceRoomModel category : newsCategories){
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Sport.CATEGORY_ID){
+                    datapoints[0] = new DataPoint(0, category.getRating());
+                    xAxisName[0] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+                if(category.getNewsCategoryId() == NewsCategoryContainer.Health.CATEGORY_ID){
+                    datapoints[1] = new DataPoint(1, category.getRating());
+                    xAxisName[1] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
+                }
+            }
+            datapoints[2] = new DataPoint(2, 0);
+            xAxisName[2] = "";
+            datapoints[3] = new DataPoint(3, 0);
+            xAxisName[3] = "";
+            datapoints[4] = new DataPoint(4, 0);
+            xAxisName[4] = "";
+            setGraph(graphView, datapoints, xAxisName, false);
+        });
+    }
+
     /**
      *  Set the values on the x and y axis of the graph and add styling.
      *  x: Name of the category, y: empty
      *  Also set the height of the individual graphs for every category depending
      *  on the category rating.
      */
-    public void setGraph(){
+    public void setGraph(GraphView graphView, DataPoint[] datapoints, String[] xAxisNames, boolean title){
         // Get user preferences from database.
-        RatingDbService dbService = RatingDbService.getInstance(getActivity().getApplication());
-        dbService.getAllUserPreferences().observe(getActivity(), new Observer<List<UserPreferenceRoomModel>>() {
-            @Override
-            public void onChanged(@Nullable List<UserPreferenceRoomModel> userPreferenceRoomModels) {
-                // Set the values in the graph.
-                GraphView graph = view.findViewById(R.id.graph);
-                statisticsFragmentDimensions.setGraphWidth(graph);
-                DataPoint[] datapoints = new DataPoint[userPreferenceRoomModels.size()];
-                for(int i = 0; i < datapoints.length; i++){
-                    UserPreferenceRoomModel currentEntry = userPreferenceRoomModels.get(i);
-                    datapoints[i] = new DataPoint(currentEntry.getNewsCategoryId(), currentEntry.getRating());
-                }
+
+            statisticsFragmentDimensions.setGraphWidth(graphView);
+
                 BarGraphSeries<DataPoint> series = new BarGraphSeries<>(datapoints);
 
                 // Additional graph styling.
                 series.setSpacing(10);
-                graph.setTitle("Your news preferences");
-//                graph.setTitleColor(Color.BLACK);
-                graph.addSeries(series);
+                series.setDataWidth(1);
+                if(title){
+                    graphView.setTitle("Your news preferences");
+                }
+                graphView.addSeries(series);
 
                 // Convert the x axis values to strings representing its news category.
-                graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                graphView.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
                     @Override
                     public String formatLabel(double value, boolean isValueX) {
                         if (isValueX) {
-                            final NewsCategoryContainer categories = new NewsCategoryContainer();
-                            // TODO: move this logic and store the strings somewhere else!
-                            if(value == categories.finance.getCategoryID()){
-                                return "Finance";
-                            }
-                            if(value == categories.politics.getCategoryID()){
-                                return "Politics";
-                            }
-                            if(value == categories.food.getCategoryID()){
-                                return "Food";
-                            }
-                            if(value == categories.technology.getCategoryID()){
-                                return "Technology";
-                            }
-                            if(value == categories.movie.getCategoryID()){
-                                return "Movies";
-                            }
-                            return super.formatLabel(value, isValueX);
-                        } else {
+                            return xAxisNames[(int) value];
+                        }
+                        else {
                             return "";
                         }
                     }
@@ -183,8 +216,6 @@ public class StatisticFragment extends Fragment {
 
                 // styling
                 series.setValueDependentColor(data -> ContextCompat.getColor(getContext(), R.color.news_card_text));
-            }
-        });
     }
 
     /**

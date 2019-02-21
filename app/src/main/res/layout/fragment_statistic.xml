@@ -34,7 +34,13 @@
         </LinearLayout>
 
         <com.jjoe64.graphview.GraphView
-            android:id="@+id/graph"
+            android:id="@+id/graph1"
+            android:layout_width="360dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        <com.jjoe64.graphview.GraphView
+            android:id="@+id/graph2"
             android:layout_width="360dp"
             android:layout_height="150dp"
             android:layout_marginTop="@dimen/activity_vertical_margin" />
