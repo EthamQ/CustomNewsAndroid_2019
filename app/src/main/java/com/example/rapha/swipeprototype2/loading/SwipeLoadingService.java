@@ -29,9 +29,9 @@ public class SwipeLoadingService {
     public static void setLoadingLanguageChange(boolean loading){
         languageChangeLoading.postValue(loading);
         if(loading){
-            addNewLanguageLoadingJob();
+            LoadingService.addNewLanguageLoadingJob(languageChangeJobs);
         } else {
-            setLastLanguageLoadingJobSuccessful();
+            LoadingService.setLastLanguageLoadingJobSuccessful(languageChangeJobs);
         }
     }
 
@@ -57,9 +57,9 @@ public class SwipeLoadingService {
         new Thread(() -> {
             try {
                 Thread.sleep(12000);
-                if(!getLastLanguageChangeJobSuccess()){
+                if(!LoadingService.getLastLanguageChangeJobSuccess(languageChangeJobs)){
                     mainActivity.runOnUiThread(() -> {
-                        SwipeLoadingService.setLoadingLanguageChange(false);
+                        setLoadingLanguageChange(false);
                         swipeFragment.swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
                         swipeFragment.swipeCardArrayAdapter.notifyDataSetChanged();
                         LanguageSettingsService.saveChecked(
@@ -78,22 +78,4 @@ public class SwipeLoadingService {
         }).start();
     }
 
-    private static boolean getLastLanguageChangeJobSuccess(){
-        boolean success = true;
-        if(!languageChangeJobs.isEmpty()){
-            success = languageChangeJobs.get(0).finishedSuccessful;
-            languageChangeJobs.remove(0);
-        }
-        return success;
-    }
-
-    private static void addNewLanguageLoadingJob(){
-        languageChangeJobs.add(new LoadingJob());
-    }
-
-    private static void setLastLanguageLoadingJobSuccessful(){
-        if(!languageChangeJobs.isEmpty()){
-            languageChangeJobs.get(languageChangeJobs.size() - 1).finishedSuccessful = true;
-        }
-    }
 }

@@ -11,12 +11,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 
 import com.example.rapha.swipeprototype2.R;
 import com.example.rapha.swipeprototype2.roomDatabase.KeyWordDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.NewsArticleDbService;
 import com.example.rapha.swipeprototype2.roomDatabase.RatingDbService;
 import com.example.rapha.swipeprototype2.sharedPreferencesAccess.NewsOfTheDayTimeService;
+import com.example.rapha.swipeprototype2.sharedPreferencesAccess.SettingsService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -51,7 +54,16 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_settings, container, false);
         initButtons();
+        initSwitch();
         return view;
+    }
+
+    private void initSwitch(){
+        Switch notificationSwitch = view.findViewById(R.id.switch_notifications);
+        notificationSwitch.setChecked(SettingsService.getCheckedNotification(getContext()));
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            SettingsService.setCheckedNotification(getContext(), isChecked);
+        });
     }
 
     private void initButtons(){

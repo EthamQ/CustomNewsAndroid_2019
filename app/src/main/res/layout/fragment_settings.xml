@@ -13,6 +13,7 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin_big"
             tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
 
             <!-- TODO: Update blank fragment layout -->
@@ -43,5 +44,51 @@
         android:textAllCaps="false"
         android:layout_marginTop="@dimen/text_margin"
         android:textColor="@color/news_card_text" />
+
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin_ultra"
+        tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_newspaper_"
+            android:tint="@color/turquis_dark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Daily news"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/titleText" />
+
+    </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+
+
+        <Switch
+            android:id="@+id/switch_notifications"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Receive notification when new articles available" />
+    </LinearLayout>
 
     </LinearLayout>

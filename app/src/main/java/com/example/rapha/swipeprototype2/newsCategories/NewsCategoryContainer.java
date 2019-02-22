@@ -200,7 +200,8 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 5;
 
         public static final String[] SPORT_QUERY_STRINGS_EN = new String[] {
-                "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey", "Bike"
+                "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey", "Bike", "Hiking",
+                "Olympia"
         };
 
         public static final String[] SPORT_DEFAULT_QUERY_STRINGS_EN = new String[] {
@@ -274,4 +275,5 @@ public class NewsCategoryContainer {
             this.DEFAULT_QUERY_STRINGS_EN = SCIENCE_DEFAULT_QUERY_STRINGS_EN;
         }
     }
+
 }

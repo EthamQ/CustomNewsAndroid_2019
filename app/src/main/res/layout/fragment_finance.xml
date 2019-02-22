@@ -31,6 +31,46 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.699">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/finance_info_text1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/finance_info_text2" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:text="@string/finance_info_text3" />
+
+    </LinearLayout>
+
     <ImageView
         android:id="@+id/imageView6"
         android:layout_width="157dp"
@@ -57,7 +97,7 @@
         android:background="@drawable/btn_rounded"
         android:backgroundTint="@color/news_card_text"
         android:padding="10dp"
-        android:text="I understood!"
+        android:text="Start swiping!"
         android:textColor="@color/news_card_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

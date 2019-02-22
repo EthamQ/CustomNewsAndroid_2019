@@ -41,7 +41,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
-        NewsOfTheDayNotificationService.sendNotificationDebug(this, "onStartJob", 1);
+        DailyNewsLoadingService.reactOnLoadArticlesUnsuccessful(NewsOfTheDayJobScheduler.this);
         Log.d(TAG, "job started");
         newsArticleDbService = NewsArticleDbService.getInstance(getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getApplication());
@@ -71,7 +71,6 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                 if(!readArticles.isEmpty()){
                     for(int i = 0; i < readArticles.size(); i++){
                         newsArticleDbService.setAsArchived(readArticles.get(i));
-                        NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "setasarchived", 4);
                         Log.d("archived", "Set to archived: " + "archived: " + readArticles.get(i).archived + ", read: " + readArticles.get(i).hasBeenRead +", title: " +  readArticles.get(i).title);
                     }
                     newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
@@ -112,7 +111,6 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                                     httpRequest, keyWords, languageIds[languageArrayIndex++]
                             );
                         } catch (Exception e) {
-                            NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "catchblock", 2);
                             e.printStackTrace();
                             DailyNewsLoadingService.setLoading(false);
                         }
@@ -126,14 +124,13 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
 
     @Override
     public boolean onStopJob(JobParameters jobParameters) {
-        NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "on stop jobs", 3);
+        DailyNewsLoadingService.loadingInterrupted();
         Log.d(TAG, "job cancelled");
         return true;
     }
 
     @Override
     public void httpResultCallback(HttpRequestInfo info) {
-        NewsOfTheDayNotificationService.sendNotificationDebug(NewsOfTheDayJobScheduler.this, "setasarchived", 5);
         numberOfReceivedResponses++;
         Log.d(TAG, "reached httpResultCallback");
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();

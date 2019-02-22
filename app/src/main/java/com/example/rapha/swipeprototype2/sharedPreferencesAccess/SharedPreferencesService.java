@@ -83,11 +83,9 @@ public class SharedPreferencesService {
     }
 
     public static boolean valueIsSetDefault(Context context, String key){
-        int notSet = -1;
         if(!(context == null)) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-            long value = sharedPreferences.getLong(key, notSet);
-            return value != notSet;
+            return sharedPreferences.contains(key);
         }
         else return true;
     }
