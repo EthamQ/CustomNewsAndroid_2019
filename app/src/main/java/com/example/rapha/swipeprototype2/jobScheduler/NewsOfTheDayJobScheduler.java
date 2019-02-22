@@ -2,6 +2,7 @@ package com.example.rapha.swipeprototype2.jobScheduler;
 
 import android.app.job.JobParameters;
 import android.app.job.JobService;
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -39,6 +40,8 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
     int numberOfSentRequests = 0;
     int numberOfReceivedResponses = 0;
 
+    LiveData<List<KeyWordRoomModel>> likedTopicsLiveData;
+
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         DailyNewsLoadingService.reactOnLoadArticlesUnsuccessful(NewsOfTheDayJobScheduler.this);
@@ -49,18 +52,20 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         setReadArticlesToArchived();
         // Request articles for liked keywords for the new request.
         Observer observer = getObserverToRequestArticles(jobParameters);
-        keyWordDbService.getAllLikedKeyWords().observeForever(observer);
+        likedTopicsLiveData = keyWordDbService.getAllLikedKeyWords();
+        likedTopicsLiveData.observeForever(observer);
         jobFinished(jobParameters, false);
         return true;
     }
 
     private void setReadArticlesToArchived(){
         List<NewsArticleRoomModel> readArticles = new LinkedList<>();
-        newsArticleDbService.getAllNewsOfTheDayArticles().observeForever(new Observer<List<NewsArticleRoomModel>>() {
+        LiveData<List<NewsArticleRoomModel>> newsOfTheDayLiveData = newsArticleDbService.getAllNewsOfTheDayArticles();
+        newsOfTheDayLiveData.observeForever(new Observer<List<NewsArticleRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<NewsArticleRoomModel> data) {
                 if(NewsOfTheDayTimeService.firstTimeLoadingData(getApplicationContext())){
-                    newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
+                    newsOfTheDayLiveData.removeObserver(this);
                 }
                 for(int j = 0; j < data.size(); j++){
                     if(!data.get(j).archived && data.get(j).hasBeenRead){
@@ -73,7 +78,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                         newsArticleDbService.setAsArchived(readArticles.get(i));
                         Log.d("archived", "Set to archived: " + "archived: " + readArticles.get(i).archived + ", read: " + readArticles.get(i).hasBeenRead +", title: " +  readArticles.get(i).title);
                     }
-                    newsArticleDbService.getAllNewsOfTheDayArticles().removeObserver(this);
+                    newsOfTheDayLiveData.removeObserver(this);
                 }
             }
         });
@@ -115,7 +120,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                             DailyNewsLoadingService.setLoading(false);
                         }
                     }
-                    keyWordDbService.getAllLikedKeyWords().removeObserver(this);
+                    likedTopicsLiveData.removeObserver(this);
                 }
             }
         };
