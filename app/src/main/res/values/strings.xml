@@ -173,7 +173,7 @@
     </string>
 
     <string name="finance_info_text2">
-        I use a third party where I request the news.
+        I use a third party api to request the news.
         I can only show a preview of the content of a news article and not the entire text.
         Furthermore the amount of news I can request per day is limited.
         So if there are more users it is possible that this limit is reached and you can\'t
@@ -184,6 +184,10 @@
         I would have to pay 450$ per month to get rid of those limitations which i can\'t afford.
         So I would be happy if you supported the app with 0,99$ per month if you want to help me
         offering a full version of this app. (More in the settings menu)
+    </string>
+
+    <string name="contact_text">
+        If you have any question just write to my private email account :)
     </string>
 
 </resources>
