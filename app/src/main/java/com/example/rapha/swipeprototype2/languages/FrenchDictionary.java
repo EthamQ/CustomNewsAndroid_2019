@@ -100,5 +100,24 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("race".toUpperCase(), "course");
         dictionary.put("athlete".toUpperCase(), "athlète");
 
+        // Health related
+        dictionary.put("Healthcare".toUpperCase(), "santé publique");
+        dictionary.put("Fitness".toUpperCase(), "Fitness");
+        dictionary.put("Disease".toUpperCase(), "maladie");
+        dictionary.put("Virus".toUpperCase(), "Virus");
+        dictionary.put("Nutrition".toUpperCase(), "nutrition");
+        dictionary.put("Diet".toUpperCase(), "nourriture");
+        dictionary.put("Vaccination".toUpperCase(), "vaccine");
+        dictionary.put("Mental illness".toUpperCase(), "déséquilibr");
+        dictionary.put("health".toUpperCase(), "santé");
+        dictionary.put("doctor".toUpperCase(), "docteur");
+        dictionary.put("exercise".toUpperCase(), "entraîn");
+        dictionary.put("hospital".toUpperCase(), "hôpital");
+        dictionary.put("pharmacy".toUpperCase(), "pharmacie");
+        dictionary.put("medicare".toUpperCase(), "santé publique");
+        dictionary.put("prevention".toUpperCase(), "prévent");
+        dictionary.put("disorder".toUpperCase(), "handicap empêchement");
+        dictionary.put("cancer".toUpperCase(), "cancer chancreu");
+        dictionary.put("heart".toUpperCase(), "cœur");
     }
 }

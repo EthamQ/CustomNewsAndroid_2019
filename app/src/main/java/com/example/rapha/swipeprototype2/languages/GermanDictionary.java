@@ -101,5 +101,25 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("championship".toUpperCase(), "Meisterschaft");
         dictionary.put("race".toUpperCase(), "Rennen");
         dictionary.put("athlete".toUpperCase(), "Athlet");
+
+        // Health related
+        dictionary.put("Healthcare".toUpperCase(), "Gesundheitsversorgung");
+        dictionary.put("Fitness".toUpperCase(), "Fitness");
+        dictionary.put("Disease".toUpperCase(), "Krankheit");
+        dictionary.put("Virus".toUpperCase(), "Virus");
+        dictionary.put("Nutrition".toUpperCase(), "Ernährun");
+        dictionary.put("Diet".toUpperCase(), "Nahrung");
+        dictionary.put("Vaccination".toUpperCase(), "Impfen");
+        dictionary.put("Mental illness".toUpperCase(), "psychisch krank");
+        dictionary.put("health".toUpperCase(), "Gesundheit");
+        dictionary.put("doctor".toUpperCase(), "Arzt Ärzte");
+        dictionary.put("exercise".toUpperCase(), "trainieren");
+        dictionary.put("hospital".toUpperCase(), "Krankenhaus");
+        dictionary.put("pharmacy".toUpperCase(), "Pharma");
+        dictionary.put("medicare".toUpperCase(), "Gesundheitssystem");
+        dictionary.put("prevention".toUpperCase(), "vorbeug");
+        dictionary.put("disorder".toUpperCase(), "Behinderung");
+        dictionary.put("cancer".toUpperCase(), "Krebs");
+        dictionary.put("heart".toUpperCase(), "Herz");
     }
 }

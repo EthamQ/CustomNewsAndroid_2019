@@ -230,7 +230,7 @@ public class NewsCategoryContainer {
         };
 
         public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "health", "fitness", "doctor", "exercise",
+                "health", "doctor", "exercise",
                 "hospital", "pharmacy", "medicare", "prevention",
                 "disorder", "cancer", "heart"
         };

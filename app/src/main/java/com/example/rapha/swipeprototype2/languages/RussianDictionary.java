@@ -89,23 +89,43 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("application".toUpperCase(), "аппликация");
 
         //Sport related
-        dictionary.put("Soccer".toUpperCase(), "футбо́ль");
-        dictionary.put("Football".toUpperCase(), "футбо́ль");
-        dictionary.put("Swimming".toUpperCase(), "пла́вать");
+        dictionary.put("Soccer".toUpperCase(), "футболь");
+        dictionary.put("Football".toUpperCase(), "футболь");
+        dictionary.put("Swimming".toUpperCase(), "плавать");
         dictionary.put("Boxing".toUpperCase(), "бокс");
         dictionary.put("MMA".toUpperCase(), "MMA");
-        dictionary.put("Tennis".toUpperCase(), "те́ннис");
-        dictionary.put("Hockey".toUpperCase(), "хокке́й");
-        dictionary.put("Bike".toUpperCase(), "велосипе́д");
-        dictionary.put("Hiking".toUpperCase(), "похо́д");
-        dictionary.put("olympic".toUpperCase(), "олимпи́йск");
-        dictionary.put("Rugby".toUpperCase(), "ре́гби");
-        dictionary.put("Baseball".toUpperCase(), "бейсбо́л");
+        dictionary.put("Tennis".toUpperCase(), "теннис");
+        dictionary.put("Hockey".toUpperCase(), "хоккей");
+        dictionary.put("Bike".toUpperCase(), "велосипед");
+        dictionary.put("Hiking".toUpperCase(), "поход");
+        dictionary.put("olympic".toUpperCase(), "олимпийск");
+        dictionary.put("Rugby".toUpperCase(), "регби");
+        dictionary.put("Baseball".toUpperCase(), "бейсбол");
         dictionary.put("sport".toUpperCase(), "спорт");
-        dictionary.put("score".toUpperCase(), "оконча́тельный счёт");
-        dictionary.put("tournament".toUpperCase(), "турни́р");
-        dictionary.put("championship".toUpperCase(), "пе́рвенство");
+        dictionary.put("score".toUpperCase(), "окончательный счёт");
+        dictionary.put("tournament".toUpperCase(), "турнир");
+        dictionary.put("championship".toUpperCase(), "первенство");
         dictionary.put("race".toUpperCase(), "бег");
-        dictionary.put("athlete".toUpperCase(), "атле́т");
+        dictionary.put("athlete".toUpperCase(), "атлет");
+
+        // Health related
+        dictionary.put("Healthcare".toUpperCase(), "здравоохранение");
+        dictionary.put("Fitness".toUpperCase(), "фитнес");
+        dictionary.put("Disease".toUpperCase(), "болезн");
+        dictionary.put("Virus".toUpperCase(), "вирус");
+        dictionary.put("Nutrition".toUpperCase(), "питание");
+        dictionary.put("Diet".toUpperCase(), "питание");
+        dictionary.put("Vaccination".toUpperCase(), " прививк nпривить");
+        dictionary.put("Mental illness".toUpperCase(), "психическ");
+        dictionary.put("health".toUpperCase(), "здоровье");
+        dictionary.put("doctor".toUpperCase(), "врач");
+        dictionary.put("exercise".toUpperCase(), "тренир");
+        dictionary.put("hospital".toUpperCase(), "больниц");
+        dictionary.put("pharmacy".toUpperCase(), "фармаци");
+        dictionary.put("medicare".toUpperCase(), "здравоохранение");
+        dictionary.put("prevention".toUpperCase(), "предотвра");
+        dictionary.put("disorder".toUpperCase(), "инвалид");
+        dictionary.put("cancer".toUpperCase(), "Рак");
+        dictionary.put("heart".toUpperCase(), "сердце");
     }
 }
