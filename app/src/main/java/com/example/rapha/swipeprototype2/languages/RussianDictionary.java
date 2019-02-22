@@ -57,6 +57,21 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("foreign policy".toUpperCase(), "внешн политик");
         dictionary.put("treaty".toUpperCase(), "договор");
         dictionary.put("surveillance".toUpperCase(), "наблюдение");
+        dictionary.put("europe".toUpperCase(), " Европ");
+        dictionary.put("sanctions".toUpperCase(), " принудительн");
+
+        dictionary.put("Communism".toUpperCase(), "коммунизм");
+        dictionary.put("Law".toUpperCase(), "закон");
+        dictionary.put("Capitalism".toUpperCase(), "капитализм");
+        dictionary.put("Socialism".toUpperCase(), "социализм");
+        dictionary.put("Dictator".toUpperCase(), "диктатор");
+        dictionary.put("Democracy".toUpperCase(), "демократия");
+        dictionary.put("Corruption".toUpperCase(), " коррупция ");
+        dictionary.put("government".toUpperCase(), "государств");
+        dictionary.put("parliament".toUpperCase(), "парламент");
+        dictionary.put("regime".toUpperCase(), "государственный строй");
+        dictionary.put("negotiation".toUpperCase(), "слушание");
+        dictionary.put("diplomat".toUpperCase(), "дипломат");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "фильм");
@@ -71,5 +86,26 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("technology".toUpperCase(), "технологи");
         dictionary.put("screen".toUpperCase(), "экран");
         dictionary.put("drone".toUpperCase(), "беспилотник");
+        dictionary.put("application".toUpperCase(), "аппликация");
+
+        //Sport related
+        dictionary.put("Soccer".toUpperCase(), "футбо́ль");
+        dictionary.put("Football".toUpperCase(), "футбо́ль");
+        dictionary.put("Swimming".toUpperCase(), "пла́вать");
+        dictionary.put("Boxing".toUpperCase(), "бокс");
+        dictionary.put("MMA".toUpperCase(), "MMA");
+        dictionary.put("Tennis".toUpperCase(), "те́ннис");
+        dictionary.put("Hockey".toUpperCase(), "хокке́й");
+        dictionary.put("Bike".toUpperCase(), "велосипе́д");
+        dictionary.put("Hiking".toUpperCase(), "похо́д");
+        dictionary.put("olympic".toUpperCase(), "олимпи́йск");
+        dictionary.put("Rugby".toUpperCase(), "ре́гби");
+        dictionary.put("Baseball".toUpperCase(), "бейсбо́л");
+        dictionary.put("sport".toUpperCase(), "спорт");
+        dictionary.put("score".toUpperCase(), "оконча́тельный счёт");
+        dictionary.put("tournament".toUpperCase(), "турни́р");
+        dictionary.put("championship".toUpperCase(), "пе́рвенство");
+        dictionary.put("race".toUpperCase(), "бег");
+        dictionary.put("athlete".toUpperCase(), "атле́т");
     }
 }

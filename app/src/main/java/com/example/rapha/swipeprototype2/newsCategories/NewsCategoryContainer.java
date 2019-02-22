@@ -158,11 +158,14 @@ public class NewsCategoryContainer {
 
         public static final String[] POLITIC_QUERY_STRINGS_EN = new String[] {
                 "Surveillance", "Trump", "Putin", "Macron", "Russia",
-                "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy", "German politics"
+                "USA", "Syria", "ISIS", "War", "Weapons", "Erdogan", "Foreign policy", "German politics",
+                "Europe", "Sanctions", "Law", "Communism", "Capitalism", "Socialism", "Dictator",
+                "Democracy", "Corruption"
 
         };
         public static final String[] POLITIC_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "politic", "president", "white house", "treaty"
+            "politic", "president", "white house", "treaty", "government", "parliament", "regime",
+                "negotiation", "diplomat"
         };
 
         public Politics(){
@@ -183,7 +186,8 @@ public class NewsCategoryContainer {
         };
 
         public static final String[] TECHNOLOGY_DEFAULT_QUERY_STRINGS_EN = new String[] {
-            "technology", "computer", "hacker", "mac", "hardware", "software", "screen"
+            "technology", "computer", "hacker", "mac", "hardware", "software", "screen",
+                "application"
         };
 
         public Technology(){
@@ -201,11 +205,11 @@ public class NewsCategoryContainer {
 
         public static final String[] SPORT_QUERY_STRINGS_EN = new String[] {
                 "Soccer", "Football", "Swimming", "Boxing", "MMA", "Tennis", "Hockey", "Bike", "Hiking",
-                "Olympia"
+                "Rugby", "Baseball"
         };
 
         public static final String[] SPORT_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "sport", "score", "tournament", "championship", "race"
+                "sport", "score", "tournament", "championship", "race", "athlete", "olympic"
         };
 
         public Sport(){
@@ -221,11 +225,14 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 6;
 
         public static final String[] HEALTH_QUERY_STRINGS_EN = new String[] {
-                "Healthcare", "Fitness"
+                "Healthcare", "Fitness", "Disease", "Virus",
+                "Nutrition", "Diet", "Vaccination", "Mental illness", "Workout"
         };
 
         public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "health", "fitness", "doctor",
+                "health", "fitness", "doctor", "exercise",
+                "hospital", "pharmacy", "medicare", "prevention",
+                "disorder", "cancer", "heart"
         };
 
         public Health(){
@@ -241,11 +248,13 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 7;
 
         public static final String[] HEALTH_QUERY_STRINGS_EN = new String[] {
-                "Murder", "Police"
+                "Murder", "Police", "Law", "Prison", "Terror", "Mafia", "Death"
         };
 
         public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "kill", "crime", "prison", "jail", "choke", "steal", "shoot"
+                "kill", "crime", "choke", "steal", "shoot", "felony",
+                "rape", "fraud", "misdemeanour", "robbery", "offence", "victim", "kidnap",
+                "plagiarize", "violent", "gang", "stab"
         };
 
         public Crime(){
@@ -260,12 +269,13 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 8;
 
-        public static final String[] SCIENCE_QUERY_STRINGS_EN = new String[] {
-                "Physics", "Climate change", "Biology", "Chemistry", "Genetics", "Illness", "Virus"
+        public static final String[] SCIENCE_QUERY_STRINGS_EN = new String[]{
+                "Physics", "Climate change", "Biology", "Chemistry", "Genetics",
+                "Mathematics", "Neuroscience", "Engineering", "Cryptology"
         };
 
         public static final String[] SCIENCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "science", "scientist", "study", "atom", "laboratory"
+                "science", "scientist", "study", "atom", "laboratory", "radioactiv", "quantum"
         };
 
         public Science(){

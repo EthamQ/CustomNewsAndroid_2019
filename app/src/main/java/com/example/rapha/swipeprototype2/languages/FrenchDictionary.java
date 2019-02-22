@@ -51,6 +51,20 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("foreign policy".toUpperCase(), "politique étrangère");
         dictionary.put("treaty".toUpperCase(), "traité");
         dictionary.put("surveillance".toUpperCase(), "surveillance");
+        dictionary.put("sanctions".toUpperCase(), "sanctions");
+
+        dictionary.put("Communism".toUpperCase(), "communisme");
+        dictionary.put("Law".toUpperCase(), "loi");
+        dictionary.put("Capitalism".toUpperCase(), "capitalisme");
+        dictionary.put("Socialism".toUpperCase(), "socialisme");
+        dictionary.put("Dictator".toUpperCase(), "dictateur");
+        dictionary.put("Democracy".toUpperCase(), "democracy");
+        dictionary.put("Corruption".toUpperCase(), "corruption");
+        dictionary.put("government".toUpperCase(), "gouvernement");
+        dictionary.put("parliament".toUpperCase(), "parlement");
+        dictionary.put("regime".toUpperCase(), "régime");
+        dictionary.put("negotiation".toUpperCase(), "négociation");
+        dictionary.put("diplomat".toUpperCase(), "diplomate ");
 
         // Movie related
         dictionary.put("movie".toUpperCase(), "film");
@@ -64,5 +78,27 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("AI Artificial Intelligence".toUpperCase(), "intelligence artificielle");
         dictionary.put("technology".toUpperCase(), "technologie");
         dictionary.put("screen".toUpperCase(), "écran");
+        dictionary.put("application".toUpperCase(), "application");
+
+        //Sport related
+        dictionary.put("Soccer".toUpperCase(), "foot");
+        dictionary.put("Football".toUpperCase(), "Football");
+        dictionary.put("Swimming".toUpperCase(), " nage");
+        dictionary.put("Boxing".toUpperCase(), "boxe");
+        dictionary.put("MMA".toUpperCase(), "MMA");
+        dictionary.put("Tennis".toUpperCase(), "tennis");
+        dictionary.put("Hockey".toUpperCase(), "hockey");
+        dictionary.put("Bike".toUpperCase(), "vélo bicyclette");
+        dictionary.put("Hiking".toUpperCase(), "marche");
+        dictionary.put("olympic".toUpperCase(), "olympien");
+        dictionary.put("Rugby".toUpperCase(), "Rugby");
+        dictionary.put("Baseball".toUpperCase(), "base-ball");
+        dictionary.put("sport".toUpperCase(), "Sport");
+        dictionary.put("score".toUpperCase(), "résultat");
+        dictionary.put("tournament".toUpperCase(), "tournoi");
+        dictionary.put("championship".toUpperCase(), " championnat ");
+        dictionary.put("race".toUpperCase(), "course");
+        dictionary.put("athlete".toUpperCase(), "athlète");
+
     }
 }
