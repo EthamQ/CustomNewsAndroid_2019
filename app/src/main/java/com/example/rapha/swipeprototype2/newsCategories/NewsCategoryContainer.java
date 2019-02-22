@@ -247,11 +247,11 @@ public class NewsCategoryContainer {
 
         public static final int CATEGORY_ID = 7;
 
-        public static final String[] HEALTH_QUERY_STRINGS_EN = new String[] {
+        public static final String[] CRIME_QUERY_STRINGS_EN = new String[] {
                 "Murder", "Police", "Law", "Prison", "Terror", "Mafia", "Death"
         };
 
-        public static final String[] HEALTH_DEFAULT_QUERY_STRINGS_EN = new String[] {
+        public static final String[] CRIME_DEFAULT_QUERY_STRINGS_EN = new String[] {
                 "kill", "crime", "choke", "steal", "shoot", "felony",
                 "rape", "fraud", "misdemeanour", "robbery", "offence", "victim", "kidnap",
                 "plagiarize", "violent", "gang", "stab"
@@ -260,8 +260,8 @@ public class NewsCategoryContainer {
         public Crime(){
             this.setCategoryID(CATEGORY_ID);
             this.displayName = "Crime";
-            this.USER_DETERMINED_QUERY_STRINGS_EN = HEALTH_QUERY_STRINGS_EN;
-            this.DEFAULT_QUERY_STRINGS_EN = HEALTH_DEFAULT_QUERY_STRINGS_EN;
+            this.USER_DETERMINED_QUERY_STRINGS_EN = CRIME_QUERY_STRINGS_EN;
+            this.DEFAULT_QUERY_STRINGS_EN = CRIME_DEFAULT_QUERY_STRINGS_EN;
         }
     }
 
