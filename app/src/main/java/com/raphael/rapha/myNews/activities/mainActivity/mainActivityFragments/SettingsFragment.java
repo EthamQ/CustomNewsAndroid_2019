@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +17,10 @@ import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.payment.BillingManager;
 import com.raphael.rapha.myNews.payment.MyBillingUpdateListener;
+import com.raphael.rapha.myNews.payment.PurchasedItemsListener;
 import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
 import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.InAppPaymentService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.SettingsService;
 
@@ -29,11 +32,12 @@ import com.raphael.rapha.myNews.sharedPreferencesAccess.SettingsService;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements PurchasedItemsListener {
 
     View view;
     MainActivity mainActivity;
     BillingManager billingManager;
+    Button payment;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,7 +68,7 @@ public class SettingsFragment extends Fragment {
 
     private void initBillingProcess(){
         billingManager = new BillingManager(mainActivity, new MyBillingUpdateListener());
-        billingManager.consumeAsync("token");
+        billingManager.setPurchasedItemsListener(this);
     }
 
     private void initSwitch(){
@@ -93,10 +97,13 @@ public class SettingsFragment extends Fragment {
                     .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
                     .create().show());
 
-        Button payment = view.findViewById(R.id.payment_button);
-        payment.setOnClickListener(view ->{
-            billingManager.initiatePurchaseFlow("monthly_payment", null, BillingClient.SkuType.SUBS);
-        });
+        payment = view.findViewById(R.id.payment_button);
+        payment.setOnClickListener(view ->
+            billingManager.initiatePurchaseFlow(
+                    InAppPaymentService.MONTHLY_PAYMENT_SKU,
+                    null,
+                    BillingClient.SkuType.SUBS)
+        );
     }
 
     /**
@@ -148,6 +155,16 @@ public class SettingsFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void onPurchasedItemsHandled() {
+        Log.d("BillingManager","onPurchasedItemsHandled()");
+        if(InAppPaymentService.userIsSubscribed(mainActivity)){
+            payment.setText("Thank you! :)");
+            payment.setClickable(false);
+        }
+
     }
 
     /**

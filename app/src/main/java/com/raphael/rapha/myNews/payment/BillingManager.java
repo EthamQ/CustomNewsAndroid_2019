@@ -10,9 +10,7 @@ import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.InAppPaymentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +18,7 @@ import java.util.List;
 public class BillingManager implements PurchasesUpdatedListener {
 
     Activity activity;
+    PurchasedItemsListener purchasedItemsListener;
     BillingClient billingClient;
     boolean isServiceConnected = false;
     int billingClientResponseCode;
@@ -42,14 +41,21 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     }
 
+    public void setPurchasedItemsListener(PurchasedItemsListener purchasedItemsListener){
+        this.purchasedItemsListener = purchasedItemsListener;
+    }
+
     public void startServiceConnection(final Runnable runnable) {
 
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(int responseCode) {
-
+                Log.i(TAG, "responsecode: "  + responseCode);
                 if (responseCode == BillingClient.BillingResponse.OK) {
+                    Log.i(TAG, "connected!");
+
                     isServiceConnected = true;
+                    queryPurchases();
                     if (runnable != null) {
                         runnable.run();
                     }
@@ -77,9 +83,7 @@ public class BillingManager implements PurchasesUpdatedListener {
 
     @Override
     public void onPurchasesUpdated(int responseCode, @Nullable List<Purchase> purchases) {
-
         if (responseCode == BillingClient.BillingResponse.OK) {
-
             billingUpdatesListener.onPurchasesUpdated(purchases);
         } else if (responseCode == BillingClient.BillingResponse.USER_CANCELED) {
             Log.i(TAG, "onPurchasesUpdated() – user cancelled the purchase flow – skipping");
@@ -90,26 +94,33 @@ public class BillingManager implements PurchasesUpdatedListener {
     }
 
     private void executeServiceRequest(Runnable runnable) {
+        Log.i(TAG, "executeServiceRequest");
         if (isServiceConnected) {
+            Log.i(TAG, "executeServiceRequest connected");
             runnable.run();
         } else {
+            Log.i(TAG, "executeServiceRequest not connected");
             // If the billing service disconnects, try to reconnect once.
             startServiceConnection(runnable);
         }
     }
 
     public void queryPurchases() {
+        Log.i(TAG, "queryPurchases()");
         Runnable queryToExecute = new Runnable() {
             @Override
             public void run() {
+                Log.i(TAG, "Runnable");
                 long time = System.currentTimeMillis();
                 Purchase.PurchasesResult purchasesResult = billingClient.queryPurchases(BillingClient.SkuType.INAPP);
                 if (areSubscriptionsSupported()) {
+                    Log.i(TAG, "areSubscriptionsSupported");
                     Purchase.PurchasesResult subscriptionResult
                             = billingClient.queryPurchases(BillingClient.SkuType.SUBS);
                     if (subscriptionResult.getResponseCode() == BillingClient.BillingResponse.OK) {
                         purchasesResult.getPurchasesList().addAll(
-                                subscriptionResult.getPurchasesList());
+                                subscriptionResult.getPurchasesList()
+                        );
                     } else {
                         // Handle any error response codes.
                     }
@@ -124,7 +135,21 @@ public class BillingManager implements PurchasesUpdatedListener {
         executeServiceRequest(queryToExecute);
     }
 
+    private void handlePurchasedSubscriptions(List<Purchase> purchases){
+        boolean monthlySubscription = false;
+        for(Purchase purchase : purchases){
+            if(purchase.getSku().equals(InAppPaymentService.MONTHLY_PAYMENT_SKU)){
+                monthlySubscription = true;
+            }
+        }
+        InAppPaymentService.setUserSubscribed(activity,monthlySubscription);
+        if(purchasedItemsListener != null){
+            purchasedItemsListener.onPurchasedItemsHandled();
+        }
+    }
+
     private void onQueryPurchasesFinished(Purchase.PurchasesResult result) {
+        Log.i(TAG, "onQueryPurchasesFinished");
         // Have we been disposed of in the meantime? If so, or bad result code, then quit
         if (billingClient == null || result.getResponseCode() != BillingClient.BillingResponse.OK) {
             Log.w(TAG, "Billing client was null or result code (" + result.getResponseCode()
@@ -132,7 +157,8 @@ public class BillingManager implements PurchasesUpdatedListener {
             return;
         }
 
-        Log.d(TAG, "Query inventory was successful.");
+        Log.d(TAG, "Query inventory was successful. SIze:"  + result.getPurchasesList().size());
+        handlePurchasedSubscriptions(result.getPurchasesList());
 
         // Update the UI and purchases inventory with new list of purchases
         // mPurchases.clear();

@@ -125,7 +125,6 @@ public class GermanDictionary extends LanguageDictionary{
         // Crime related
         dictionary.put("Murder".toUpperCase(), "ermorden Mörder");
         dictionary.put("Police".toUpperCase(), "Polizei");
-        dictionary.put("Law".toUpperCase(), "Gesetz");
         dictionary.put("Prison".toUpperCase(), "Gefängnis");
         dictionary.put("Terror".toUpperCase(), "Terror");
         dictionary.put("Mafia".toUpperCase(), "Mafia");
@@ -147,5 +146,23 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("violent".toUpperCase(), "gewalt");
         dictionary.put("gang".toUpperCase(), "Gang");
         dictionary.put("stab".toUpperCase(), "erstechen ersticht erstach");
+
+        //Science related
+        dictionary.put("Physics".toUpperCase(), "Physik");
+        dictionary.put("Climate change".toUpperCase(), "Klimawandel");
+        dictionary.put("Biology".toUpperCase(), "Biologie");
+        dictionary.put("Chemistry".toUpperCase(), "Chemie");
+        dictionary.put("Genetics".toUpperCase(), "Genetik genetisch");
+        dictionary.put("Mathematics".toUpperCase(), "Mathematik");
+        dictionary.put("Neuroscience".toUpperCase(), "Neurolog");
+        dictionary.put("Engineering".toUpperCase(), "Ingenieur");
+        dictionary.put("cryptography".toUpperCase(), "Kryptografie");
+        dictionary.put("science".toUpperCase(), "Wissenschaft");
+        dictionary.put("scientist".toUpperCase(), "Wissenschaftler");
+        dictionary.put("study".toUpperCase(), "Studie");
+        dictionary.put("atom".toUpperCase(), "Atom");
+        dictionary.put("laboratory".toUpperCase(), "Labor");
+        dictionary.put("radioactiv".toUpperCase(), "radioaktiv");
+        dictionary.put("quantum".toUpperCase(), "quantum");
     }
 }

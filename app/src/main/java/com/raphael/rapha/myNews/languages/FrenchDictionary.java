@@ -119,5 +119,48 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("disorder".toUpperCase(), "handicap empêchement");
         dictionary.put("cancer".toUpperCase(), "cancer chancreu");
         dictionary.put("heart".toUpperCase(), "cœur");
+
+        // Crime related
+        dictionary.put("Murder".toUpperCase(), "meurtrier massacreur assassin");
+        dictionary.put("Police".toUpperCase(), "police");
+        dictionary.put("Prison".toUpperCase(), "prison");
+        dictionary.put("Terror".toUpperCase(), "terreur");
+        dictionary.put("Mafia".toUpperCase(), "mafia");
+        dictionary.put("Death".toUpperCase(), "mort");
+        dictionary.put("kill".toUpperCase(), "tuer");
+        dictionary.put("crime".toUpperCase(), "crime");
+        dictionary.put("choke".toUpperCase(), "strangul");
+        dictionary.put("steal".toUpperCase(), "vole");
+        dictionary.put("shoot".toUpperCase(), "abattr");
+        dictionary.put("felony".toUpperCase(), "délit");
+        dictionary.put("rape".toUpperCase(), "viol");
+        dictionary.put("fraud".toUpperCase(), "fraude");
+        dictionary.put("misdemeanour".toUpperCase(), "infraction");
+        dictionary.put("robbery".toUpperCase(), "attaque");
+        dictionary.put("offence".toUpperCase(), "hôpital");
+        dictionary.put("victim".toUpperCase(), "victime");
+        dictionary.put("kidnap".toUpperCase(), "kidnapper");
+        dictionary.put("plagiarize".toUpperCase(), "contrefai falsifi");
+        dictionary.put("violent".toUpperCase(), "violence force");
+        dictionary.put("gang".toUpperCase(), "Gang");
+        dictionary.put("stab".toUpperCase(), "poignard");
+
+        //Science related
+        dictionary.put("Physics".toUpperCase(), "physique");
+        dictionary.put("Climate change".toUpperCase(), "changement climatique");
+        dictionary.put("Biology".toUpperCase(), "biologie");
+        dictionary.put("Chemistry".toUpperCase(), "chimie");
+        dictionary.put("Genetics".toUpperCase(), "génétique");
+        dictionary.put("Mathematics".toUpperCase(), "mathématique");
+        dictionary.put("Neuroscience".toUpperCase(), "neuroscience neurologie");
+        dictionary.put("Engineering".toUpperCase(), "ingénieur");
+        dictionary.put("cryptography".toUpperCase(), "cryptographie");
+        dictionary.put("science".toUpperCase(), "science");
+        dictionary.put("scientist".toUpperCase(), "scientifique");
+        dictionary.put("study".toUpperCase(), "étude recherche");
+        dictionary.put("atom".toUpperCase(), "l'atome");
+        dictionary.put("laboratory".toUpperCase(), "laboratoire");
+        dictionary.put("radioactiv".toUpperCase(), "radioacti");
+        dictionary.put("quantum".toUpperCase(), "quant");
     }
 }

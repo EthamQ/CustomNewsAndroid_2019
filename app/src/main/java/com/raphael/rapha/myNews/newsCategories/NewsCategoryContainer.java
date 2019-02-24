@@ -245,7 +245,7 @@ public class NewsCategoryContainer {
         public static final int CATEGORY_ID = 7;
 
         public static final String[] CRIME_QUERY_STRINGS_EN = new String[] {
-                "Murder", "Police", "Law", "Prison", "Terror", "Mafia", "Death"
+                "Murder", "Police", "Prison", "Terror", "Mafia", "Death"
         };
 
         public static final String[] CRIME_DEFAULT_QUERY_STRINGS_EN = new String[] {
@@ -268,7 +268,7 @@ public class NewsCategoryContainer {
 
         public static final String[] SCIENCE_QUERY_STRINGS_EN = new String[]{
                 "Physics", "Climate change", "Biology", "Chemistry", "Genetics",
-                "Mathematics", "Neuroscience", "Engineering", "Cryptology"
+                "Mathematics", "Neuroscience", "Engineering", "Cryptography"
         };
 
         public static final String[] SCIENCE_DEFAULT_QUERY_STRINGS_EN = new String[] {

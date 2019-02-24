@@ -127,5 +127,48 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("disorder".toUpperCase(), "инвалид");
         dictionary.put("cancer".toUpperCase(), "Рак");
         dictionary.put("heart".toUpperCase(), "сердце");
+
+        // Crime related
+        dictionary.put("Murder".toUpperCase(), "уби́йц");
+        dictionary.put("Police".toUpperCase(), "поли́ци");
+        dictionary.put("Prison".toUpperCase(), "тюрьм");
+        dictionary.put("Terror".toUpperCase(), "терро́р");
+        dictionary.put("Mafia".toUpperCase(), "ма́фия");
+        dictionary.put("Death".toUpperCase(), "смерть");
+        dictionary.put("kill".toUpperCase(), "уби́ть убил убива");
+        dictionary.put("crime".toUpperCase(), "преступле́н");
+        dictionary.put("choke".toUpperCase(), "души́ть");
+        dictionary.put("steal".toUpperCase(), "красть крал ворова вор кра́ж");
+        dictionary.put("shoot".toUpperCase(), "стрел стреля");
+        dictionary.put("felony".toUpperCase(), "преступле́ние");
+        dictionary.put("rape".toUpperCase(), "изнаси́лован наси́лова");
+        dictionary.put("fraud".toUpperCase(), "обма́н");
+        dictionary.put("misdemeanour".toUpperCase(), "наруше́ние");
+        dictionary.put("robbery".toUpperCase(), "ата́ка набе́г нападе́ние");
+        dictionary.put("offence".toUpperCase(), "больни́ца");
+        dictionary.put("victim".toUpperCase(), "же́ртв пострада́в");
+        dictionary.put("kidnap".toUpperCase(), "похище́н похи́ти похища");
+        dictionary.put("plagiarize".toUpperCase(), "изврати извраща");
+        dictionary.put("violent".toUpperCase(), "наси́лие");
+        dictionary.put("gang".toUpperCase(), "братва́");
+        dictionary.put("stab".toUpperCase(), "заре́за заколо зака́лыва");
+
+        //Science related
+        dictionary.put("Physics".toUpperCase(), "фи́зик");
+        dictionary.put("Climate change".toUpperCase(), "измене́ние кли́мата");
+        dictionary.put("Biology".toUpperCase(), "биоло́гия");
+        dictionary.put("Chemistry".toUpperCase(), "хи́мия");
+        dictionary.put("Genetics".toUpperCase(), "гене́тика");
+        dictionary.put("Mathematics".toUpperCase(), "матема́тика");
+        dictionary.put("Neuroscience".toUpperCase(), "невроло́гия");
+        dictionary.put("Engineering".toUpperCase(), "инжене́р");
+        dictionary.put("cryptography".toUpperCase(), "криптогра́фия");
+        dictionary.put("science".toUpperCase(), "нау́к");
+        dictionary.put("scientist".toUpperCase(), "учён нау́чн");
+        dictionary.put("study".toUpperCase(), "иссле́дован");
+        dictionary.put("atom".toUpperCase(), "а́том");
+        dictionary.put("laboratory".toUpperCase(), "лаборато́рия");
+        dictionary.put("radioactiv".toUpperCase(), "радиоакти́вн");
+        dictionary.put("quantum".toUpperCase(), "ква́нт");
     }
 }
