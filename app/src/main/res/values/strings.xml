@@ -169,7 +169,7 @@
 
     <string name="finance_info_text1">
         For now yes, however...
-        as long as I offer it for free there are some limitations to its use.
+        as long as I offer it for free (unless i show ads which I don\'t want to) there are some limitations to its use.
     </string>
 
     <string name="finance_info_text2">
@@ -182,7 +182,7 @@
 
     <string name="finance_info_text3">
         I would have to pay 450$ per month to get rid of those limitations which i can\'t afford.
-        So I would be happy if you supported the app with 0,99$ per month if you want to help me
+        So I would be happy if you supported the app with a really small amount per month if you want to help me
         offering a full version of this app. (More in the settings menu)
     </string>
 

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.raphael.rapha.myNews.api.apiKey.ApiKey;
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
+import com.raphael.rapha.myNews.loading.LoadingService;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.http.HttpRequest;
 import com.raphael.rapha.myNews.http.HttpUtils;
@@ -35,7 +36,8 @@ public class NewsApi {
 		Log.d("newswipe", "category: " + queryBuilder.getNewsCategory() + ", received query:  " + urlForApi);
 	    Log.d("URL", urlForApi);
         JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
-		Log.d("oftheday", newsArticleJson.toString());
+        LoadingService.answerReceived();
+        queryBuilder.getQueryListener().updateLoadingText(LoadingService.getNumberOfAnswersReceivedText());
         return NewsApiHelper.jsonToNewsArticleArray(newsArticleJson, newsCategory, languageId);
 	}
 

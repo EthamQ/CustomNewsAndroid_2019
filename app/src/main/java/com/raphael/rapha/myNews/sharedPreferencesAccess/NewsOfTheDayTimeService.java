@@ -6,10 +6,10 @@ import java.util.Date;
 
 public class NewsOfTheDayTimeService {
 
-    private static String version = "46";
+    public static String version = "52";
     private static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
     private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 24;
-    private static boolean testing = true;
+    private static boolean testing = false;
     public static final int SCHEDULER_ID = 123;
 
     public static void saveDateLastLoadedArticles(Context context, Date date){

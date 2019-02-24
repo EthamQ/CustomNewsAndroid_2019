@@ -174,6 +174,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
             // We have set this value before so we know it's stored there.
             articleToAdd.foundWithKeyWord = foundWithKeyWord;
             articleToAdd.languageId = LanguageSettingsService.getLanguageIdAsString(languageId);
+            Log.d(TAG, "adds keyword: " + articleToAdd.foundWithKeyWord + ", adds language: " + articleToAdd.languageId);
             newsArticleDbService.insert(articleToAdd);
         }
     }

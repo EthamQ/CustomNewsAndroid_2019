@@ -1,6 +1,7 @@
 package com.raphael.rapha.myNews.sharedPreferencesAccess;
 
 import android.app.Activity;
+import android.content.Context;
 
 import com.raphael.rapha.myNews.utils.DateService;
 
@@ -8,18 +9,17 @@ import java.util.Date;
 
 public class SwipeTimeService {
 
-    public static String TIME_OF_RELAOD_SWIPE = "time_reload_swipe";
-    private static int INTERVALL_HOURS_RELAOD_SWIPE = 12;
+    private final static String FIRST_TIME_LOADING = "swipe_first_time" + NewsOfTheDayTimeService.version;
 
-    public static boolean forceApiReloadSwipe(Activity activity){
-        return DateService.hoursBetween(getLastLoaded(activity, TIME_OF_RELAOD_SWIPE), new Date()) > INTERVALL_HOURS_RELAOD_SWIPE;
+    public static boolean dataIsLoadedTheFirstTime(Context context){
+        if(!SharedPreferencesService.valueIsSetDefault(context, FIRST_TIME_LOADING)){
+            return true;
+        }
+        return SharedPreferencesService.getBooleanDefault(context, FIRST_TIME_LOADING);
     }
 
-    public static void saveLastLoaded(Activity activity, Date date){
-        SharedPreferencesService.storeData(activity, date, TIME_OF_RELAOD_SWIPE);
+    public static void setDataIsLoadedTheFirstTime(Context context, boolean loaded){
+        SharedPreferencesService.storeDataDefault(context, loaded, FIRST_TIME_LOADING);
     }
 
-    public static Date getLastLoaded(Activity activity, String key){
-        return SharedPreferencesService.getData(activity, key);
-    }
 }

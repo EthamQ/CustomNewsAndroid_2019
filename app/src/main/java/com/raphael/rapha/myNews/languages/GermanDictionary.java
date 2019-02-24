@@ -7,6 +7,12 @@ public class GermanDictionary extends LanguageDictionary{
     }
 
 
+    /**
+     * Puts the german translation for every relevant english word in the
+     * dictionary hash map.
+     * Doesn't always translate to the complete word to make it more likely
+     * to find a variation of the word
+     */
     @Override
     protected void createDictionary(){
         // Finance related

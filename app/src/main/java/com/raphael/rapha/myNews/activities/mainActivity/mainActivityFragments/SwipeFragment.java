@@ -14,15 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.api.SwipeApiService;
+import com.raphael.rapha.myNews.api.apiQuery.IQueryListener;
 import com.raphael.rapha.myNews.customAdapters.NewsArticleAdapter;
 import com.raphael.rapha.myNews.languages.LanguageCombinationService;
 import com.raphael.rapha.myNews.requestDateOffset.DateOffsetService;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomModel;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
 import com.raphael.rapha.myNews.temporaryDataStorage.ArticleDataStorage;
 import com.raphael.rapha.myNews.temporaryDataStorage.DateOffsetDataStorage;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
@@ -63,7 +66,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment implements IDeletesArticle {
+public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryListener {
 
     public MainActivity mainActivity;
     public View view;
@@ -87,6 +90,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
     public KeyWordDbService keyWordDbService;
     public OffsetDbService dateOffsetDbService;
     public LanguageCombinationDbService languageComboDbService;
+
+    Button abortLoading;
 
     // Booleans tracking the state.
     public boolean apiIsLoading = false;
@@ -147,7 +152,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
      * React on the loading status.
      */
     public void startObservingLoadingStatus() {
-        SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> apiIsLoading = loading);
+        SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> {
+                apiIsLoading = loading;
+        if(SwipeTimeService.dataIsLoadedTheFirstTime(mainActivity)){
+            handleLoadingScreen(true, SwipeLoadingService.FIRST_TIME_LOADING);
+        }
+    });
 
         // Loading status database.
         SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading -> {
@@ -157,9 +167,9 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
 
         // Show a loading screen when news of the day are loaded
         // because it prevents other database operations.
-        DailyNewsLoadingService.getLoading().observe(getActivity(),
-                loading -> handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS)
-        );
+        DailyNewsLoadingService.getLoading().observe(getActivity(), loading -> {
+            handleLoadingScreen(loading, DailyNewsLoadingService.LOAD_DAILY_NEWS);
+        });
         // Loading status changing language.
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
@@ -167,6 +177,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
             if (loading) {
                 SwipeLoadingService.reactOnLanguageChangeUnsuccessful(this);
             }
+            int visibilityAbort = loading ? Button.VISIBLE : Button.INVISIBLE;
+            abortLoading.setVisibility(visibilityAbort);
         });
     }
 
@@ -221,6 +233,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
                         Log.d("newswipe", "loadArticlesFromDb() onchanged article size: " + articleModels.size());
                         if (articleModels.isEmpty()) {
                             SwipeLoadingService.setLoadingApiRequest(true);
+                            SwipeTimeService.setDataIsLoadedTheFirstTime(mainActivity, false);
                             loadArticlesFromApi();
                         } else {
                             SwipeLoadingService.setLoadingDatabase(true);
@@ -400,6 +413,23 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
         dateOffsetDbService = OffsetDbService.getInstance(getActivity().getApplication());
         languageComboDbService = LanguageCombinationDbService.getInstance(getActivity().getApplication());
         setSwipeFunctionality();
+
+        abortLoading = view.findViewById(R.id.button_abort_language_loading);
+        abortLoading.setOnClickListener(view ->abortLanguageChange());
+    }
+
+    public void abortLanguageChange(){
+        SwipeLoadingService.setLoadingLanguageChange(false);
+        swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
+        swipeCardArrayAdapter.notifyDataSetChanged();
+        LanguageSettingsService.saveChecked(
+                mainActivity,
+                LanguageSelectionDataStorage.restorePreviousLanguageSelection()
+        );
+
+        CharSequence text = "Sorry something went wrong, please try it again later or check your internet connection";
+        Toast.makeText(mainActivity, text, Toast.LENGTH_LONG).show();
+        reloadFragment();
     }
 
     /**
@@ -585,6 +615,15 @@ public class SwipeFragment extends Fragment implements IDeletesArticle {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+    }
+
+    @Override
+    public void updateLoadingText(String loadingText) {
+        mainActivity.runOnUiThread(() ->{
+            TextView loadingProgress = view.findViewById(R.id.loading_progress);
+            loadingProgress.setVisibility(TextView.VISIBLE);
+            loadingProgress.setText(loadingText);
+        });
     }
 
     /**

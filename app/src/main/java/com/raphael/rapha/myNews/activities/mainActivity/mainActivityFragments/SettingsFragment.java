@@ -67,7 +67,10 @@ public class SettingsFragment extends Fragment implements PurchasedItemsListener
     }
 
     private void initBillingProcess(){
-        billingManager = new BillingManager(mainActivity, new MyBillingUpdateListener());
+        MyBillingUpdateListener billingListener = new MyBillingUpdateListener();
+        billingListener.setActivity(mainActivity);
+        billingListener.setPurchasedItemsListener(this);
+        billingManager = new BillingManager(mainActivity, billingListener);
         billingManager.setPurchasedItemsListener(this);
     }
 

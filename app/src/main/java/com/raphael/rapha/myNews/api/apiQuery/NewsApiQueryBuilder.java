@@ -14,6 +14,8 @@ public class NewsApiQueryBuilder {
     private String finalQuery = "";
     private int newsCategory;
 
+    private IQueryListener queryListener;
+
     private int languageId = -1;
     public final static String GERMAN = "de";
     public final static String ENGLISH = "en";
@@ -23,6 +25,14 @@ public class NewsApiQueryBuilder {
     public NewsApiQueryBuilder(int languageId){
         categoryContainer = new QueryCategoryContainer();
         this.setLanguage(languageId);
+    }
+
+    public void setQueryListener(IQueryListener queryListener) {
+        this.queryListener = queryListener;
+    }
+
+    public IQueryListener getQueryListener() {
+        return queryListener;
     }
 
     public int getLanguageId() {

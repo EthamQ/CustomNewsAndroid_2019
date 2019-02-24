@@ -16,6 +16,7 @@ import java.util.List;
 public class SwipeLoadingService {
 
     public static final int CHANGE_LANGUAGE = 0;
+    public static final int FIRST_TIME_LOADING = 5;
 
     private static MutableLiveData<Boolean> languageChangeLoading = new MutableLiveData<>();
     private static MutableLiveData<Boolean> apiRequestLoading = new MutableLiveData<>();
@@ -51,31 +52,22 @@ public class SwipeLoadingService {
 
     public static MutableLiveData<Boolean> getLoadingDatabase(){ return databaseLoading; }
 
+    // Right now not in use because user can react by himself now, may be deleted later
     public static void reactOnLanguageChangeUnsuccessful(SwipeFragment swipeFragment){
         MainActivity mainActivity = swipeFragment.mainActivity;
         Context context = mainActivity.getApplicationContext();
-        new Thread(() -> {
-            try {
-                Thread.sleep(20000);
-                if(!LoadingService.getLastLanguageChangeJobSuccess(languageChangeJobs)){
-                    mainActivity.runOnUiThread(() -> {
-                        setLoadingLanguageChange(false);
-                        swipeFragment.swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
-                        swipeFragment.swipeCardArrayAdapter.notifyDataSetChanged();
-                        LanguageSettingsService.saveChecked(
-                                mainActivity,
-                                LanguageSelectionDataStorage.restorePreviousLanguageSelection()
-                        );
-
-                        CharSequence text = "Sorry something went wrong, please try it again later or check your internet connection";
-                        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-                        swipeFragment.reloadFragment();
-                    });
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }).start();
+//        new Thread(() -> {
+//            try {
+//                Thread.sleep(40000);
+//                if(!LoadingService.getLastLanguageChangeJobSuccess(languageChangeJobs)){
+//                    mainActivity.runOnUiThread(() -> {
+//                        swipeFragment.abortLanguageChange();
+//                    });
+//                }
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }).start();
     }
 
 }

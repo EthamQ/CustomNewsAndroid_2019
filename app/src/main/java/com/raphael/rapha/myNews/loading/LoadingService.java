@@ -5,11 +5,14 @@ import java.util.List;
 public class LoadingService {
 
     public static final int MAX_LOADING_TIME_MILLS_DEFAULT = 7000;
+    private static int numberOfSentRequests;
+    private static int numberOfAnswersReceived;
 
     public static String getLoadingText(int loadingType){
         switch(loadingType){
-            case SwipeLoadingService.CHANGE_LANGUAGE: return "Changing language...";
-            case DailyNewsLoadingService.LOAD_DAILY_NEWS: return "Loading your daily news...";
+            case SwipeLoadingService.CHANGE_LANGUAGE: return "Loading articles in another language, this may take a while...";
+            case DailyNewsLoadingService.LOAD_DAILY_NEWS: return "Loading your daily news, please wait a moment...";
+            case SwipeLoadingService.FIRST_TIME_LOADING: return "Loading articles for the first time, this may take a while";
             default: return "Loading articles, please wait a moment...";
         }
     }
@@ -33,4 +36,19 @@ public class LoadingService {
         }
         return success;
     }
+
+    public static void setNumberOfSentRequests(int requestsSent){
+        numberOfAnswersReceived = 0;
+        numberOfSentRequests = requestsSent;
+    }
+
+    public static void answerReceived(){
+        numberOfAnswersReceived++;
+    }
+
+    public static String getNumberOfAnswersReceivedText(){
+        return "Article request " + numberOfAnswersReceived +  " of " + numberOfSentRequests + " finished";
+    }
+
+
 }

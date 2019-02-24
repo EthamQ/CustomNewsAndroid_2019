@@ -189,6 +189,7 @@ public class NewsOfTheDayFragment extends Fragment {
                     );
                     int languageArrayIndex = 0;
                     for(int i = 0; i < topics.size(); i++){
+                        Log.d("langid", "look for topic: " + topics.get(i).keyWord);
                         // Get articles for every topic and add them to the view.
                         addArticleForTopicToView(
                                 topics.get(i).keyWord,
@@ -216,6 +217,7 @@ public class NewsOfTheDayFragment extends Fragment {
             articlesForTopicLiveData.observe(mainActivity, new Observer<List<NewsArticleRoomModel>>() {
                 @Override
                 public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
+                    Log.d("langid", "add with lang id get 0: " + articlesForTopic.size());
                     if(!articlesForTopic.isEmpty()){
                         // Look if you find article with the language Id
                         for(int i = 0; i < articlesForTopic.size(); i++){

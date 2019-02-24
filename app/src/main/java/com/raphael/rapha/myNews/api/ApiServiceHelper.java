@@ -8,6 +8,7 @@ import android.util.Log;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
+import com.raphael.rapha.myNews.loading.LoadingService;
 import com.raphael.rapha.myNews.temporaryDataStorage.DateOffsetDataStorage;
 import com.raphael.rapha.myNews.languages.Language;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
@@ -50,15 +51,18 @@ public class ApiServiceHelper {
                 languages.add(new Language(languageIndex));
             }
         }
-        Log.d("aaaa", "distribution: ");
+
+        // To give the user feedback how much he still has to wait
+        int numberRequests = distribution.size() * languages.size();
+        LoadingService.setNumberOfSentRequests(numberRequests);
+        swipeFragment.updateLoadingText(LoadingService.getNumberOfAnswersReceivedText());
+
         // Api call for every category and its distribution.
         for(int i = 0; i < distribution.size(); i++){
             Distribution currentDistribution = distribution.get(i);
-            Log.d("bbb", "distribution cat: " + currentDistribution.categoryId);
             // One Api call for every selected language
             currentDistribution.balanceWithLanguageDistribution(languages.size());
             for(int j = 0; j < languages.size(); j++){
-                Log.d("aaaa", "addall: ");
                 newsArticles.addAll(buildQueryAndFetchArticlesFromApi(swipeFragment, currentDistribution, languages.get(j)));
             }
         }
@@ -90,6 +94,7 @@ public class ApiServiceHelper {
         Log.d("iii", "marker0: " + distribution.categoryId);
         NewsApi newsApi = new NewsApi();
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
+        queryBuilder.setQueryListener(swipeFragment);
         queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment.liveKeyWords);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         String dateFrom = DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY);
@@ -110,7 +115,6 @@ public class ApiServiceHelper {
             Log.d("newswipe", "no offset set");
         }
         LinkedList<NewsArticle> fetchedArticles = newsApi.queryNewsArticles(queryBuilder);
-        Log.d("aaaa", "fetched size: " + fetchedArticles.size());
         return fetchedArticles;
     }
 
