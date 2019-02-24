@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.rapha.swipeprototype2.activities.readArticle.ArticleDetailScrollingActivity">
+    tools:context="com.raphael.rapha.myNews.activities.readArticle.ArticleDetailScrollingActivity">
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

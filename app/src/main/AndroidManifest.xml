@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.rapha.swipeprototype2">
+    package="com.raphael.rapha.myNews">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -15,12 +17,12 @@
         android:theme="@style/AppTheme">
 
         <service
-            android:name=".jobScheduler.NewsOfTheDayJobScheduler"
+            android:name="com.raphael.rapha.myNews.jobScheduler.NewsOfTheDayJobScheduler"
             android:label="JOB_SCHEDULER_SERVICE"
             android:permission="android.permission.BIND_JOB_SERVICE" >
         </service>
 
-        <activity android:name=".activities.introduction.IntroductionActivity"
+        <activity android:name="com.raphael.rapha.myNews.activities.introduction.IntroductionActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,11 +31,11 @@
         </activity>
 
         <activity
-            android:name=".activities.readArticle.ArticleDetailScrollingActivity"
+            android:name="com.raphael.rapha.myNews.activities.readArticle.ArticleDetailScrollingActivity"
             android:label="@string/title_activity_article_detail_scrolling"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activities.mainActivity.MainActivity"
+            android:name="com.raphael.rapha.myNews.activities.mainActivity.MainActivity"
             android:label="@string/title_activity_main2"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

@@ -7,45 +7,52 @@
         android:layout_marginTop="@dimen/fragment_top_margin"
         android:background="@drawable/background">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin_big"
+        tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <!-- TODO: Update blank fragment layout -->
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_support"
+            android:tint="@color/turquis_dark" />
+
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin_big"
-            tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+            android:layout_height="match_parent"
+            android:text="Support the app"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/titleText" />
 
-            <!-- TODO: Update blank fragment layout -->
+    </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="56dp"
-                android:layout_height="40dp"
-                android:src="@drawable/chart"
-                android:tint="@color/turquis_dark" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Statistics"
-                android:textColor="@color/news_card_text"
-                android:textSize="@dimen/titleText" />
-
-        </LinearLayout>
-
-    <Button
-        android:id="@+id/statistic_reset_button"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="So I can afford upgrading my app to provide unlimited news without showing annoying ads" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="More under Info -> Is this app for free?" />
+
+    <Button
+        android:id="@+id/payment_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Contribute a small amount"
         android:background="@drawable/btn_rounded"
-        android:backgroundTint="@color/main_background"
-        android:text="Reset"
-        android:textAllCaps="false"
-        android:layout_marginTop="@dimen/text_margin"
-        android:textColor="@color/news_card_text" />
-
-
+        android:backgroundTint="@color/news_card_text"
+        android:textColor="@color/news_card_background"
+        android:padding="10dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin"/>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -88,7 +95,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Receive notification when new articles available" />
+            android:text="Receive notification when new articles are available"
+            android:textColor="@color/light_black" />
     </LinearLayout>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin_big"
+        tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="40dp"
+            android:src="@drawable/chart"
+            android:tint="@color/turquis_dark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Statistics"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/titleText" />
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/statistic_reset_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_rounded"
+        android:backgroundTint="@color/main_background"
+        android:text="Reset"
+        android:textAllCaps="false"
+        android:layout_marginTop="@dimen/text_margin"
+        android:textColor="@color/news_card_text" />
+
+
+
+</LinearLayout>
