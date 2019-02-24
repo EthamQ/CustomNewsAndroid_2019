@@ -2,6 +2,7 @@ package com.raphael.rapha.myNews.api;
 
 import android.util.Log;
 
+import com.raphael.rapha.myNews.api.apiKey.ApiKey;
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.http.HttpRequest;
