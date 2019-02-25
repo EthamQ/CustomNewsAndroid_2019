@@ -8,7 +8,7 @@ public class NewsOfTheDayTimeService {
 
     public static String version = "52";
     private static String TIME_OF_RELAOD_DAILY = "time_reload_daily" + version;
-    private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 24;
+    private static int INTERVALL_HOURS_RELAOD_DAILY_HOURS = 12;
     private static boolean testing = false;
     public static final int SCHEDULER_ID = 123;
 

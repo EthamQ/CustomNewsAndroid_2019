@@ -442,7 +442,9 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         button.setOnClickListener(view -> {
             AlertDialog.Builder dialog = new
                     AlertDialog.Builder(mainActivity);
-            dialog.setTitle("Select languages");
+            dialog.setTitle("Language of news articles");
+//            dialog.setMessage("This will not change the language of the app." +
+//                    "Just the language of the news articles.");
             final String[] languageItems = LanguageSettingsService.languageItems;
             final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
             LanguageSelectionDataStorage.backUpPreviousLanguageSelection(initialSelection);

@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity
     public void changeFragmentTo(int id){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        currentFragment = id;
         if (id == R.id.nav_statistics) {
             toolbar.setTitle("My Statistics");
             ft.replace(R.id.your_placeholder, new StatisticFragment());

@@ -47,7 +47,9 @@ public class LoadingService {
     }
 
     public static String getNumberOfAnswersReceivedText(){
-        return "Article request " + numberOfAnswersReceived +  " of " + numberOfSentRequests + " finished";
+        double percentage = ((double)numberOfAnswersReceived / (double)numberOfSentRequests) * 100;
+        return "Loading progress: " + (int)percentage + "%\n"
+                + "Request " + numberOfAnswersReceived +  " of " + numberOfSentRequests + " finished";
     }
 
 
