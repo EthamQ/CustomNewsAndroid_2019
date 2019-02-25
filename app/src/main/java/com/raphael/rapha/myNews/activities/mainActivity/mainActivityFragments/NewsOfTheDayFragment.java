@@ -8,6 +8,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -178,6 +179,11 @@ public class NewsOfTheDayFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
                 boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
+
+                if(enoughTopics){
+                    ConstraintLayout cl = view.findViewById(R.id.empty_text_container);
+                    cl.setVisibility(ConstraintLayout.GONE);
+                }
                 if(!enoughTopics){
                     setTextNotEnoughTopics();
                 }
@@ -271,7 +277,7 @@ public class NewsOfTheDayFragment extends Fragment {
 
         TextView belowHeadlineDate = view.findViewById(R.id.news_of_the_day_date);
         Date lastReload = NewsOfTheDayTimeService.getDateLastLoadedArticles(getContext());
-        belowHeadlineDate.setText(DateService.makeDateReadable(lastReload));
+        belowHeadlineDate.setText(DateService.makeDateReadable(lastReload) + "\nUpdated once every 12 hours");
     }
 
     /**
@@ -279,8 +285,11 @@ public class NewsOfTheDayFragment extends Fragment {
      * that he has to like topics (answer questions with yes) first.
      */
     private void setTextNotEnoughTopics(){
-        TextView belowHeadline = view.findViewById(R.id.news_of_the_day_date);
-        belowHeadline.setText(R.string.not_enough_topics_news_of_the_day);
+        //TextView belowHeadline = view.findViewById(R.id.news_of_the_day_date);
+        //belowHeadline.setText(R.string.not_enough_topics_news_of_the_day);
+        ConstraintLayout cl = view.findViewById(R.id.empty_text_container);
+        cl.setVisibility(ConstraintLayout.VISIBLE);
+
     }
 
     /**

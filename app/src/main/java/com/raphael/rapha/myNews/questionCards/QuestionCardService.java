@@ -22,7 +22,7 @@ public class QuestionCardService {
      */
     public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<KeyWordRoomModel> keyWords){
         Log.d("questioncard", "mixQuestionCardsIntoSwipeCards");
-        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 4));
+        LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 3));
         // Generate random indices.
         int[] randomIndices = new int[questionSwipeCards.size()];
         for(int i = 0; i < randomIndices.length; i++){

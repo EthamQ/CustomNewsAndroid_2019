@@ -628,6 +628,24 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         });
     }
 
+    public void showDailyNewsDialogue(){
+        AlertDialog.Builder dialog = new
+                AlertDialog.Builder(mainActivity);
+        dialog.setTitle("Congratulations! :)");
+        dialog.setMessage("You just answered your first question with yes, " +
+                        "only 4 more to go to receive your first news of the day!\n\n" +
+                "There we will show you one article for every topic you liked.\n\n"+
+                "Check it out in the menu on the left!\n\n" +
+                "(You can see your liked topics in the My Statistics menu point)");
+
+        dialog.setPositiveButton("Continue swiping", (positiveDialog, which) -> {
+            positiveDialog.cancel();
+        });
+
+        AlertDialog alertDialog = dialog.create();
+        alertDialog.show();
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated

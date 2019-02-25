@@ -6,6 +6,7 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.roomDatabase.AppDatabase;
@@ -83,7 +84,13 @@ public class RequestOffsetRepository {
         }
         @Override
         protected Void doInBackground(RequestOffsetRoomModel... requestOffsetRoomModels) {
-            dao.insertOne(requestOffsetRoomModels[0]);
+            try{
+                dao.insertOne(requestOffsetRoomModels[0]);
+            }
+            catch(Exception e){
+                Log.e("dberror", "error when inserting requestoffset");
+            }
+
             return null;
         }
     }

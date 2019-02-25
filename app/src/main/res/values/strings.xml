@@ -144,7 +144,7 @@
     </string>
 
     <string name="explain_daily_news3">
-        It is updated once a day.
+        It is updated every 12 hours.
     </string>
 
     <string name="introcard_right">
@@ -162,9 +162,10 @@
     </string>
 
     <string name="not_enough_topics_news_of_the_day">
-        Answer at least 5 questions with yes to see your news of the day.
-        Answering a question with yes means swipe through the cards and when you are asked a question swipe it
-        to the right.
+        Like at least <b>5 topics</b> to receive your news of the day!\n\n
+
+        Just swipe through the cards and if you are asked a <b>question</b> swipe it to the
+        <b>right</b> to <b>like</b> the topic it asked you about.
     </string>
 
     <string name="finance_info_text1">
