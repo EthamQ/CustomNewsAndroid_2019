@@ -133,7 +133,7 @@ public class NewsOfTheDayFragment extends Fragment {
         boolean isLoading = currentLoadingValue;
         boolean wasLoading = lastLoadingValue != currentLoadingValue;
         if(mainActivity != null && wasLoading && !isLoading){
-            mainActivity.changeFragmentTo(R.id.nav_news);
+            mainActivity.loadFragment(R.id.nav_news);
         }
     }
 

@@ -49,7 +49,6 @@ import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
 import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.raphael.rapha.myNews.temporaryDataStorage.LanguageSelectionDataStorage;
 import com.raphael.rapha.myNews.utils.CollectionService;
-import com.raphael.rapha.myNews.utils.Logging;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -550,7 +549,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * Open this fragment once again to reset the view.
      */
     public void reloadFragment(){
-        mainActivity.changeFragmentTo(R.id.nav_home);
+        mainActivity.loadFragment(R.id.nav_swipe);
     }
 
     /**
