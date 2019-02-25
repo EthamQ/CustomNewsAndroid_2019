@@ -1,178 +1,88 @@
 <resources>
-    <string name="app_name">MY News - multilingual</string>
+
+    <!-- =================================== -->
+    <!-- Titles and app name -->
+    <string name="app_name">MY News: news YOU like in multiple languages</string>
     <string name="title_activity_article_detail_scrolling">ArticleDetailScrollingActivity</string>
+    <!-- =================================== -->
 
-    <string name="action_settings">Settings</string>
-    <string name="Open">Custom News</string>
-    <string name="Close">Custom News</string>
+    <!-- =================================== -->
+    <!-- Swipe fragment -->
+    <!-- Swipe fragment - confirm language change-->
+    <string name="language_change_title">Confirm choice</string>
+    <string name="language_change_confirm">Confirm choice</string>
+    <string name="language_change_cancel">Cancel</string>
+    <!-- Swipe fragment - news of the day dialogue-->
+    <string name="daily_news_dialogue_title">"Congratulations! :)"</string>
+    <string name="daily_news_dialogue_message">
+        You just answered your first question with yes, only 4 more to go
+        to receive your first news of the day!
+        \n\nThere we will show you one article for every topic you liked.
+        \n\nCheck it out in the menu on the left!
+        \n\n(You can see your liked topics in the My Statistics menu point)
+    </string>
+    <string name="daily_news_dialogue_confirm">Continue swiping</string>
+    <!-- =================================== -->
 
-    <string name="nav_statistics">My Statistics</string>
 
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <!-- =================================== -->
+    <!-- Default leftovers -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main2">MY News: news YOU like in multiple languages</string>
+    <string name="action_settings">Settings</string>
+    <!-- =================================== -->
+
+
+    <!-- =================================== -->
+    <!-- Navigation drawer -->
+    <string name="nav_header_title">MY News</string>
+    <string name="nav_header_desc">Navigation header</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">MY News</string>
-    <string name="nav_header_subtitle">Menu</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="how_it_works_text">
-        When you go to home you can see a card which shows you a news article.
-        You can also click on the article to get to the entire article.
-        If you\'re interested in the article you can swipe the article to the right,
-        if not swipe it to the left.
-        This app will remember what kind of topics you\'re interested in and show
-        you more articles related to that topic.
-        If you want to know what kind of requestResponse the app collects about you just go to
-        My Statistics.
-    </string>
-
-    <string name="known_problems_text">
-        I\'m just a small developer and I use a free source for the news articles I\'m showing to you.
-        That\'s why I can request news articles only up to 1000 times a month.
-        Furthermore I don\'t get the entire article content, that\'s why I link to
-        the entire article.
-        So for now the usage of this app is limited but if I\'m able to generate any kind of revenue
-        with this app I\'ll be able to pay for an upgrade of my news source.
-    </string>
-
-    <string name="credit_text">
-        I\'m getting my news from NewsAPI.org.\n\n
-
-        The icons in this app:\n
-        Icon made by Gregor Cresnar from www.flaticon.com\n
-        https://www.flaticon.com/authors/gregor-cresnar\n\n
-
-        Icon made by Gregor Good Ware from www.flaticon.com\n
-        https://www.flaticon.com/authors/good-ware\n\n
-
-        Icons made by Gregor freepik from www.flaticon.com\n
-        https://www.flaticon.com/authors/freepik\n\n
-
-        Free icon from www.fontawesome.com\n
-        https://fontawesome.com/icons/chart-bar\n\n
-    </string>
-
-    <string name="swipe_right_text1">
-        Swipe
-    </string>
-    <string name="swipe_right_text2">
-        RIGHT
-    </string>
-    <string name="swipe_right_text3">
-        if you
-    </string>
-    <string name="swipe_right_text4">
-        LIKE
-    </string>
-    <string name="swipe_right_text5">
-        the article you see.
-    </string>
-
-    <string name="question_right_text1">
-        to answer
-    </string>
-    <string name="question_right_text2">
-        YES.
-    </string>
+    <string name="nav_swipe">Swipe</string>
+    <string name="nav_statistics">My Statistics</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_daily">News of the day</string>
+    <string name="nav_info">Info</string>
+    <!-- =================================== -->
 
 
-    <string name="swipe_left_text1">
-        Swipe
-    </string>
-    <string name="swipe_left_text2">
-        LEFT
-    </string>
-    <string name="swipe_left_text3">
-        if you
-    </string>
-    <string name="swipe_left_text4">
-        DISLIKE
-    </string>
-    <string name="swipe_left_text5">
-        the article you see.
-    </string>
+    <!-- =================================== -->
+    <!-- Introduction activity -->
+    <!-- Introduction activity - Swipe articles right -->
+    <string name="swipe_right_text1">Swipe</string>
+    <string name="swipe_right_text2">RIGHT</string>
+    <string name="swipe_right_text3">if you</string>
+    <string name="swipe_right_text4">LIKE</string>
+    <string name="swipe_right_text5">the article you see.</string>
 
-    <string name="question_left_text1">
-        to answer
-    </string>
-    <string name="question_left_text2">
-        NO.
-    </string>
+    <!-- Introduction activity - Swipe articles left -->
+    <string name="swipe_left_text1">Swipe</string>
+    <string name="swipe_left_text2">LEFT</string>
+    <string name="swipe_left_text3">if you</string>
+    <string name="swipe_left_text4">DISLIKE</string>
+    <string name="swipe_left_text5">the article you see.</string>
 
-    <string name="click_text1">
-        Click on the article to
-    </string>
-    <string name="click_text2">
-        READ
-    </string>
-    <string name="click_text3">
-        it.
-    </string>
+    <!-- Introduction activity - Click article -->
+    <string name="click_text1">Click on the article to</string>
+    <string name="click_text2">READ</string>
+    <string name="click_text3">it.</string>
 
-    <string name="finance_expl_headline">
-        Is this app for free?
-    </string>
+    <!-- Introduction activity - Answer questions yes-->
+    <string name="question_right_text1">to answer</string>
+    <string name="question_right_text2">YES.</string>
 
-    <string name="daily_expl_headline">
-        News of the day
-    </string>
+    <!-- Introduction activity - Answer questions no -->
+    <string name="question_left_text1">to answer</string>
+    <string name="question_left_text2">NO.</string>
 
-    <string name="statistics_expl_headline">
-        What happens after you swiped?
-    </string>
-    <string name="explain_cat_statistic">
-        By swiping NEWS ARTICLES we know which CATEGORIES you like.
-    </string>
-    <string name="explain_topic_statistic">
-        By answering QUESTIONS we know which TOPICS you like.
-    </string>
-    <string name="explain_statistic_below_text1">
-        Every day we adjust the news we show to you according to your preferred CATEGORIES and TOPICS.
-    </string>
-    <string name="explain_statistic_below_text2">
-        In MY STATISTICS you can always check out the data we collected about you.
-    </string>
-
-    <string name="explain_daily_news1">
-        Here you see one news article for every topic you liked.
-    </string>
-
-    <string name="explain_daily_news2">
-        The more questions you answer with yes the more articles are displayed.
-    </string>
-
-    <string name="explain_daily_news3">
-        It is updated every 12 hours.
-    </string>
-
-    <string name="introcard_right">
-        Swipe right if you like an article
-    </string>
-    <string name="introcard_left">
-        Swipe left if you dislike an article
-    </string>
-    <string name="introcard_start">
-        Swipe in any direction to start
-    </string>
-
-    <string name="introcard_click">
-        Click on an article to read it
-    </string>
-
-    <string name="not_enough_topics_news_of_the_day">
-        Like at least <b>5 topics</b> to receive your news of the day!\n\n
-
-        Just swipe through the cards and if you are asked a <b>question</b> swipe it to the
-        <b>right</b> to <b>like</b> the topic it asked you about.
-    </string>
-
+    <!-- Introduction activity - Is this app for free? -->
+    <string name="finance_expl_headline">Is this app for free?</string>
     <string name="finance_info_text1">
-        For now yes, however...
-        as long as I offer it for free (unless i show ads which I don\'t want to) there are some limitations to its use.
+        For now yes, however&#8230;
+        as long as I offer it for free (unless i show ads which I don\'t want to)
+        there are some limitations to its use.
     </string>
-
     <string name="finance_info_text2">
         I use a third party api to request the news.
         I can only show a preview of the content of a news article and not the entire text.
@@ -180,15 +90,62 @@
         So if there are more users it is possible that this limit is reached and you can\'t
         load new articles anymore for a certain amount of time.
     </string>
-
     <string name="finance_info_text3">
         I would have to pay 450$ per month to get rid of those limitations which i can\'t afford.
         So I would be happy if you supported the app with a really small amount per month if you want to help me
         offering a full version of this app. (More in the settings menu)
     </string>
 
+    <!-- Introduction activity - News of the day -->
+    <string name="daily_expl_headline">News of the day</string>
+    <string name="explain_daily_news1">
+        Here you see one news article for every topic you liked.
+    </string>
+    <string name="explain_daily_news2">
+        The more questions you answer with yes the more articles are displayed.
+    </string>
+    <string name="explain_daily_news3">It is updated every 12 hours.</string>
+
+    <!-- Introduction activity - Statistics -->
+    <string name="statistics_expl_headline">What happens after you swiped?</string>
+    <string name="explain_cat_statistic">By swiping NEWS ARTICLES we know which CATEGORIES you like.</string>
+    <string name="explain_topic_statistic">By answering QUESTIONS we know which TOPICS you like.</string>
+    <string name="explain_statistic_below_text1">
+        Every day we adjust the news we show to you according to your preferred CATEGORIES and TOPICS.
+    </string>
+    <string name="explain_statistic_below_text2">
+        In MY STATISTICS you can always check out the data we collected about you.
+    </string>
+    <!-- =================================== -->
+
+
+    <!-- =================================== -->
+    <!-- Info fragment -->
+    <!-- Info fragment - is this app for free? -->
+    <!-- Info fragment - credits -->
+    <!-- Info fragment - contact -->
     <string name="contact_text">
         If you have any question just write to my private email account :)
     </string>
+    <!-- =================================== -->
+
+
+    <!-- =================================== -->
+    <!-- Introduction card -->
+    <string name="introcard_right">Swipe right if you like an article</string>
+    <string name="introcard_left">Swipe left if you dislike an article</string>
+    <string name="introcard_click">Click on an article to read it</string>
+    <string name="introcard_start">Swipe in any direction to start</string>
+    <!-- =================================== -->
+
+
+    <!-- =================================== -->
+    <!-- News of the day fragment -->
+    <string name="not_enough_topics_news_of_the_day">
+        Like at least <b>5 topics</b> to receive your news of the day!\n\n
+        Just swipe through the cards and if you are asked a <b>question</b> swipe it to the
+        <b>right</b> to <b>like</b> the topic you were asked about.
+    </string>
+    <!-- =================================== -->
 
 </resources>

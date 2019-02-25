@@ -91,6 +91,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     public OffsetDbService dateOffsetDbService;
     public LanguageCombinationDbService languageComboDbService;
 
+    // Only shown while loading
     Button abortLoading;
 
     // Booleans tracking the state.
@@ -118,6 +119,16 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+        this.mainActivity = (MainActivity) getActivity();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -133,7 +144,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         setVisibilitySwipeCards(false);
 
         // When leaving the fragment all swipe cards are temporarily stored
-        // and still available when again opening the fragment.
+        // and still available when opening the fragment again.
         if (ArticleDataStorage.temporaryArticlesExist()) {
             swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
             swipeCardArrayAdapter.notifyDataSetChanged();
@@ -145,10 +156,9 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         return view;
     }
 
-
     /**
-     * Look if articles are loaded from the api or database.
-     * Look if the user changed the language.
+     * Observe if articles are currently loaded from the api or database.
+     * Observe if the user changed the language.
      * React on the loading status.
      */
     public void startObservingLoadingStatus() {
@@ -194,6 +204,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
 
             // Observe the date offset for the currently selected languages.
+            // Date offset is the dateTo value you send to the api in a query.
+            // Don't load articles newer than the last one the user looked at.
             DateOffsetDataStorage.resetData();
             LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
             allLanguageCombinationsLiveData.observe(mainActivity, languageCombinations -> {
@@ -222,15 +234,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * from the api.
      */
     public void loadArticlesFromDb() {
-        Log.d("newswipe", "loadArticlesFromDb()");
         LiveData<List<NewsArticleRoomModel>> unreadArticlesLiveData = newsArticleDbService.getAllUnreadSwipeArticles();
         unreadArticlesLiveData.observe(
                 getActivity(),
                 new Observer<List<NewsArticleRoomModel>>() {
                     @Override
                     public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
-                        Log.d("newswipe", "loadArticlesFromDb() onchanged");
-                        Log.d("newswipe", "loadArticlesFromDb() onchanged article size: " + articleModels.size());
                         if (articleModels.isEmpty()) {
                             SwipeLoadingService.setLoadingApiRequest(true);
                             SwipeTimeService.setDataIsLoadedTheFirstTime(mainActivity, false);
@@ -271,23 +280,23 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      */
     public void loadArticlesFromApi() {
         SwipeLoadingService.setLoadingApiRequest(true);
-        Log.d("newswipe", "loadArticlesFromApi()");
         Thread thread = new Thread(() -> {
             try {
                 LinkedList<NewsArticle> apiArticlesToAdd =
-                        SwipeApiService.getAllArticlesApiForSwipeCards(SwipeFragment.this, liveCategoryRatings);
-                Log.d("newswipe", "articles from api call: " + apiArticlesToAdd.size());
+                        SwipeApiService.getAllArticlesApiForSwipeCards(
+                                SwipeFragment.this,
+                                liveCategoryRatings
+                        );
                 mainActivity.runOnUiThread(() -> {
                     storeArticlesInDatabase(apiArticlesToAdd);
                     swipeCardsList.addAll(apiArticlesToAdd);
                     CollectionService.removeDuplicatesArticleList(swipeCardsList);
-                    Logging.logSwipeCards(swipeCardsList, "newswipe2");
                     QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
                     SwipeLoadingService.resetLoading();
                     reloadFragment();
                 });
             } catch (Exception e) {
-                Log.d("popopo", "ERROR: " + e.toString());
+                Log.d("catchedError", "ERROR: " + e.toString());
                 e.printStackTrace();
             }
         });
@@ -295,9 +304,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     /**
-     * Deletes all articles that belong to this fragment from the database.
-     * When they are deleted onDeleted is called where the new articles are stored in the database.
-     * The data that onDeleted receives is defined here.
+     * Deletes all articles that belong to the swipe fragment from the database.
+     * When they are deleted the callback function onSwipeArticlesDeleted is called
+     * where the new articles are stored in the database.
+     * The data that onSwipeArticlesDeleted receives is defined here.
      *
      * @param articles The articles to store in the database.
      */
@@ -319,16 +329,16 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * @param deleteData
      */
     @Override
-    public void onDeleted(DeleteData deleteData) {
+    public void onSwipeArticlesDeleted(DeleteData deleteData) {
         if (mainActivity != null) {
-            NewsArticleDbService.getInstance(mainActivity.getApplication())
-                    .insertNewsArticles((LinkedList<NewsArticle>) deleteData.data);
+            LinkedList<NewsArticle> passedArticlesToStore = (LinkedList<NewsArticle>) deleteData.data;
+            newsArticleDbService.insertNewsArticles(passedArticlesToStore);
         }
     }
 
     /**
      * Sets the functionality for the flingContainer which handles the functionality
-     * if the user swipes to the left or right or clicks on a swipe cards.
+     * if the user swipes to the left or right or clicks on a swipe card.
      */
     public void setSwipeFunctionality() {
         SwipeFlingAdapterView flingContainer = view.findViewById(R.id.swipe_card);
@@ -339,12 +349,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                 if (swipeCardsList.size() == 0 || swipeCardsList.size() == 1) {
                     swipeCardsList.add(new ErrorSwipeCard());
                 }
-                Log.d("newswipe", "++++++++++++++++++++++++");
-                Log.d("newswipe", "article: " + swipeCardsList.get(0).toString());
                 swipeCardsList.remove(0);
-                Log.d("newswipe", "articles leftIndicator: " + swipeCardsList.size());
-
-                Log.d("newswipe", "++++++++++++++++++++++++");
                 boolean alreadyLoadingData = apiIsLoading || dbIsLoading;
                 if (swipeCardsList.size() <= ARTICLE_MINIMUM_BEFORE_LOADING && !alreadyLoadingData) {
                     loadArticlesFromApi();
@@ -373,7 +378,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
 
             @Override
             public void onScroll(float scrollProgressPercent) {
-                Log.d("swipee", "on scroll detected");
                 if (!swipeCardsList.isEmpty()) {
                     ISwipeCard currentCard = swipeCardsList.get(0);
                     currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
@@ -418,6 +422,11 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         abortLoading.setOnClickListener(view ->abortLanguageChange());
     }
 
+    /**
+     * When the user clicks on the abort language change button in the loading screen.
+     * Set loading false, add a backup of the previous articles to the view.
+     * Show an error toast. Reload this fragment.
+     */
     public void abortLanguageChange(){
         SwipeLoadingService.setLoadingLanguageChange(false);
         swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
@@ -442,9 +451,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         button.setOnClickListener(view -> {
             AlertDialog.Builder dialog = new
                     AlertDialog.Builder(mainActivity);
-            dialog.setTitle("Language of news articles");
-//            dialog.setMessage("This will not change the language of the app." +
-//                    "Just the language of the news articles.");
+            dialog.setTitle(R.string.language_change_title);
+
             final String[] languageItems = LanguageSettingsService.languageItems;
             final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
             LanguageSelectionDataStorage.backUpPreviousLanguageSelection(initialSelection);
@@ -455,14 +463,20 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                 LanguageSettingsService.saveChecked(mainActivity, currentSelection);
             });
 
-            dialog.setPositiveButton("Confirm choice", (positiveDialog, which) -> {
+            dialog.setPositiveButton(R.string.language_change_confirm, (positiveDialog, which) -> {
                 if (LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)) {
                     SwipeLoadingService.setLoadingLanguageChange(true);
-                    LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData = languageComboDbService.getAll();
-                    allLanguageCombinationsLiveData.observe(mainActivity, new Observer<List<LanguageCombinationRoomModel>>() {
+                    LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData
+                            = languageComboDbService.getAll();
+                    allLanguageCombinationsLiveData.observe(
+                            mainActivity,
+                            new Observer<List<LanguageCombinationRoomModel>>() {
                         @Override
                         public void onChanged(@Nullable List<LanguageCombinationRoomModel> languageCombinations) {
-                            int languageCombinationId = LanguageCombinationService.getIdOfLanguageCombination(languageCombinations, currentSelection);
+                            int languageCombinationId =
+                                    LanguageCombinationService.getIdOfLanguageCombination(
+                                            languageCombinations, currentSelection
+                                    );
                             loadArticlesForOtherLanguage(languageCombinationId);
                             allLanguageCombinationsLiveData.removeObserver(this);
                             }
@@ -471,7 +485,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                 positiveDialog.cancel();
             });
 
-            dialog.setNegativeButton("Cancel", (negativeDialog, which) -> {
+            dialog.setNegativeButton(R.string.language_change_cancel, (negativeDialog, which) -> {
                 LanguageSettingsService.saveChecked(mainActivity, initialSelection);
                 negativeDialog.cancel();
             });
@@ -492,12 +506,16 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     public void loadArticlesForOtherLanguage(int languageCombinationId) {
         if(mainActivity !=null) {
             DateOffsetDataStorage.resetData();
+            // Invalid language combination
             if(languageCombinationId < 0){
                 ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                 swipeCardsList.clear();
                 loadArticlesFromApi();
             }
+            // Valid language combination
             else{
+                // Load date offsets (dateTo query parameter)
+                // so they are up to date before requesting new articles.
                 LiveData<List<RequestOffsetRoomModel>> dateOffsetsLiveData
                         = dateOffsetDbService.getAll();
                 dateOffsetsLiveData.observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
@@ -509,9 +527,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                                         languageCombinationId
                                 );
 
+                        // No available date offsets for this language combination.
                         if(dateOffsetsForLanguageCombination.isEmpty()){
                             DateOffsetDataStorage.resetData();
                         }
+                        // We found date offsets, store them so they can be retrieved
+                        // when requesting articles.
                         else{
                             DateOffsetDataStorage.setDateOffsets(dateOffsetsForLanguageCombination);
                         }
@@ -526,7 +547,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     /**
-     * Open this fragment once again to reset the view eg.
+     * Open this fragment once again to reset the view.
      */
     public void reloadFragment(){
         mainActivity.changeFragmentTo(R.id.nav_home);
@@ -545,7 +566,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     /**
-     * If we are loading data it displays a loading gif and an info text
+     * If we are loading data it displays a loading gif and an info text about
      * what we are loading.
      * @param loading
      * @param loadingType
@@ -574,6 +595,34 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     /**
+     * Callback function called when articles are requested or if we received
+     * http answers with new articles to show the loading progress in the loading screen.
+     * @param loadingText
+     */
+    @Override
+    public void updateLoadingText(String loadingText) {
+        mainActivity.runOnUiThread(() ->{
+            TextView loadingProgress = view.findViewById(R.id.loading_progress);
+            loadingProgress.setVisibility(TextView.VISIBLE);
+            loadingProgress.setText(loadingText);
+        });
+    }
+
+    /**
+     * Show a dialogue as soon as the user swipes his first question card to the right
+     * to tell him about news of the day.
+     */
+    public void showDailyNewsDialogue(){
+        AlertDialog.Builder dialog = new
+                AlertDialog.Builder(mainActivity);
+        dialog.setTitle(R.string.daily_news_dialogue_title);
+        dialog.setMessage(R.string.daily_news_dialogue_message);
+        dialog.setPositiveButton(R.string.daily_news_dialogue_confirm, (
+                positiveDialog, which) -> positiveDialog.cancel()
+        ).create().show();
+    }
+
+    /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
@@ -589,16 +638,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-        this.mainActivity = (MainActivity) getActivity();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -617,33 +656,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
-
-    @Override
-    public void updateLoadingText(String loadingText) {
-        mainActivity.runOnUiThread(() ->{
-            TextView loadingProgress = view.findViewById(R.id.loading_progress);
-            loadingProgress.setVisibility(TextView.VISIBLE);
-            loadingProgress.setText(loadingText);
-        });
-    }
-
-    public void showDailyNewsDialogue(){
-        AlertDialog.Builder dialog = new
-                AlertDialog.Builder(mainActivity);
-        dialog.setTitle("Congratulations! :)");
-        dialog.setMessage("You just answered your first question with yes, " +
-                        "only 4 more to go to receive your first news of the day!\n\n" +
-                "There we will show you one article for every topic you liked.\n\n"+
-                "Check it out in the menu on the left!\n\n" +
-                "(You can see your liked topics in the My Statistics menu point)");
-
-        dialog.setPositiveButton("Continue swiping", (positiveDialog, which) -> {
-            positiveDialog.cancel();
-        });
-
-        AlertDialog alertDialog = dialog.create();
-        alertDialog.show();
     }
 
     /**

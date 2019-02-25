@@ -43,7 +43,7 @@ public class NewsArticleRepository {
         DeleteData deleteData = new DeleteData();
         deleteData.deletesArticle = new IDeletesArticle(){
             @Override
-            public void onDeleted(DeleteData data) {
+            public void onSwipeArticlesDeleted(DeleteData data) {
 
             }
         };
@@ -117,7 +117,7 @@ public class NewsArticleRepository {
 
         @Override
         protected void onPostExecute(DeleteData deleteData) {
-            deleteData.deletesArticle.onDeleted(deleteData);
+            deleteData.deletesArticle.onSwipeArticlesDeleted(deleteData);
         }
     }
 
