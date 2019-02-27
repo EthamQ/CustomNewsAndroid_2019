@@ -2,14 +2,24 @@
 
     <!-- =================================== -->
     <!-- Titles and app name -->
-    <string name="app_name">MY News: news YOU like in multiple languages</string>
+    <string name="app_name">MY News</string>
     <string name="title_activity_article_detail_scrolling">ArticleDetailScrollingActivity</string>
     <!-- =================================== -->
 
     <!-- =================================== -->
     <!-- Swipe fragment -->
+    <string name="too_many_requests_title">Too many requests</string>
+    <string name="too_many_requests_content">
+        Sorry we can\'t load new articles right now because there\'s a <b>limit</b>
+        to how many articles I\'m allowed to request for free.
+        \nTry it again <b>in a few hours</b>.
+        \n\nIn order to provide <b>unlimited news</b> I have to pay a <b>monthly fee of
+        450$</b> which I can\'t afford because I offer this app for free.
+        \n\nSo if you want me to help to pay this fee in order to provide
+        unlimited news think about <b>supporting the app</b> in the <b>Settings</b> menu.
+    </string>
     <!-- Swipe fragment - confirm language change-->
-    <string name="language_change_title">Confirm choice</string>
+    <string name="language_change_title">Change the language of the news articles</string>
     <string name="language_change_confirm">Confirm choice</string>
     <string name="language_change_cancel">Cancel</string>
     <!-- Swipe fragment - news of the day dialogue-->
@@ -79,21 +89,21 @@
     <!-- Introduction activity - Is this app for free? -->
     <string name="finance_expl_headline">Is this app for free?</string>
     <string name="finance_info_text1">
-        For now yes, however&#8230;
+        <b>Yes</b> I want to keep this app for free but
         as long as I offer it for free (unless i show ads which I don\'t want to)
-        there are some limitations to its use.
+        there are some <b>limitations</b> to its use.
     </string>
     <string name="finance_info_text2">
         I use a third party api to request the news.
-        I can only show a preview of the content of a news article and not the entire text.
-        Furthermore the amount of news I can request per day is limited.
+        I can only show a <b>preview of the content</b> of a news article and not the entire text.
+        Furthermore the amount of news I can request per day is <b>limited</b>.
         So if there are more users it is possible that this limit is reached and you can\'t
         load new articles anymore for a certain amount of time.
     </string>
     <string name="finance_info_text3">
-        I would have to pay 450$ per month to get rid of those limitations which i can\'t afford.
-        So I would be happy if you supported the app with a really small amount per month if you want to help me
-        offering a full version of this app. (More in the settings menu)
+        I would have to pay <b>450$ per month</b> to get rid of those limitations which i can\'t afford.
+        So I would be happy if you <b>supported the app</b> with a really small amount per month if you want to help me
+        offer a <b>full version</b> of this app. (You can support it in the <b>Settings menu</b>)
     </string>
 
     <!-- Introduction activity - News of the day -->
@@ -147,5 +157,32 @@
         <b>right</b> to <b>like</b> the topic you were asked about.
     </string>
     <!-- =================================== -->
+
+
+    <!-- =================================== -->
+    <!-- Settings fragment -->
+    <string name="support_settings">
+        So I can afford upgrading my app to provide unlimited news
+        and the entire article content without showing annoying ads.
+        \n\nMore information under <b>Info</b> menu.
+    </string>
+    <string name="support_settings_button">
+        So I can afford upgrading my app to provide unlimited news
+        and the entire article content without showing annoying ads
+    </string>
+    <!-- =================================== -->
+
+    <!-- =================================== -->
+    <!-- Read article -->
+    <string name="support_read_article">
+        I have to pay a monthly fee that i can\'t afford in order to show the entire article content.
+        \nOr I show ads in this app which i don\'t want.
+        \n\nSo if you want to have the entire article without clicking on the link first,
+        think about <b>supporting</b> the app with a small amount in the <b>Settings</b> menu.
+        \n\nMore information about why I have to pay this amount in the <b>Info</b> menu.
+    </string>
+    <!-- =================================== -->
+
+
 
 </resources>

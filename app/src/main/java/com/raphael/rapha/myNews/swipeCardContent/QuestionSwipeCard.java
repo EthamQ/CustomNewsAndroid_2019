@@ -5,6 +5,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,6 +15,7 @@ import com.raphael.rapha.myNews.categoryDistribution.CategoryRatingService;
 import com.raphael.rapha.myNews.questionCards.QuestionCardRatingService;
 import com.raphael.rapha.myNews.questionCards.QuestionCardService;
 import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
 
 import java.util.List;
 
@@ -58,10 +60,8 @@ public class QuestionSwipeCard implements ISwipeCard {
         likedKeyWordsLiveData.observe(swipeFragment, new Observer<List<KeyWordRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> likedTopics) {
-                if(likedTopics.isEmpty()){
-                    swipeFragment.showDailyNewsDialogue();
-                }
                 QuestionCardRatingService.likeKeyWord(swipeFragment, QuestionSwipeCard.this);
+                swipeFragment.showDailyNewsDialogue(likedTopics.size());
                 likedKeyWordsLiveData.removeObserver(this);
             }
         });
@@ -80,6 +80,14 @@ public class QuestionSwipeCard implements ISwipeCard {
         rightIndicator.setText("Yes");
         leftIndicator.setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
         rightIndicator.setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+
+        Button skip = swipeFragment.skip;
+        skip.setAlpha(scrollProgressPercent == 0 ? 1 : 0);
+    }
+
+    @Override
+    public void initAlphaSkipButton(Button skipButton) {
+        skipButton.setAlpha(1);
     }
 
 }

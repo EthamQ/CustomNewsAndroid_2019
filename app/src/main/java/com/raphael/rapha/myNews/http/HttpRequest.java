@@ -1,5 +1,9 @@
 package com.raphael.rapha.myNews.http;
 
+import android.support.v4.app.Fragment;
+
+import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
+
 public class HttpRequest {
 
     IHttpRequester httpRequester;

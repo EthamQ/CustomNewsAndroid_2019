@@ -1,8 +1,11 @@
 package com.raphael.rapha.myNews.http;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 
 public class HttpRequestInfo {
+
+    public static final int TOO_MANY_REQUESTS = 429;
 
     private int informationCode;
     private boolean errorOccurred;

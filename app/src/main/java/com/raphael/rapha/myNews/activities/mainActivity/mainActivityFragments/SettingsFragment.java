@@ -23,6 +23,7 @@ import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.InAppPaymentService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.SettingsService;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -95,6 +96,7 @@ public class SettingsFragment extends Fragment implements PurchasedItemsListener
                         KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
                         keyWordDbService.deleteAll();
                         NewsOfTheDayTimeService.resetLastLoaded(getContext());
+                        SwipeTimeService.setFirstTopicWasLiked(getContext(), false);
                         dialogInterface.cancel();
                     })
                     .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())

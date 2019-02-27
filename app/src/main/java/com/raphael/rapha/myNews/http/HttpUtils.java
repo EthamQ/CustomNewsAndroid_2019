@@ -30,9 +30,8 @@ public class HttpUtils {
 	 * @return returns the answer to the request as a JSONObject.
 	 * @throws Exception
 	 */
-	public static JSONObject httpGET(String url) throws Exception {
+	public static JSONObject httpGET(String url, HttpRequest httpRequest) throws Exception {
 		StringBuffer response = new StringBuffer();
-	try{
 		final String USER_AGENT = "Mozilla/5.0";
 		URL urlObject = new URL(url);
 		HttpURLConnection connnection = (HttpURLConnection) urlObject.openConnection();
@@ -41,8 +40,12 @@ public class HttpUtils {
 		//add request header
 		connnection.setRequestProperty("User-Agent", USER_AGENT);
 
-		// TODO: check responseCode!
 		int responseCode = connnection.getResponseCode();
+		// Pass the response code to the calling fragment or activity to handle it.
+		if(httpRequest.httpRequester != null){
+			httpRequest.requestInfo.setInformationCode(responseCode);
+			httpRequest.httpRequester.httpResultCallback(httpRequest.requestInfo);
+		}
 		Log.d("HTTPCHECK", "Request to URL: " + url + ", ResponseCode: " + responseCode);
 
 		BufferedReader reader = new BufferedReader(
@@ -53,12 +56,6 @@ public class HttpUtils {
 			response.append(inputLine);
 		}
 		reader.close();
-	}
-	catch(Exception e){
-		e.printStackTrace();
-		}
-
-
 		return new JSONObject(response.toString());
 	}
 

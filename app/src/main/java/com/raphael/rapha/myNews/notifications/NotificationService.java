@@ -16,7 +16,8 @@ public class NotificationService {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setSmallIcon(R.drawable.ic_newspaper_colored);
+                .setSmallIcon(R.drawable.ic_newspaper_colored)
+                .setAutoCancel(true);
         return builder;
         }
 

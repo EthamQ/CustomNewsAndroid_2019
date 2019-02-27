@@ -34,6 +34,13 @@ public class MainActivity extends AppCompatActivity
 
     // To know what should happen when the user presses back.
     public int currentFragment = R.id.nav_swipe;
+    private NavigationView navigationView;
+
+    public final int INDEX_SWIPE_MENU = 0;
+    public final int INDEX_DAILY_MENU = 1;
+    public final int INDEX_STATISTICS_MENU = 2;
+    public final int INDEX_INFO_MENU = 3;
+    public final int INDEX_SETTINGS_MENU = 4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +51,7 @@ public class MainActivity extends AppCompatActivity
 
         // Navigation drawer
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -84,6 +92,16 @@ public class MainActivity extends AppCompatActivity
      */
     public boolean showIntroductionCard(){
         return !StatusDataStorage.getMainActivityWasActive();
+    }
+
+    /**
+     * Change which menu item in the navigation drawer is marked as selected.
+     * @param indexFrom
+     * @param indexTo
+     */
+    public void switchNavigationDrawerItemFromTo(int indexFrom, int indexTo){
+        navigationView.getMenu().getItem(indexFrom).setChecked(false);
+        navigationView.getMenu().getItem(indexTo).setChecked(true);
     }
 
     /**

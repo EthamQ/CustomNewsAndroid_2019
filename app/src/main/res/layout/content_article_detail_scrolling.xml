@@ -52,8 +52,7 @@
             android:layout_marginEnd="@dimen/text_margin"
             android:layout_marginRight="@dimen/text_margin"
             android:layout_marginBottom="@dimen/text_margin"
-            android:text="Example 123 LoremIpsum"
-            android:textColor="@color/black" />
+            android:text="Example 123 LoremIpsum" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -77,6 +76,26 @@
             android:autoLink="web"
             android:text="Link"
             android:textColor="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginTop="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="0dp"
+            android:text="Why only an article preview?"
+            android:textColor="@color/news_card_text"
+            android:textSize="@dimen/subTitleText" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/text_margin"
+            android:layout_marginRight="@dimen/text_margin"
+            android:layout_marginBottom="@dimen/text_margin"
+            android:layout_marginTop="5dp"
+            android:text="@string/support_read_article" />
     </LinearLayout>
 
 

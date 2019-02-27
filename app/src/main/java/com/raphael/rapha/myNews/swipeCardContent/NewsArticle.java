@@ -10,6 +10,7 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -135,6 +136,14 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
         rightIndicator.setText("Like");
         leftIndicator.setAlpha(scrollProgressPercent < 0 ? -scrollProgressPercent : 0);
         rightIndicator.setAlpha(scrollProgressPercent > 0 ? scrollProgressPercent : 0);
+
+        Button skip = swipeFragment.skip;
+        skip.setAlpha(scrollProgressPercent == 0 ? 1 : 0);
+    }
+
+    @Override
+    public void initAlphaSkipButton(Button skipButton) {
+        skipButton.setAlpha(1);
     }
 
     public void updateValuesAfterSwipe(SwipeFragment swipeFragment) {

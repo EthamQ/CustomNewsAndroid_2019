@@ -2,6 +2,8 @@ package com.raphael.rapha.myNews.swipeCardContent;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.raphael.rapha.myNews.R;
@@ -23,13 +25,10 @@ public class IntroductionSwipeCard implements ISwipeCard {
 
     @Override
     public void setSwipeCardView(View convertView) {
-//        TextView textView = convertView.findViewById(R.id.card_main_text);
-//        textView.setText(this.introductionText);
-//        convertView.findViewById(R.id.imageBackground).setVisibility(TextView.INVISIBLE);
-//        ImageView imageView = convertView.findViewById(R.id.news_card_image);
-//        imageView.setVisibility(TextView.INVISIBLE);
         LinearLayout layout = convertView.findViewById(R.id.introcard_content);
         layout.setVisibility(LinearLayout.VISIBLE);
+        ImageView imageView = convertView.findViewById(R.id.news_card_image);
+        imageView.setImageResource(R.mipmap.ic_launcher);
     }
 
     @Override
@@ -42,7 +41,15 @@ public class IntroductionSwipeCard implements ISwipeCard {
     @Override
     public void dislike(SwipeFragment swipeFragment) { }
     @Override
-    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) { }
+    public void onSwipe(SwipeFragment swipeFragment, float scrollProgressPercent) {
+        Button skip = swipeFragment.skip;
+        skip.setAlpha(0);
+    }
+
+    @Override
+    public void initAlphaSkipButton(Button skipButton) {
+        skipButton.setAlpha(0);
+    }
 
 
 }

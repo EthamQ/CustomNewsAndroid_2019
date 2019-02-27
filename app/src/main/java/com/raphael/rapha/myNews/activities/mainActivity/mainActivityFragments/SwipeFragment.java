@@ -21,6 +21,8 @@ import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.api.SwipeApiService;
 import com.raphael.rapha.myNews.api.apiQuery.IQueryListener;
 import com.raphael.rapha.myNews.customAdapters.NewsArticleAdapter;
+import com.raphael.rapha.myNews.http.HttpRequestInfo;
+import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageCombinationService;
 import com.raphael.rapha.myNews.requestDateOffset.DateOffsetService;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
@@ -65,7 +67,7 @@ import pl.droidsonroids.gif.GifImageView;
  * Use the {@link SwipeFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryListener {
+public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryListener, IHttpRequester {
 
     public MainActivity mainActivity;
     public View view;
@@ -92,11 +94,14 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
 
     // Only shown while loading
     Button abortLoading;
+    public Button skip;
 
     // Booleans tracking the state.
     public boolean apiIsLoading = false;
-    boolean dbIsLoading = false;
     public boolean languageChangeIsLoading = false;
+    boolean dbIsLoading = false;
+    boolean canShowTooManyRequestDialogue = true;
+
 
     // Text to display when swiping left or right.
     public TextView leftIndicator;
@@ -130,6 +135,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_swipe, container, false);
 
@@ -146,6 +152,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         // and still available when opening the fragment again.
         if (ArticleDataStorage.temporaryArticlesExist()) {
             swipeCardsList.addAll(ArticleDataStorage.getTemporaryStoredArticles());
+            swipeCardsList.get(0).initAlphaSkipButton(skip);
             swipeCardArrayAdapter.notifyDataSetChanged();
             setVisibilitySwipeCards(true);
         } else {
@@ -279,6 +286,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      */
     public void loadArticlesFromApi() {
         SwipeLoadingService.setLoadingApiRequest(true);
+        canShowTooManyRequestDialogue = true;
         Thread thread = new Thread(() -> {
             try {
                 LinkedList<NewsArticle> apiArticlesToAdd =
@@ -349,6 +357,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                     swipeCardsList.add(new ErrorSwipeCard());
                 }
                 swipeCardsList.remove(0);
+                if(swipeCardsList.size() > 0){
+                    swipeCardsList.get(0).initAlphaSkipButton(skip);
+                }
+
                 boolean alreadyLoadingData = apiIsLoading || dbIsLoading;
                 if (swipeCardsList.size() <= ARTICLE_MINIMUM_BEFORE_LOADING && !alreadyLoadingData) {
                     loadArticlesFromApi();
@@ -379,6 +391,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             public void onScroll(float scrollProgressPercent) {
                 if (!swipeCardsList.isEmpty()) {
                     ISwipeCard currentCard = swipeCardsList.get(0);
+                    // Handle visibility of skip button and the like/dislike text at the bottom.
                     currentCard.onSwipe(SwipeFragment.this, scrollProgressPercent);
                 }
             }
@@ -399,11 +412,20 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     }
 
     public void initObjectsAndServices() {
+        abortLoading = view.findViewById(R.id.button_abort_language_loading);
+        abortLoading.setOnClickListener(view ->abortLanguageChange());
+        skip = view.findViewById(R.id.skip_button);
+        skip.setOnClickListener(view -> {
+            swipeCardsList.remove(0);
+            reloadFragment();
+        });
+
         swipeCardsList = new ArrayList<>();
         swipeCardArrayAdapter = new NewsArticleAdapter(getActivity(), R.layout.swipe_card, swipeCardsList);
         // Only add introduction card when the user just started the app.
         if (mainActivity.showIntroductionCard()) {
             swipeCardsList.add(new IntroductionSwipeCard());
+            swipeCardsList.get(0).initAlphaSkipButton(skip);
             mainActivity.introductionCardWasShown();
         }
 
@@ -416,9 +438,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         dateOffsetDbService = OffsetDbService.getInstance(getActivity().getApplication());
         languageComboDbService = LanguageCombinationDbService.getInstance(getActivity().getApplication());
         setSwipeFunctionality();
-
-        abortLoading = view.findViewById(R.id.button_abort_language_loading);
-        abortLoading.setOnClickListener(view ->abortLanguageChange());
     }
 
     /**
@@ -611,14 +630,39 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * Show a dialogue as soon as the user swipes his first question card to the right
      * to tell him about news of the day.
      */
-    public void showDailyNewsDialogue(){
-        AlertDialog.Builder dialog = new
-                AlertDialog.Builder(mainActivity);
-        dialog.setTitle(R.string.daily_news_dialogue_title);
-        dialog.setMessage(R.string.daily_news_dialogue_message);
-        dialog.setPositiveButton(R.string.daily_news_dialogue_confirm, (
-                positiveDialog, which) -> positiveDialog.cancel()
-        ).create().show();
+    public void showDailyNewsDialogue(int amountTopicsBeforeLike){
+        if(amountTopicsBeforeLike == 0 && !SwipeTimeService.firstTopicWasLiked(mainActivity)){
+            SwipeTimeService.setFirstTopicWasLiked(mainActivity, true);
+            AlertDialog.Builder dialog = new
+                    AlertDialog.Builder(mainActivity);
+            dialog.setTitle(R.string.daily_news_dialogue_title);
+            dialog.setMessage(R.string.daily_news_dialogue_message);
+            dialog.setPositiveButton(R.string.daily_news_dialogue_confirm, (
+                    positiveDialog, which) -> positiveDialog.cancel()
+            ).create().show();
+        }
+        else if(amountTopicsBeforeLike == 4){
+            mainActivity.switchNavigationDrawerItemFromTo(
+                    mainActivity.INDEX_SWIPE_MENU,
+                    mainActivity.INDEX_DAILY_MENU
+            );
+            mainActivity.loadFragment(R.id.nav_news);
+        }
+    }
+
+    public void showTooManyRequestsDialogue(){
+        if(canShowTooManyRequestDialogue){
+            mainActivity.runOnUiThread(() ->{
+                AlertDialog.Builder dialog = new
+                        AlertDialog.Builder(mainActivity);
+                dialog.setTitle(R.string.too_many_requests_title);
+                dialog.setMessage(R.string.too_many_requests_content);
+                dialog.setPositiveButton("Ok", (
+                        positiveDialog, which) -> positiveDialog.cancel()
+                ).create().show();
+                canShowTooManyRequestDialogue = false;
+            });
+        }
     }
 
     /**
@@ -654,6 +698,20 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    /**
+     * Check the response code that the http function passes to this function
+     * and show a corresponding dialogue if something went wrong
+     * @param httpRequestInfo
+     */
+    @Override
+    public void httpResultCallback(HttpRequestInfo httpRequestInfo) {
+        Log.d("429", "GET 429: " + httpRequestInfo.getInformationCode());
+        // Http response code is in the information code.
+        if(httpRequestInfo.getInformationCode() == HttpRequestInfo.TOO_MANY_REQUESTS){
+            showTooManyRequestsDialogue();
         }
     }
 

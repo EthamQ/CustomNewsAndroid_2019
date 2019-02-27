@@ -146,4 +146,14 @@ public class DateService {
         DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy | hh:mm a", Locale.ENGLISH);
         return dateFormat.format(date);
     }
+
+    public static boolean datesEqual(String date1ISO8601, String date2ISO8601){
+        DateTime from = new DateTime( date1ISO8601 );
+        DateTime to = new DateTime( date2ISO8601 );
+        int dayFrom = from.getDayOfMonth();
+        int monthFrom = from.getMonthOfYear();
+        int dayTo = to.getDayOfMonth();
+        int monthTo = to.getMonthOfYear();
+        return dayFrom == dayTo && monthFrom == monthTo;
+    }
 }

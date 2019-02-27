@@ -2,8 +2,11 @@ package com.raphael.rapha.myNews.api;
 
 import android.util.Log;
 
+import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.raphael.rapha.myNews.api.apiKey.ApiKey;
+import com.raphael.rapha.myNews.api.apiQuery.IQueryListener;
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
+import com.raphael.rapha.myNews.http.HttpRequestInfo;
 import com.raphael.rapha.myNews.loading.LoadingService;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.http.HttpRequest;
@@ -35,9 +38,11 @@ public class NewsApi {
 	    String urlForApi = URL_ALL_NEWS_API + ApiKey.getApiKey() + queryBuilder.getQuery();
 		Log.d("newswipe", "category: " + queryBuilder.getNewsCategory() + ", received query:  " + urlForApi);
 	    Log.d("URL", urlForApi);
-        JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi);
+		IQueryListener queryListener = queryBuilder.getQueryListener();
+		HttpRequest httpRequest = new HttpRequest(queryBuilder.getHttpRequester(), new HttpRequestInfo());
+		JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi, httpRequest);
         LoadingService.answerReceived();
-        queryBuilder.getQueryListener().updateLoadingText(LoadingService.getNumberOfAnswersReceivedText());
+		queryListener.updateLoadingText(LoadingService.getNumberOfAnswersReceivedText());
         return NewsApiHelper.jsonToNewsArticleArray(newsArticleJson, newsCategory, languageId);
 	}
 

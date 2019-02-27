@@ -22,6 +22,6 @@ public class SwipeApiService {
      * @throws Exception
      */
     public static LinkedList<NewsArticle> getAllArticlesApiForSwipeCards(SwipeFragment swipeFragment, List<UserPreferenceRoomModel> userPreferenceRoomModels) throws Exception{
-        return ApiServiceHelper.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
+        return SwipeApiServiceHelper.buildNewsArticlesList(swipeFragment, FilterNewsService.getCategoryDistribution(userPreferenceRoomModels));
     }
 }

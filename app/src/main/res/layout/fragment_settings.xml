@@ -4,8 +4,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
-        android:layout_marginTop="@dimen/fragment_top_margin"
-        android:background="@drawable/background">
+        android:layout_marginTop="@dimen/fragment_top_margin">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -36,12 +35,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="So I can afford upgrading my app to provide unlimited news without showing annoying ads" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="More under Info -> Is this app for free?" />
+        android:text="@string/support_settings" />
 
     <Button
         android:id="@+id/payment_button"

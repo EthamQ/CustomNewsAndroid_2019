@@ -2,6 +2,7 @@ package com.raphael.rapha.myNews.api.apiQuery;
 
 import android.util.Log;
 
+import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.raphael.rapha.myNews.topics.TopicService;
@@ -16,6 +17,8 @@ public class NewsApiQueryBuilder {
 
     private IQueryListener queryListener;
 
+    private IHttpRequester httpRequester;
+
     private int languageId = -1;
     public final static String GERMAN = "de";
     public final static String ENGLISH = "en";
@@ -27,13 +30,15 @@ public class NewsApiQueryBuilder {
         this.setLanguage(languageId);
     }
 
-    public void setQueryListener(IQueryListener queryListener) {
-        this.queryListener = queryListener;
-    }
+    public void setQueryListener(IQueryListener queryListener) { this.queryListener = queryListener; }
 
     public IQueryListener getQueryListener() {
         return queryListener;
     }
+
+    public IHttpRequester getHttpRequester() { return httpRequester; }
+
+    public void setHttpRequester(IHttpRequester httpRequester) { this.httpRequester = httpRequester; }
 
     public int getLanguageId() {
         return languageId;
