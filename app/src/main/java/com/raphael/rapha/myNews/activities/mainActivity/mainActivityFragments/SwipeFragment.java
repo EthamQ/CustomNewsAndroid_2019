@@ -172,6 +172,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                 apiIsLoading = loading;
         if(SwipeTimeService.dataIsLoadedTheFirstTime(mainActivity)){
             handleLoadingScreen(true, SwipeLoadingService.FIRST_TIME_LOADING);
+            skip.setAlpha(0);
         }
     });
 
@@ -189,6 +190,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         // Loading status changing language.
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
+            skip.setAlpha(0);
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
             if (loading) {
                 SwipeLoadingService.reactOnLanguageChangeUnsuccessful(this);
