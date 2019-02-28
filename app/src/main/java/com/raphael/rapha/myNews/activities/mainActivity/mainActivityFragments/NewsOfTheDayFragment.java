@@ -164,6 +164,7 @@ public class NewsOfTheDayFragment extends Fragment {
     private void loadArticles(){
         // If once successfully loaded data first time loading will be false.
         boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
+        DailyNewsLoadingService.setLoading(false);
         if(firstTimeLoading){
             setTextNotEnoughTopics();
             likedTopicsLiveData = keyWordDbService.getAllLikedKeyWords();
@@ -194,7 +195,7 @@ public class NewsOfTheDayFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
                 boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
-
+                Log.d("notd", "ready: " + articlesAreReady);
                 if(enoughTopics){
                     ConstraintLayout cl = view.findViewById(R.id.empty_text_container);
                     cl.setVisibility(ConstraintLayout.GONE);
