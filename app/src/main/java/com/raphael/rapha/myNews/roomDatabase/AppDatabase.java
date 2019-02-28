@@ -9,8 +9,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
-import com.raphael.rapha.myNews.roomDatabase.articleLanguageLink.ArticleLanguageLinkRoomModel;
-import com.raphael.rapha.myNews.roomDatabase.articleLanguageLink.IArticleLanguageLinkDao;
+import com.raphael.rapha.myNews.roomDatabase.newsHistory.NewsHistoryRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.newsHistory.INewsHistoryDao;
 import com.raphael.rapha.myNews.roomDatabase.categoryRating.IUserPreferenceDao;
 import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.IKeyWordDao;
@@ -27,9 +27,9 @@ import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomMode
         NewsArticleRoomModel.class,
         KeyWordRoomModel.class,
         LanguageCombinationRoomModel.class,
-        ArticleLanguageLinkRoomModel.class,
+        NewsHistoryRoomModel.class,
         RequestOffsetRoomModel.class
-}, version = 104, exportSchema = false)
+}, version = 105, exportSchema = false)
 @TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 
@@ -39,7 +39,7 @@ public abstract class AppDatabase extends RoomDatabase{
         public abstract IKeyWordDao keyWordDao();
         public abstract ILanguageCombinationDao languageCombinationDao();
         public abstract IRequestOffsetDao requestOffsetDao();
-        public abstract IArticleLanguageLinkDao articleLanguageLinkDao();
+        public abstract INewsHistoryDao newsHistoryDao();
 
         public static synchronized AppDatabase getInstance(Context context){
                 if(instance == null){

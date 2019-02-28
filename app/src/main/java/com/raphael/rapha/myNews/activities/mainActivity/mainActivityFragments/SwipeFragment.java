@@ -25,6 +25,7 @@ import com.raphael.rapha.myNews.http.HttpRequestInfo;
 import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageCombinationService;
 import com.raphael.rapha.myNews.requestDateOffset.DateOffsetService;
+import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
@@ -91,6 +92,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     public KeyWordDbService keyWordDbService;
     public OffsetDbService dateOffsetDbService;
     public LanguageCombinationDbService languageComboDbService;
+    public NewsHistoryDbService newsHistoryDbService;
 
     // Only shown while loading
     Button abortLoading;
@@ -359,6 +361,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                     swipeCardsList.add(new ErrorSwipeCard());
                 }
                 swipeCardsList.remove(0);
+                Log.d("LEFTT", ": " + swipeCardsList.size());
                 if(swipeCardsList.size() > 0){
                     swipeCardsList.get(0).initAlphaSkipButton(skip);
                 }
@@ -434,11 +437,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         leftIndicator = view.findViewById(R.id.swipe_left_indicator);
         rightIndicator = view.findViewById(R.id.swipe_right_indicator);
 
-        ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
-        newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-        keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-        dateOffsetDbService = OffsetDbService.getInstance(getActivity().getApplication());
-        languageComboDbService = LanguageCombinationDbService.getInstance(getActivity().getApplication());
+        ratingDbService = RatingDbService.getInstance(mainActivity.getApplication());
+        newsArticleDbService = NewsArticleDbService.getInstance(mainActivity.getApplication());
+        keyWordDbService = KeyWordDbService.getInstance(mainActivity.getApplication());
+        dateOffsetDbService = OffsetDbService.getInstance(mainActivity.getApplication());
+        languageComboDbService = LanguageCombinationDbService.getInstance(mainActivity.getApplication());
+        newsHistoryDbService = NewsHistoryDbService.getInstance(mainActivity.getApplication());
         setSwipeFunctionality();
     }
 
@@ -643,7 +647,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                     positiveDialog, which) -> positiveDialog.cancel()
             ).create().show();
         }
-        else if(amountTopicsBeforeLike == 4){
+        else if(amountTopicsBeforeLike >= 4 && !SwipeTimeService.alreadyRedirected(mainActivity)){
+            SwipeTimeService.setRedirected(mainActivity, true);
             mainActivity.switchNavigationDrawerItemFromTo(
                     mainActivity.INDEX_SWIPE_MENU,
                     mainActivity.INDEX_DAILY_MENU

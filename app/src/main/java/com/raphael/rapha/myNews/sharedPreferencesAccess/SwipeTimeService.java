@@ -11,6 +11,7 @@ public class SwipeTimeService {
 
     private final static String FIRST_TIME_LOADING = "swipe_first_time" + NewsOfTheDayTimeService.version;
     private final static String FIRST_TOPIC_LIKED = "first_topic_liked" + NewsOfTheDayTimeService.version;
+    private final static String REDIRECTED_TO_DAILY = "redirected" + NewsOfTheDayTimeService.version;
 
     public static boolean dataIsLoadedTheFirstTime(Context context){
         if(!SharedPreferencesService.valueIsSetDefault(context, FIRST_TIME_LOADING)){
@@ -32,6 +33,17 @@ public class SwipeTimeService {
             return false;
         }
         return SharedPreferencesService.getBooleanDefault(context, FIRST_TOPIC_LIKED);
+    }
+
+    public static void setRedirected(Context context, boolean redirected){
+        SharedPreferencesService.storeDataDefault(context, redirected, REDIRECTED_TO_DAILY);
+    }
+
+    public static boolean alreadyRedirected(Context context){
+        if(!SharedPreferencesService.valueIsSetDefault(context, REDIRECTED_TO_DAILY)){
+            return false;
+        }
+        return SharedPreferencesService.getBooleanDefault(context, REDIRECTED_TO_DAILY);
     }
 
 }

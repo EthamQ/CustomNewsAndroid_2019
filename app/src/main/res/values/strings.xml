@@ -54,6 +54,7 @@
     <string name="nav_settings">Settings</string>
     <string name="nav_daily">News of the day</string>
     <string name="nav_info">Info</string>
+    <string name="nav_history">History of liked articles</string>
     <!-- =================================== -->
 
 
@@ -160,6 +161,14 @@
 
 
     <!-- =================================== -->
+    <!-- History fragment -->
+    <string name="no_liked_articles">
+        Swipe at least one article to the right to see your liked articles.
+    </string>
+    <!-- =================================== -->
+
+
+    <!-- =================================== -->
     <!-- Settings fragment -->
     <string name="support_settings">
         So I can afford upgrading my app to provide unlimited news
@@ -182,7 +191,6 @@
         \n\nMore information about why I have to pay this amount in the <b>Info</b> menu.
     </string>
     <!-- =================================== -->
-
 
 
 </resources>

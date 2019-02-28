@@ -121,6 +121,7 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     @Override
     public void like(SwipeFragment swipeFragment) {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
+        swipeFragment.newsHistoryDbService.insert(this);
         updateValuesAfterSwipe(swipeFragment);
     }
     @Override

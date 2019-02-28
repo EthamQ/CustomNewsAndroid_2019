@@ -18,13 +18,32 @@
     tools:context=".activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment"
     android:descendantFocusability="blocksDescendants">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="News Selected by the topics you liked"
-        android:layout_marginLeft="15dp"
-        android:textSize="@dimen/titleText"
-        android:textColor="@color/turquis_dark"/>
+        android:layout_marginTop="@dimen/activity_vertical_margin_big"
+        tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+
+        <!-- TODO: Update blank fragment layout -->
+
+        <ImageView
+            android:layout_width="47dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_love"
+            android:tint="@color/turquis_dark"
+            android:layout_marginLeft="10dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="News Selected by the topics you liked"
+            android:textColor="@color/turquis_dark"
+            android:textSize="@dimen/titleText"
+            android:layout_marginLeft="10dp"/>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/news_of_the_day_info"

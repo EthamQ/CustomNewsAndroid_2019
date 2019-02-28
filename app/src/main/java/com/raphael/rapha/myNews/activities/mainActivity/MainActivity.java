@@ -17,6 +17,7 @@ import android.view.MenuItem;
 
 import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.InfoFragment;
+import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.NewsHistoryFragment;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SettingsFragment;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.StatisticFragment;
@@ -30,7 +31,8 @@ public class MainActivity extends AppCompatActivity
         StatisticFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         InfoFragment.OnFragmentInteractionListener,
-        NewsOfTheDayFragment.OnFragmentInteractionListener{
+        NewsOfTheDayFragment.OnFragmentInteractionListener,
+        NewsHistoryFragment.OnFragmentInteractionListener {
 
     // To know what should happen when the user presses back.
     public int currentFragment = R.id.nav_swipe;
@@ -39,8 +41,9 @@ public class MainActivity extends AppCompatActivity
     public final int INDEX_SWIPE_MENU = 0;
     public final int INDEX_DAILY_MENU = 1;
     public final int INDEX_STATISTICS_MENU = 2;
-    public final int INDEX_INFO_MENU = 3;
-    public final int INDEX_SETTINGS_MENU = 4;
+    public final int INDEX_HISTORY_MENU = 3;
+    public final int INDEX_INFO_MENU = 4;
+    public final int INDEX_SETTINGS_MENU = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,6 +164,10 @@ public class MainActivity extends AppCompatActivity
             toolbar.setTitle(R.string.nav_daily);
             ft.replace(R.id.your_placeholder, new NewsOfTheDayFragment());
             ft.commitAllowingStateLoss();
+        } else if(fragmentId == R.id.nav_history){
+            toolbar.setTitle(R.string.nav_history);
+            ft.replace(R.id.your_placeholder, new NewsHistoryFragment());
+            ft.commit();
         }
     }
 

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group1">
         <item
             android:id="@+id/nav_swipe"
             android:icon="@drawable/ic_swipe_right"
@@ -12,10 +13,21 @@
             android:id="@+id/nav_news"
             android:icon="@drawable/ic_newspaper_"
             android:title="News of the day" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/group2">
         <item
             android:id="@+id/nav_statistics"
             android:icon="@drawable/chart"
             android:title="@string/nav_statistics" />
+        <item
+            android:id="@+id/nav_history"
+            android:icon="@drawable/ic_clock"
+            android:title="History of liked articles" />
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/group3">
         <item
             android:id="@+id/nav_info"
             android:icon="@drawable/ic_information_"

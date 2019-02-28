@@ -62,6 +62,10 @@ public class NewsOfTheDayFragment extends Fragment {
     NewsOfTheDayListAdapter adapter;
     NewsArticleDbService newsArticleDbService;
     KeyWordDbService keyWordDbService;
+    boolean articlesAreReady = false;
+
+    LiveData<List<KeyWordRoomModel>> likedTopicsLiveData;
+    Observer topicObserver;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -95,7 +99,7 @@ public class NewsOfTheDayFragment extends Fragment {
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
         keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
         articleListView = view.findViewById(R.id.articleList);
-        adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay);
+        adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay, true);
         articleListView.setAdapter(adapter);
         articleListView.setOnItemClickListener((arg0, view, position, arg3) -> {
             NewsArticle clickedArticle = (NewsArticle)articleListView.getItemAtPosition(position);
@@ -117,6 +121,7 @@ public class NewsOfTheDayFragment extends Fragment {
         final boolean[] lastLoadingStatus = new boolean[1];
         DailyNewsLoadingService.getLoading().observe(getActivity(), loading ->{
             handleLoading(loading);
+            articlesAreReady = !loading;
             // Reload if change from loading true to false.
             reloadFragmentAfterLoadingData(lastLoadingStatus[0], loading);
             lastLoadingStatus[0] = loading;
@@ -160,8 +165,18 @@ public class NewsOfTheDayFragment extends Fragment {
         // If once successfully loaded data first time loading will be false.
         boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
         if(firstTimeLoading){
-            scheduleArticleRequests();
             setTextNotEnoughTopics();
+            likedTopicsLiveData = keyWordDbService.getAllLikedKeyWords();
+            likedTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
+                @Override
+                public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+                    topicObserver = this;
+                    if(keyWordRoomModels.size() >= ARTICLE_MINIMUM){
+                        scheduleArticleRequests();
+                        likedTopicsLiveData.removeObserver(this);
+                    }
+                }
+            });
         }
         else{
             loadArticlesFromDatabase();
@@ -187,7 +202,7 @@ public class NewsOfTheDayFragment extends Fragment {
                 if(!enoughTopics){
                     setTextNotEnoughTopics();
                 }
-                else if(!topics.isEmpty()){
+                else if(!topics.isEmpty() && articlesAreReady){
                     // Provides a language id for every topic at the corresponding index.
                     int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
                             topics.size(),
@@ -340,6 +355,9 @@ public class NewsOfTheDayFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+        if(this.likedTopicsLiveData != null){
+            this.likedTopicsLiveData.removeObserver(topicObserver);
+        }
         mListener = null;
     }
 

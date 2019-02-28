@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+
+    <ScrollView android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_marginTop="@dimen/fragment_top_margin">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment"
+            android:descendantFocusability="blocksDescendants">
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_big"
+                tools:context=".activities.mainActivity.mainActivityFragments.SettingsFragment">
+
+                <!-- TODO: Update blank fragment layout -->
+
+                <ImageView
+                    android:layout_width="37dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="10dp"
+                    android:src="@drawable/ic_clock"
+                    android:tint="@color/turquis_dark" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="The last 30 articles you liked"
+                    android:textColor="@color/turquis_dark"
+                    android:textSize="@dimen/titleText"
+                    android:layout_marginLeft="10dp"/>
+
+            </LinearLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/empty_text_container_history"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin_ultra">
+
+                <TextView
+                    android:id="@+id/empty_text_history"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/no_liked_articles"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/subTitleText"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <ListView
+                android:id="@+id/article_list_history"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/activity_vertical_margin_ultra"/>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

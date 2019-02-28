@@ -19,6 +19,7 @@ import com.raphael.rapha.myNews.payment.BillingManager;
 import com.raphael.rapha.myNews.payment.MyBillingUpdateListener;
 import com.raphael.rapha.myNews.payment.PurchasedItemsListener;
 import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
 import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.InAppPaymentService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
@@ -91,12 +92,13 @@ public class SettingsFragment extends Fragment implements PurchasedItemsListener
                     .setMessage("Do you really want to reset all of your liked categories and topics? " +
                             "You can't reverse this decision.")
                     .setPositiveButton("Yes reset", (dialogInterface, i) -> {
-                        RatingDbService ratingDbService = RatingDbService.getInstance(getActivity().getApplication());
-                        ratingDbService.deleteAllUserPreferences(getActivity().getApplication());
-                        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
-                        keyWordDbService.deleteAll();
+                        RatingDbService.getInstance(mainActivity.getApplication())
+                                .deleteAllUserPreferences(mainActivity.getApplication());
+                        KeyWordDbService.getInstance(mainActivity.getApplication()).deleteAll();
+                        NewsHistoryDbService.getInstance(mainActivity.getApplication()).deleteAll();
                         NewsOfTheDayTimeService.resetLastLoaded(getContext());
                         SwipeTimeService.setFirstTopicWasLiked(getContext(), false);
+                        SwipeTimeService.setRedirected(getContext(), false);
                         dialogInterface.cancel();
                     })
                     .setNegativeButton("Cancel", (dialogInterface, i) -> dialogInterface.cancel())
