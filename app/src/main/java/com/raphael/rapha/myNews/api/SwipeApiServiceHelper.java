@@ -1,9 +1,5 @@
 package com.raphael.rapha.myNews.api;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.support.annotation.Nullable;
-
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
 import com.raphael.rapha.myNews.dateOffset.DateOffsetService;
@@ -11,9 +7,6 @@ import com.raphael.rapha.myNews.loading.LoadingService;
 import com.raphael.rapha.myNews.temporaryDataStorage.DateOffsetDataStorage;
 import com.raphael.rapha.myNews.languages.Language;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
-import com.raphael.rapha.myNews.roomDatabase.LanguageCombinationDbService;
-import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
-import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.categoryDistribution.Distribution;
 import com.raphael.rapha.myNews.categoryDistribution.DistributionContainer;
@@ -22,7 +15,6 @@ import com.raphael.rapha.myNews.utils.DateService;
 import org.joda.time.DateTime;
 
 import java.util.Collections;
-import java.util.List;
 
 import java.util.LinkedList;
 
@@ -99,7 +91,7 @@ public class SwipeApiServiceHelper {
         queryBuilder.setDateFrom(dateFrom);
         String dateTo = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
         if(!dateTo.isEmpty()){
-            if(DateService.datesEqual(dateFrom, dateTo)){
+            if(DateService.dateFromIsEqualOrAfterDateTo(dateFrom, dateTo)){
                 DateOffsetService.resetDateOffsetForCurrentLanguages(swipeFragment, distribution.categoryId);
             }
             else{

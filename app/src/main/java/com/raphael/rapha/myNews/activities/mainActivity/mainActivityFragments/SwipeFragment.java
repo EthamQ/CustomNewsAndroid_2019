@@ -23,6 +23,7 @@ import com.raphael.rapha.myNews.api.apiQuery.IQueryListener;
 import com.raphael.rapha.myNews.customAdapters.NewsArticleAdapter;
 import com.raphael.rapha.myNews.http.HttpRequestInfo;
 import com.raphael.rapha.myNews.http.IHttpRequester;
+import com.raphael.rapha.myNews.internetConnection.InternetConnectionService;
 import com.raphael.rapha.myNews.languages.LanguageCombinationService;
 import com.raphael.rapha.myNews.requestDateOffset.DateOffsetService;
 import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
@@ -172,11 +173,15 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     public void startObservingLoadingStatus() {
         SwipeLoadingService.getLoadingApiRequest().observe(getActivity(), loading -> {
                 apiIsLoading = loading;
-        if(SwipeTimeService.dataIsLoadedTheFirstTime(mainActivity)){
-            handleLoadingScreen(true, SwipeLoadingService.FIRST_TIME_LOADING);
-            skip.setAlpha(0);
-        }
     });
+
+        SwipeLoadingService.getApiRequestLoadingLoadingScreen().observe(mainActivity, loading ->{
+            if(loading){
+                skip.setAlpha(0);
+                checkInternetConnection();
+            }
+            handleLoadingScreen(loading, SwipeLoadingService.FIRST_TIME_LOADING);
+        });
 
         // Loading status database.
         SwipeLoadingService.getLoadingDatabase().observe(getActivity(), loading -> {
@@ -192,10 +197,13 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
         // Loading status changing language.
         SwipeLoadingService.getLoadingLanguageChange().observe(getActivity(), loading -> {
             languageChangeIsLoading = loading;
-            skip.setAlpha(0);
+            Log.d("bbupp", "Loading: " + loading);
             handleLoadingScreen(loading, SwipeLoadingService.CHANGE_LANGUAGE);
             if (loading) {
-                SwipeLoadingService.reactOnLanguageChangeUnsuccessful(this);
+                skip.setAlpha(0);
+                if(!swipeCardsList.isEmpty()){
+                    ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
+                }
             }
             int visibilityAbort = loading ? Button.VISIBLE : Button.INVISIBLE;
             abortLoading.setVisibility(visibilityAbort);
@@ -252,7 +260,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                     public void onChanged(@Nullable List<NewsArticleRoomModel> articleModels) {
                         if (articleModels.isEmpty()) {
                             SwipeLoadingService.setLoadingApiRequest(true);
-                            SwipeTimeService.setDataIsLoadedTheFirstTime(mainActivity, false);
+                            SwipeLoadingService.setApiRequestLoadingLoadingScreen(true);
                             loadArticlesFromApi();
                         } else {
                             SwipeLoadingService.setLoadingDatabase(true);
@@ -289,6 +297,10 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * Reload this fragment.
      */
     public void loadArticlesFromApi() {
+//        if(SwipeTimeService.dataIsLoadedTheFirstTime(mainActivity)){
+//            SwipeLoadingService.setApiRequestLoadingLoadingScreen(true);
+//            SwipeTimeService.setDataIsLoadedTheFirstTime(mainActivity, false);
+//        }
         SwipeLoadingService.setLoadingApiRequest(true);
         canShowTooManyRequestDialogue = true;
         Thread thread = new Thread(() -> {
@@ -418,10 +430,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
 
     public void initObjectsAndServices() {
         abortLoading = view.findViewById(R.id.button_abort_language_loading);
-        abortLoading.setOnClickListener(view ->abortLanguageChange());
+        abortLoading.setOnClickListener(view -> abortLanguageChange());
         skip = view.findViewById(R.id.skip_button);
         skip.setOnClickListener(view -> {
-            swipeCardsList.remove(0);
+            if(!swipeCardsList.isEmpty()){
+                swipeCardsList.remove(0);
+            }
             reloadFragment();
         });
 
@@ -452,16 +466,22 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * Show an error toast. Reload this fragment.
      */
     public void abortLanguageChange(){
-        SwipeLoadingService.setLoadingLanguageChange(false);
+        Log.d("bbuppp", "abortLanguageChange()");
+        boolean[] restored = LanguageSelectionDataStorage.restorePreviousLanguageSelection();
         swipeCardsList.addAll(ArticleDataStorage.getBackUpArticlesIfError());
         swipeCardArrayAdapter.notifyDataSetChanged();
         LanguageSettingsService.saveChecked(
                 mainActivity,
-                LanguageSelectionDataStorage.restorePreviousLanguageSelection()
+                restored
         );
 
-        CharSequence text = "Sorry something went wrong, please try it again later or check your internet connection";
-        Toast.makeText(mainActivity, text, Toast.LENGTH_LONG).show();
+        // Sometimes reload started before restoring the language
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        SwipeLoadingService.setLoadingLanguageChange(false);
         reloadFragment();
     }
 
@@ -476,6 +496,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             AlertDialog.Builder dialog = new
                     AlertDialog.Builder(mainActivity);
             dialog.setTitle(R.string.language_change_title);
+            dialog.setCancelable(false);
 
             final String[] languageItems = LanguageSettingsService.languageItems;
             final boolean[] initialSelection = LanguageSettingsService.loadChecked(mainActivity);
@@ -489,6 +510,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
 
             dialog.setPositiveButton(R.string.language_change_confirm, (positiveDialog, which) -> {
                 if (LanguageSettingsService.userChangedLanguage(initialSelection, currentSelection)) {
+                    checkInternetConnectionToast(SwipeLoadingService.CHANGE_LANGUAGE);
                     SwipeLoadingService.setLoadingLanguageChange(true);
                     LiveData<List<LanguageCombinationRoomModel>> allLanguageCombinationsLiveData
                             = languageComboDbService.getAll();
@@ -532,7 +554,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             DateOffsetDataStorage.resetData();
             // Invalid language combination
             if(languageCombinationId < 0){
-                ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                 swipeCardsList.clear();
                 loadArticlesFromApi();
             }
@@ -560,7 +581,6 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                         else{
                             DateOffsetDataStorage.setDateOffsets(dateOffsetsForLanguageCombination);
                         }
-                        ArticleDataStorage.setBackUpArticlesIfError(swipeCardsList);
                         swipeCardsList.clear();
                         loadArticlesFromApi();
                         dateOffsetsLiveData.removeObserver(this);
@@ -637,24 +657,54 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * to tell him about news of the day.
      */
     public void showDailyNewsDialogue(int amountTopicsBeforeLike){
-        if(amountTopicsBeforeLike == 0 && !SwipeTimeService.firstTopicWasLiked(mainActivity)){
-            SwipeTimeService.setFirstTopicWasLiked(mainActivity, true);
-            AlertDialog.Builder dialog = new
-                    AlertDialog.Builder(mainActivity);
-            dialog.setTitle(R.string.daily_news_dialogue_title);
-            dialog.setMessage(R.string.daily_news_dialogue_message);
-            dialog.setPositiveButton(R.string.daily_news_dialogue_confirm, (
-                    positiveDialog, which) -> positiveDialog.cancel()
-            ).create().show();
+                if(amountTopicsBeforeLike == 0 && !SwipeTimeService.firstTopicWasLiked(mainActivity)){
+                    SwipeTimeService.setFirstTopicWasLiked(mainActivity, true);
+                    AlertDialog.Builder dialog = new
+                            AlertDialog.Builder(mainActivity);
+                    dialog.setTitle(R.string.daily_news_dialogue_title);
+                    dialog.setMessage(R.string.daily_news_dialogue_message);
+                    dialog.setPositiveButton(R.string.daily_news_dialogue_confirm, (
+                            positiveDialog, which) -> positiveDialog.cancel()
+                    ).create().show();
+                }
+                else if(amountTopicsBeforeLike >= 4
+                        && !SwipeTimeService.alreadyRedirected(mainActivity)){
+                    new Thread(() ->{
+                        if(InternetConnectionService.isOnline()){
+                            mainActivity.runOnUiThread(() ->{
+                                SwipeTimeService.setRedirected(mainActivity, true);
+                                mainActivity.switchNavigationDrawerItemFromTo(
+                                        mainActivity.INDEX_SWIPE_MENU,
+                                        mainActivity.INDEX_DAILY_MENU
+                                );
+                                mainActivity.loadFragment(R.id.nav_news);
+                            });
+
+                        }
+                        else{
+                            mainActivity.runOnUiThread(() -> showToastNoInternet(DailyNewsLoadingService.LOAD_DAILY_NEWS));
+                        }
+                    }).start();
+                }
+    }
+
+    private void showToastNoInternet(int type){
+        int message = -1;
+        switch(type){
+            case SwipeLoadingService.CHANGE_LANGUAGE: message = R.string.no_internet_language_change; break;
+            case DailyNewsLoadingService.LOAD_DAILY_NEWS: message = R.string.no_internet_daily; break;
         }
-        else if(amountTopicsBeforeLike >= 4 && !SwipeTimeService.alreadyRedirected(mainActivity)){
-            SwipeTimeService.setRedirected(mainActivity, true);
-            mainActivity.switchNavigationDrawerItemFromTo(
-                    mainActivity.INDEX_SWIPE_MENU,
-                    mainActivity.INDEX_DAILY_MENU
-            );
-            mainActivity.loadFragment(R.id.nav_news);
+        if(message != -1){
+            Toast.makeText(mainActivity, message, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void checkInternetConnectionToast(int type){
+        new Thread(() -> {
+            if(!InternetConnectionService.isOnline()){
+                mainActivity.runOnUiThread(() -> showToastNoInternet(type));
+            }
+        }).start();
     }
 
     public void showTooManyRequestsDialogue(){
@@ -664,12 +714,31 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                         AlertDialog.Builder(mainActivity);
                 dialog.setTitle(R.string.too_many_requests_title);
                 dialog.setMessage(R.string.too_many_requests_content);
-                dialog.setPositiveButton("Ok", (
-                        positiveDialog, which) -> positiveDialog.cancel()
-                ).create().show();
+                dialog.setPositiveButton("Ok", (positiveDialog, which) ->
+                        positiveDialog.cancel()).create().show();
                 canShowTooManyRequestDialogue = false;
             });
         }
+    }
+
+    private void checkInternetConnection(){
+        new Thread(() ->{
+            if(!InternetConnectionService.isOnline()){
+                mainActivity.runOnUiThread(() ->{
+                    AlertDialog.Builder dialog = new
+                            AlertDialog.Builder(mainActivity);
+                    dialog.setTitle(R.string.no_internet_title);
+                    dialog.setCancelable(false);
+                    dialog.setMessage(R.string.no_internet_content);
+                    dialog.setPositiveButton(R.string.no_internet_positive_button, (positiveDialog, which) -> {
+                        SwipeLoadingService.setApiRequestLoadingLoadingScreen(false);
+                        loadArticlesFromApi();
+                        SwipeLoadingService.setApiRequestLoadingLoadingScreen(true);
+                        positiveDialog.cancel();
+                    }).create().show();
+                });
+            }
+        }).start();
     }
 
     /**
@@ -715,9 +784,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      */
     @Override
     public void httpResultCallback(HttpRequestInfo httpRequestInfo) {
-        Log.d("429", "GET 429: " + httpRequestInfo.getInformationCode());
-        // Http response code is in the information code.
-        if(httpRequestInfo.getInformationCode() == HttpRequestInfo.TOO_MANY_REQUESTS){
+        if(httpRequestInfo.getHttpResponseCode() == HttpRequestInfo.TOO_MANY_REQUESTS){
             showTooManyRequestsDialogue();
         }
     }

@@ -1,6 +1,8 @@
 package com.raphael.rapha.myNews.api;
+import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.NewsOfTheDayFragment;
 import com.raphael.rapha.myNews.http.HttpRequest;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
+import com.raphael.rapha.myNews.topics.TopicWordsTransformation;
 
 public class NewsOfTheDayApiService {
 
@@ -8,7 +10,13 @@ public class NewsOfTheDayApiService {
     static final int REQUEST_AMOUNT_AFTER_INITIAL_LOAD = 20;
 
     public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language) throws Exception{
-        int requestAmount = REQUEST_AMOUNT_AFTER_INITIAL_LOAD;
+        boolean firstTimeRequestingData = false;
+        if(httpRequest.requestInfo.getContext() != null){
+            firstTimeRequestingData = NewsOfTheDayTimeService.firstTimeLoadingData(
+                    httpRequest.requestInfo.getContext()
+            );
+        }
+        int requestAmount = firstTimeRequestingData ? 100 : REQUEST_AMOUNT_AFTER_INITIAL_LOAD;
         ApiService.getArticlesNewsApiByKeyWords(
                 httpRequest,
                 queryWords,

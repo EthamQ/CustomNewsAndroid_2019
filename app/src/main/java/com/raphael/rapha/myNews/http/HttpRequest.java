@@ -1,12 +1,13 @@
 package com.raphael.rapha.myNews.http;
 
+import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
 
 public class HttpRequest {
 
-    IHttpRequester httpRequester;
+    public IHttpRequester httpRequester;
     public HttpRequestInfo requestInfo;
 
     public HttpRequest(IHttpRequester httpRequester, HttpRequestInfo requestInfo){

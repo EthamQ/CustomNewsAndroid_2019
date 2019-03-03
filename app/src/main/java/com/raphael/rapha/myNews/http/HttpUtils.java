@@ -43,7 +43,7 @@ public class HttpUtils {
 		int responseCode = connnection.getResponseCode();
 		// Pass the response code to the calling fragment or activity to handle it.
 		if(httpRequest.httpRequester != null){
-			httpRequest.requestInfo.setInformationCode(responseCode);
+			httpRequest.requestInfo.setHttpResponseCode(responseCode);
 			httpRequest.httpRequester.httpResultCallback(httpRequest.requestInfo);
 		}
 		Log.d("HTTPCHECK", "Request to URL: " + url + ", ResponseCode: " + responseCode);

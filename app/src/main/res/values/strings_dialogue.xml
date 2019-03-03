@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- =================================== -->
+    <!-- No internet dialogue -->
+    <string name="no_internet_title">No internet connection</string>
+    <string name="no_internet_content">
+        Unfortunately there seems to be a problem with your internet connection
+        so we can\'t load articles right now.
+        \n\nPlease check it and then try it again.
+    </string>
+    <string name="no_internet_positive_button">Try again</string>
+    <!-- =================================== -->
+
+    <!-- =================================== -->
+    <!-- No internet Toast -->
+    <string name="no_internet_daily">
+        There seems to be a problem with your internet connection so we can\'t
+        load your news of the day right now
+    </string>
+    <string name="no_internet_language_change">
+        There seems to be a problem with your internet connection so we can\'t
+        load articles in another language right now
+    </string>
+    <!-- =================================== -->
+
+
+</resources>

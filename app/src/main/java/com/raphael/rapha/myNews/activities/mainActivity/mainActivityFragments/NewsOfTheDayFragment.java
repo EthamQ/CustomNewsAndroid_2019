@@ -23,20 +23,30 @@ import android.arch.lifecycle.Observer;
 import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.activities.viewElements.DimensionService;
+import com.raphael.rapha.myNews.api.NewsApiHelper;
+import com.raphael.rapha.myNews.api.NewsOfTheDayApiService;
 import com.raphael.rapha.myNews.customAdapters.NewsOfTheDayListAdapter;
+import com.raphael.rapha.myNews.http.HttpRequest;
+import com.raphael.rapha.myNews.http.HttpRequestInfo;
+import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.jobScheduler.NewsOfTheDayJobScheduler;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
+import com.raphael.rapha.myNews.notifications.NewsOfTheDayNotificationService;
 import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
 import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
+import com.raphael.rapha.myNews.topics.TopicWordsTransformation;
 import com.raphael.rapha.myNews.utils.DateService;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -64,6 +74,7 @@ public class NewsOfTheDayFragment extends Fragment {
     KeyWordDbService keyWordDbService;
     boolean articlesAreReady = false;
 
+    // Stored here to remove the subscription when closing the fragment to a void a bug.
     LiveData<List<KeyWordRoomModel>> likedTopicsLiveData;
     Observer topicObserver;
 
@@ -137,7 +148,13 @@ public class NewsOfTheDayFragment extends Fragment {
     private void reloadFragmentAfterLoadingData(boolean lastLoadingValue, boolean currentLoadingValue){
         boolean isLoading = currentLoadingValue;
         boolean wasLoading = lastLoadingValue != currentLoadingValue;
-        if(mainActivity != null && wasLoading && !isLoading){
+        if(wasLoading && !isLoading){
+            reloadFragment();
+        }
+    }
+
+    private void reloadFragment(){
+        if(mainActivity != null){
             mainActivity.loadFragment(R.id.nav_news);
         }
     }
@@ -164,9 +181,11 @@ public class NewsOfTheDayFragment extends Fragment {
     private void loadArticles(){
         // If once successfully loaded data first time loading will be false.
         boolean firstTimeLoading = NewsOfTheDayTimeService.firstTimeLoadingData(getContext());
+        // Set false at first. If necessary the job scheduler sets it true afterwards.
         DailyNewsLoadingService.setLoading(false);
         if(firstTimeLoading){
             setTextNotEnoughTopics();
+            // Only start when enough topics are in the database.
             likedTopicsLiveData = keyWordDbService.getAllLikedKeyWords();
             likedTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
                 @Override
@@ -195,7 +214,6 @@ public class NewsOfTheDayFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
                 boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
-                Log.d("notd", "ready: " + articlesAreReady);
                 if(enoughTopics){
                     ConstraintLayout cl = view.findViewById(R.id.empty_text_container);
                     cl.setVisibility(ConstraintLayout.GONE);
@@ -210,13 +228,14 @@ public class NewsOfTheDayFragment extends Fragment {
                             LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity)
                     );
                     int languageArrayIndex = 0;
+                    int languageId = languageIds[languageArrayIndex];
                     for(int i = 0; i < topics.size(); i++){
-                        Log.d("langid", "look for topic: " + topics.get(i).keyWord);
                         // Get articles for every topic and add them to the view.
                         addArticleForTopicToView(
                                 topics.get(i).keyWord,
-                                LanguageSettingsService.getLanguageIdAsString(languageIds[languageArrayIndex++])
+                                LanguageSettingsService.getLanguageIdAsString(languageId)
                         );
+                        languageArrayIndex++;
                     }
                     topicsOfTheDayLiveData.removeObserver(this);
                 }
@@ -233,18 +252,17 @@ public class NewsOfTheDayFragment extends Fragment {
      * @param topic
      */
     private void addArticleForTopicToView(String topic, String languageId){
+        String keyWord = topic;
         if(mainActivity != null){
             LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
                     newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
             articlesForTopicLiveData.observe(mainActivity, new Observer<List<NewsArticleRoomModel>>() {
                 @Override
                 public void onChanged(@Nullable List<NewsArticleRoomModel> articlesForTopic) {
-                    Log.d("langid", "add with lang id get 0: " + articlesForTopic.size());
-                    if(!articlesForTopic.isEmpty()){
+                    if(!articlesForTopic.isEmpty()) {
                         // Look if you find article with the language Id
                         for(int i = 0; i < articlesForTopic.size(); i++){
                             if(articlesForTopic.get(i).languageId.equals(languageId)){
-                                Log.d("langid", "add with lang id: " + articlesForTopic.get(i).languageId + ", title: " + articlesForTopic.get(i).title);
                                 NewsArticleRoomModel modelToAdd = articlesForTopic.get(i);
                                 if(!modelToAdd.hasBeenRead){
                                     newsArticleDbService.setAsRead(modelToAdd);
@@ -258,7 +276,6 @@ public class NewsOfTheDayFragment extends Fragment {
                                 break;
                             }
                         }
-
                     }
                 }
             });
@@ -278,7 +295,6 @@ public class NewsOfTheDayFragment extends Fragment {
                 .build();
         JobScheduler scheduler = (JobScheduler) getActivity().getSystemService(JOB_SCHEDULER_SERVICE);
         int resultCode = scheduler.schedule(info);
-        Log.d("loaddd", "" + resultCode);
         if(resultCode < 0){
             DailyNewsLoadingService.setLoading(false);
         }

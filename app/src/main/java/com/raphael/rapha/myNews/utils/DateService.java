@@ -147,13 +147,15 @@ public class DateService {
         return dateFormat.format(date);
     }
 
-    public static boolean datesEqual(String date1ISO8601, String date2ISO8601){
-        DateTime from = new DateTime( date1ISO8601 );
-        DateTime to = new DateTime( date2ISO8601 );
+    public static boolean dateFromIsEqualOrAfterDateTo(String dateFromISO8601, String dateToISO8601){
+        DateTime from = new DateTime( dateFromISO8601 );
+        DateTime to = new DateTime( dateToISO8601 );
         int dayFrom = from.getDayOfMonth();
         int monthFrom = from.getMonthOfYear();
         int dayTo = to.getDayOfMonth();
         int monthTo = to.getMonthOfYear();
-        return dayFrom == dayTo && monthFrom == monthTo;
+        boolean equal = dayFrom >= dayTo && monthFrom >= monthTo;
+        boolean shouldResetDateOffset = from.isAfter(to);
+        return equal ? equal : shouldResetDateOffset;
     }
 }

@@ -15,6 +15,7 @@ import com.raphael.rapha.myNews.http.HttpRequestInfo;
 import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
+import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
 import com.raphael.rapha.myNews.topics.TopicWordsTransformation;
 import com.raphael.rapha.myNews.notifications.NewsOfTheDayNotificationService;
 import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
@@ -156,7 +157,9 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         // Send notification when all responses have arrived
         if(numberOfReceivedResponses == numberOfSentRequests){
             DailyNewsLoadingService.setLoading(false);
-                NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
+            // No redirect to news of the day necessary after initial load.
+            SwipeTimeService.setRedirected(this, true);
+            NewsOfTheDayNotificationService.sendNotificationLoadedDailyNews(this);
         }
     }
 

@@ -8,6 +8,7 @@ public class HttpRequestInfo {
     public static final int TOO_MANY_REQUESTS = 429;
 
     private int informationCode;
+    private int httpResponseCode;
     private boolean errorOccurred;
     private Object requestResponse;
     private Context context;
@@ -58,5 +59,13 @@ public class HttpRequestInfo {
 
     public void setRequestResponse(Object requestResponse) {
         this.requestResponse = requestResponse;
+    }
+
+    public int getHttpResponseCode() {
+        return httpResponseCode;
+    }
+
+    public void setHttpResponseCode(int httpResponseCode) {
+        this.httpResponseCode = httpResponseCode;
     }
 }

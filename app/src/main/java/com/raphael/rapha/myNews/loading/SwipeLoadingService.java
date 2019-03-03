@@ -20,6 +20,7 @@ public class SwipeLoadingService {
 
     private static MutableLiveData<Boolean> languageChangeLoading = new MutableLiveData<>();
     private static MutableLiveData<Boolean> apiRequestLoading = new MutableLiveData<>();
+    private static MutableLiveData<Boolean> apiRequestLoadingLoadingScreen = new MutableLiveData<>();
     private static MutableLiveData<Boolean> databaseLoading = new MutableLiveData<>();
 
     // If the user quickly changes between languages there are several threads open
@@ -38,17 +39,26 @@ public class SwipeLoadingService {
 
     public static void setLoadingApiRequest(boolean loading){ apiRequestLoading.setValue(loading); }
 
+    public static void setApiRequestLoadingLoadingScreen(boolean loading) {
+        apiRequestLoadingLoadingScreen.setValue(loading);
+    }
+
     public static void setLoadingDatabase(boolean loading){ databaseLoading.setValue(loading); }
 
     public static void resetLoading(){
         setLoadingApiRequest(false);
         setLoadingDatabase(false);
         setLoadingLanguageChange(false);
+        setApiRequestLoadingLoadingScreen(false);
     }
 
     public static MutableLiveData<Boolean> getLoadingLanguageChange(){ return languageChangeLoading; }
 
     public static MutableLiveData<Boolean> getLoadingApiRequest(){ return apiRequestLoading; }
+
+    public static MutableLiveData<Boolean> getApiRequestLoadingLoadingScreen() {
+        return apiRequestLoadingLoadingScreen;
+    }
 
     public static MutableLiveData<Boolean> getLoadingDatabase(){ return databaseLoading; }
 
