@@ -23,6 +23,7 @@ import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.activities.viewElements.DimensionService;
 import com.raphael.rapha.myNews.customAdapters.NewsOfTheDayListAdapter;
+import com.raphael.rapha.myNews.generalServices.CollectionService;
 import com.raphael.rapha.myNews.jobScheduler.NewsOfTheDayJobScheduler;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
@@ -225,6 +226,13 @@ public class NewsOfTheDayFragment extends Fragment {
                                 LanguageSettingsService.getLanguageIdAsString(languageId)
                         );
                         languageArrayIndex++;
+                        // Quick fix. Needs improvement. We don't know which language the request used.
+                        // So for now we're looking for the topic in all languages.
+                        languageId = languageIds[languageArrayIndex % languageIds.length];
+                        addArticleForTopicToView(
+                                topics.get(i).keyWord,
+                                LanguageSettingsService.getLanguageIdAsString(languageId)
+                        );
                     }
                     topicsOfTheDayLiveData.removeObserver(this);
                 }
@@ -241,7 +249,6 @@ public class NewsOfTheDayFragment extends Fragment {
      * @param topic
      */
     private void addArticleForTopicToView(String topic, String languageId){
-        String keyWord = topic;
         if(mainActivity != null){
             LiveData<List<NewsArticleRoomModel>> articlesForTopicLiveData =
                     newsArticleDbService.getAllNewsOfTheDayArticlesByKeyWord(topic);
@@ -262,6 +269,7 @@ public class NewsOfTheDayFragment extends Fragment {
                                 DimensionService.setListViewHeightBasedOnItems(articleListView, true);
                                 setTextArticlesLoaded();
                                 articlesForTopicLiveData.removeObserver(this);
+                                cleanUpDailyArticles();
                                 break;
                             }
                         }
@@ -311,6 +319,10 @@ public class NewsOfTheDayFragment extends Fragment {
         ConstraintLayout cl = view.findViewById(R.id.empty_text_container);
         cl.setVisibility(ConstraintLayout.VISIBLE);
 
+    }
+
+    private void cleanUpDailyArticles(){
+        CollectionService.removeDuplicatesNewsArticleList(articlesOfTheDay);
     }
 
     /**

@@ -70,8 +70,25 @@ public class CollectionService {
         articles.addAll(newList);
     }
 
+    public static void removeDuplicatesNewsArticleList(List<NewsArticle> articles) {
+        LinkedList<NewsArticle> newList = new LinkedList<>();
+        for (NewsArticle swipeCard : articles) {
+            // If this element is not present in newList
+            // then add it
+                if(!containsTitleNewsArticle(newList, swipeCard.title)) {
+                    newList.add(swipeCard);
+                }
+        }
+        articles.clear();
+        articles.addAll(newList);
+    }
+
     private static boolean containsTitle(final List<ISwipeCard> list, final String title){
         return list.stream().filter(article -> article instanceof NewsArticle && ((NewsArticle)article).title.equals(title)).findFirst().isPresent();
+    }
+
+    private static boolean containsTitleNewsArticle(final List<NewsArticle> list, final String title){
+        return list.stream().filter(article -> article.title.equals(title)).findFirst().isPresent();
     }
 
 }

@@ -29,7 +29,7 @@ import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomMode
         LanguageCombinationRoomModel.class,
         NewsHistoryRoomModel.class,
         RequestOffsetRoomModel.class
-}, version = 109, exportSchema = false)
+}, version = 110, exportSchema = false)
 @TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 

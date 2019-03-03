@@ -127,7 +127,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("heart".toUpperCase(), "cœur");
 
         // Crime related
-        dictionary.put("Murder".toUpperCase(), "meurtrier massacreur assassin");
+        dictionary.put("Murder".toUpperCase(), "meurtrier");
         dictionary.put("Police".toUpperCase(), "police");
         dictionary.put("Prison".toUpperCase(), "prison");
         dictionary.put("Terror".toUpperCase(), "terreur");
