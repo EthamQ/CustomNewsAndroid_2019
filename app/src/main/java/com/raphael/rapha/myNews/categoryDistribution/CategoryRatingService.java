@@ -1,24 +1,21 @@
 package com.raphael.rapha.myNews.categoryDistribution;
 
 
-import android.util.Log;
-
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.ISwipeCard;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
 
 public class CategoryRatingService {
 
     // The rating mustn't go lower than this value.
     public static final int MIN_RATING = 0;
-    private static final int MAX_RATING = 30;
+    private static final int MAX_RATING = 40;
 
     /**
      * Increments the rating value of the category of swipedArticle by 1 in the database.
      * @param swipedArticle The article the user swiped to the left or right in MainActivity.
      */
     public static void rateAsInteresting(SwipeFragment swipeFragment, final ISwipeCard swipedArticle){
-        Log.d("RIGHTEXIT", "in rateAsInteresting ");
             rate(swipeFragment, swipedArticle, true);
     }
 
@@ -49,7 +46,7 @@ public class CategoryRatingService {
                             newRating--;
                         }
                         // Update in database.
-                        swipeFragment.ratingDbService.updateUserPreference(new UserPreferenceRoomModel(
+                        swipeFragment.ratingDbService.updateUserPreference(new NewsCategoryRatingRoomModel(
                                 swipedArticle.getNewsCategory(),
                                 newRating
                         ));

@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,30 +22,20 @@ import android.arch.lifecycle.Observer;
 import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.activities.viewElements.DimensionService;
-import com.raphael.rapha.myNews.api.NewsApiHelper;
-import com.raphael.rapha.myNews.api.NewsOfTheDayApiService;
 import com.raphael.rapha.myNews.customAdapters.NewsOfTheDayListAdapter;
-import com.raphael.rapha.myNews.http.HttpRequest;
-import com.raphael.rapha.myNews.http.HttpRequestInfo;
-import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.jobScheduler.NewsOfTheDayJobScheduler;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
-import com.raphael.rapha.myNews.notifications.NewsOfTheDayNotificationService;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.TopicDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
-import com.raphael.rapha.myNews.topics.TopicWordsTransformation;
-import com.raphael.rapha.myNews.utils.DateService;
-
-import org.json.JSONObject;
+import com.raphael.rapha.myNews.generalServices.DateService;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 import pl.droidsonroids.gif.GifImageView;
@@ -71,11 +60,11 @@ public class NewsOfTheDayFragment extends Fragment {
     ListView articleListView;
     NewsOfTheDayListAdapter adapter;
     NewsArticleDbService newsArticleDbService;
-    KeyWordDbService keyWordDbService;
+    TopicDbService keyWordDbService;
     boolean articlesAreReady = false;
 
     // Stored here to remove the subscription when closing the fragment to a void a bug.
-    LiveData<List<KeyWordRoomModel>> likedTopicsLiveData;
+    LiveData<List<TopicRoomModel>> likedTopicsLiveData;
     Observer topicObserver;
 
 
@@ -108,7 +97,7 @@ public class NewsOfTheDayFragment extends Fragment {
     private void initObjectsAndServices(){
         mainActivity = (MainActivity) getActivity();
         newsArticleDbService = NewsArticleDbService.getInstance(getActivity().getApplication());
-        keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        keyWordDbService = TopicDbService.getInstance(getActivity().getApplication());
         articleListView = view.findViewById(R.id.articleList);
         adapter = new NewsOfTheDayListAdapter(getActivity(), R.layout.news_of_the_day_list_item, articlesOfTheDay, true);
         articleListView.setAdapter(adapter);
@@ -187,9 +176,9 @@ public class NewsOfTheDayFragment extends Fragment {
             setTextNotEnoughTopics();
             // Only start when enough topics are in the database.
             likedTopicsLiveData = keyWordDbService.getAllLikedKeyWords();
-            likedTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
+            likedTopicsLiveData.observe(mainActivity, new Observer<List<TopicRoomModel>>() {
                 @Override
-                public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+                public void onChanged(@Nullable List<TopicRoomModel> keyWordRoomModels) {
                     topicObserver = this;
                     if(keyWordRoomModels.size() >= ARTICLE_MINIMUM){
                         scheduleArticleRequests();
@@ -209,10 +198,10 @@ public class NewsOfTheDayFragment extends Fragment {
      */
     private void loadArticlesFromDatabase(){
         // Get topics marked as topic of the day.
-        LiveData<List<KeyWordRoomModel>> topicsOfTheDayLiveData = keyWordDbService.getAllKeyWordsArticlesOfTheDay();
-        topicsOfTheDayLiveData.observe(getActivity(), new Observer<List<KeyWordRoomModel>>() {
+        LiveData<List<TopicRoomModel>> topicsOfTheDayLiveData = keyWordDbService.getAllKeyWordsArticlesOfTheDay();
+        topicsOfTheDayLiveData.observe(getActivity(), new Observer<List<TopicRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
+            public void onChanged(@Nullable List<TopicRoomModel> topics) {
                 boolean enoughTopics = topics.size() >= ARTICLE_MINIMUM;
                 if(enoughTopics){
                     ConstraintLayout cl = view.findViewById(R.id.empty_text_container);

@@ -4,18 +4,18 @@ import android.app.Application;
 import android.arch.lifecycle.LiveData;
 import android.util.Log;
 
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRepository;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRepository;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRoomModel;
 
 import java.util.List;
 
 public class RatingDbService {
 
     private static RatingDbService instance;
-    UserPreferenceRepository repository;
+    NewsCategoryRatingRepository repository;
 
     private RatingDbService(Application application){
-        this.repository = new UserPreferenceRepository(application);
+        this.repository = new NewsCategoryRatingRepository(application);
         FillDatabase.fillCategories(repository);
     }
 
@@ -31,12 +31,12 @@ public class RatingDbService {
         FillDatabase.fillCategories(repository);
     }
 
-    public void updateUserPreference(UserPreferenceRoomModel preference){
+    public void updateUserPreference(NewsCategoryRatingRoomModel preference){
         Log.d("RIGHTEXIT", "updateUserPreference");
         repository.update(preference);
     }
 
-    public LiveData<List<UserPreferenceRoomModel>> getAllUserPreferences(){
+    public LiveData<List<NewsCategoryRatingRoomModel>> getAllUserPreferences(){
         return repository.getAllUserPreferences();
     }
 

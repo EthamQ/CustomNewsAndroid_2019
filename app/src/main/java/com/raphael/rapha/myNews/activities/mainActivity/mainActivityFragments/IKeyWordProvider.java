@@ -1,10 +1,10 @@
 package com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments;
 
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 
 import java.util.List;
 
 public interface IKeyWordProvider {
 
-    List<KeyWordRoomModel> getCurrentKeyWords();
+    List<TopicRoomModel> getCurrentKeyWords();
 }

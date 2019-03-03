@@ -2,11 +2,11 @@ package com.raphael.rapha.myNews.questionCards;
 
 import android.util.Log;
 
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.ISwipeCard;
 import com.raphael.rapha.myNews.swipeCardContent.QuestionSwipeCard;
-import com.raphael.rapha.myNews.utils.DateService;
-import com.raphael.rapha.myNews.utils.CollectionService;
+import com.raphael.rapha.myNews.generalServices.DateService;
+import com.raphael.rapha.myNews.generalServices.CollectionService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +20,7 @@ public class QuestionCardService {
      * Add question swipe cards at random indices to the list of swipe cards.
      * @param swipeCardsList
      */
-    public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<KeyWordRoomModel> keyWords){
+    public static void mixQuestionCardsIntoSwipeCards(ArrayList<ISwipeCard> swipeCardsList, List<TopicRoomModel> keyWords){
         Log.d("questioncard", "mixQuestionCardsIntoSwipeCards");
         LinkedList<QuestionSwipeCard> questionSwipeCards = generateQuestionCards(keyWords, (swipeCardsList.size() / 3));
         // Generate random indices.
@@ -38,7 +38,7 @@ public class QuestionCardService {
         }
     }
 
-    private static LinkedList<QuestionSwipeCard> generateQuestionCards(List<KeyWordRoomModel> keyWords, int amount){
+    private static LinkedList<QuestionSwipeCard> generateQuestionCards(List<TopicRoomModel> keyWords, int amount){
         LinkedList<QuestionSwipeCard> questionCards = new LinkedList();
                 for(int i = 0; i < keyWords.size(); i++){
                     if(questionShouldBeAsked(keyWords.get(i))){
@@ -55,7 +55,7 @@ public class QuestionCardService {
                 return questionCards;
     }
 
-    private static boolean questionShouldBeAsked(KeyWordRoomModel keyWordRoomModel){
+    private static boolean questionShouldBeAsked(TopicRoomModel keyWordRoomModel){
         if(keyWordRoomModel.shownToUser == null){
             return true;
         }

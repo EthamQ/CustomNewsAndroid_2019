@@ -5,7 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.raphael.rapha.myNews.utils.DateService;
+import com.raphael.rapha.myNews.generalServices.DateService;
 
 import java.util.Date;
 

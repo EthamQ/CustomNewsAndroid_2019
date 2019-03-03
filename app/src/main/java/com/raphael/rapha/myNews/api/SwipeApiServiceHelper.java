@@ -10,7 +10,7 @@ import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.categoryDistribution.Distribution;
 import com.raphael.rapha.myNews.categoryDistribution.DistributionContainer;
-import com.raphael.rapha.myNews.utils.DateService;
+import com.raphael.rapha.myNews.generalServices.DateService;
 
 import org.joda.time.DateTime;
 
@@ -40,7 +40,7 @@ public class SwipeApiServiceHelper {
             }
         }
 
-        // To give the user feedback how much he still has to wait
+        // To give the user feedback how long he still has to wait on the loading screen.
         int numberRequests = distribution.size() * languages.size();
         LoadingService.setNumberOfSentRequests(numberRequests);
         swipeFragment.updateLoadingText(LoadingService.getNumberOfAnswersReceivedText());
@@ -75,7 +75,7 @@ public class SwipeApiServiceHelper {
      * Initializes a query builder to build a query string for the api request
      * and passes it to another class to send the query.
      * Uses the topics from the database, the news category id, the language id
-     * and date values stored elsewhere  as information.
+     * and date values stored elsewhere as information.
      * @param distribution
      * @return The news articles it received from the api with the query.
      * @throws Exception
@@ -85,11 +85,11 @@ public class SwipeApiServiceHelper {
         NewsApiQueryBuilder queryBuilder = new NewsApiQueryBuilder(language.languageId);
         queryBuilder.setQueryListener(swipeFragment);
         queryBuilder.setHttpRequester(swipeFragment);
-        queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment.liveKeyWords);
+        queryBuilder.setQueryCategory(distribution.categoryId, swipeFragment.liveTopicsFromDb);
         queryBuilder.setNumberOfNewsArticles(distribution.amountToFetchFromApi);
         String dateFrom = DateService.getDateBefore(ApiService.AMOUNT_DAYS_BEFORE_TODAY);
         queryBuilder.setDateFrom(dateFrom);
-        String dateTo = DateOffsetDataStorage.getOffsetForCategory(distribution.categoryId);
+        String dateTo = DateOffsetDataStorage.getDateOffsetForCategory(distribution.categoryId);
         if(!dateTo.isEmpty()){
             if(DateService.dateFromIsEqualOrAfterDateTo(dateFrom, dateTo)){
                 DateOffsetService.resetDateOffsetForCurrentLanguages(swipeFragment, distribution.categoryId);

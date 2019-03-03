@@ -17,9 +17,9 @@ import com.raphael.rapha.myNews.activities.viewElements.StatisticsFragmentDimens
 import com.raphael.rapha.myNews.customAdapters.TopicRowAdapter;
 import com.raphael.rapha.myNews.newsCategories.NewsCategoryContainer;
 import com.raphael.rapha.myNews.newsCategories.NewsCategoryService;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.TopicDbService;
 import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRoomModel;
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -84,7 +84,7 @@ public class StatisticFragment extends Fragment {
         listView.setAdapter(topicRowAdapter);
         topicRowAdapter.notifyDataSetChanged();
 
-        KeyWordDbService keyWordDbService = KeyWordDbService.getInstance(getActivity().getApplication());
+        TopicDbService keyWordDbService = TopicDbService.getInstance(getActivity().getApplication());
         keyWordDbService.getAllLikedKeyWords().observe(getActivity(), likedKeyWords -> {
             topicSets.clear();
                 String[] topicSet = new String[]{"", "", ""};
@@ -126,7 +126,7 @@ public class StatisticFragment extends Fragment {
             DataPoint[] datapoints = new DataPoint[5];
             String[] xAxisName = new String[5];
 
-            for(UserPreferenceRoomModel category : newsCategories){
+            for(NewsCategoryRatingRoomModel category : newsCategories){
                 if(category.getNewsCategoryId() == NewsCategoryContainer.Finance.CATEGORY_ID){
                     datapoints[0] = new DataPoint(0, category.getRating());
                     xAxisName[0] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());
@@ -165,7 +165,7 @@ public class StatisticFragment extends Fragment {
             DataPoint[] datapoints = new DataPoint[5];
             String[] xAxisName = new String[5];
 
-            for(UserPreferenceRoomModel category : newsCategories){
+            for(NewsCategoryRatingRoomModel category : newsCategories){
                 if(category.getNewsCategoryId() == NewsCategoryContainer.Sport.CATEGORY_ID){
                     datapoints[0] = new DataPoint(0, category.getRating());
                     xAxisName[0] = NewsCategoryService.getDisplayNameForCategory(category.getNewsCategoryId());

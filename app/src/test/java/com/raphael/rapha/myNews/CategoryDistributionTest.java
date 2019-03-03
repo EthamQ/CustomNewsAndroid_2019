@@ -4,7 +4,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.raphael.rapha.myNews.categoryDistribution.DistributionContainer;
 import com.raphael.rapha.myNews.roomDatabase.UserPreferenceRoomModel;
-import com.raphael.rapha.myNews.categoryDistribution.FilterNewsService;
+import com.raphael.rapha.myNews.categoryDistribution.DistributionService;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ public class CategoryDistributionTest {
     @Test
     public void testDistribution(){
         DistributionContainer distributionWrapper =
-                FilterNewsService.getCategoryDistribution(userPreferenceRoomModels);
+                DistributionService.getCategoryDistribution(userPreferenceRoomModels);
         HashMap<Integer, Integer> distribution = distributionWrapper.getDistributionAsHashMap();
         assertEquals(new Integer(37), distribution.get(1));
         assertEquals(new Integer(12), distribution.get(2));

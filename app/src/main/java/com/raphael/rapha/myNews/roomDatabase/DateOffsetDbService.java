@@ -11,18 +11,18 @@ import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomMode
 import java.util.LinkedList;
 import java.util.List;
 
-public class OffsetDbService {
+public class DateOffsetDbService {
 
-    private static OffsetDbService instance;
+    private static DateOffsetDbService instance;
     RequestOffsetRepository repository;
 
-    public OffsetDbService(Application application){
+    public DateOffsetDbService(Application application){
         this.repository = new RequestOffsetRepository(application);
     }
 
-    public static synchronized OffsetDbService getInstance(Application application){
+    public static synchronized DateOffsetDbService getInstance(Application application){
         if(instance == null){
-            instance = new OffsetDbService(application);
+            instance = new DateOffsetDbService(application);
         }
         return instance;
     }

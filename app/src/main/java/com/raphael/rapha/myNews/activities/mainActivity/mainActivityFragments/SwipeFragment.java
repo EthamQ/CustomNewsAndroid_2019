@@ -27,6 +27,8 @@ import com.raphael.rapha.myNews.internetConnection.InternetConnectionService;
 import com.raphael.rapha.myNews.languages.LanguageCombinationService;
 import com.raphael.rapha.myNews.requestDateOffset.DateOffsetService;
 import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomModel;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
@@ -37,10 +39,9 @@ import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
 import com.raphael.rapha.myNews.loading.LoadingService;
 import com.raphael.rapha.myNews.loading.SwipeLoadingService;
 import com.raphael.rapha.myNews.questionCards.QuestionCardService;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.TopicDbService;
 import com.raphael.rapha.myNews.roomDatabase.LanguageCombinationDbService;
-import com.raphael.rapha.myNews.roomDatabase.OffsetDbService;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.DateOffsetDbService;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.DeleteData;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.IDeletesArticle;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
@@ -50,9 +51,8 @@ import com.raphael.rapha.myNews.swipeCardContent.IntroductionSwipeCard;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
 import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
 import com.raphael.rapha.myNews.temporaryDataStorage.LanguageSelectionDataStorage;
-import com.raphael.rapha.myNews.utils.CollectionService;
+import com.raphael.rapha.myNews.generalServices.CollectionService;
 import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import java.util.ArrayList;
@@ -84,14 +84,14 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
     public ArrayList<ISwipeCard> swipeCardsList;
 
     // Up to date data from observables to pass to other functions.
-    public List<UserPreferenceRoomModel> liveCategoryRatings;
-    public List<KeyWordRoomModel> liveKeyWords;
+    public List<NewsCategoryRatingRoomModel> liveCategoryRatings;
+    public List<TopicRoomModel> liveTopicsFromDb;
 
     // Database services.
     public RatingDbService ratingDbService;
     public NewsArticleDbService newsArticleDbService;
-    public KeyWordDbService keyWordDbService;
-    public OffsetDbService dateOffsetDbService;
+    public TopicDbService keyWordDbService;
+    public DateOffsetDbService dateOffsetDbService;
     public LanguageCombinationDbService languageComboDbService;
     public NewsHistoryDbService newsHistoryDbService;
 
@@ -219,7 +219,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
             ratingDbService.getAllUserPreferences().observe(mainActivity, dbCategoryRatings -> liveCategoryRatings = dbCategoryRatings);
 
             // Observe all topics.
-            keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveKeyWords = keyWords);
+            keyWordDbService.getAllKeyWords().observe(mainActivity, keyWords -> liveTopicsFromDb = keyWords);
 
             // Observe the date offset for the currently selected languages.
             // Date offset is the dateTo value you send to the api in a query.
@@ -277,12 +277,12 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
      * Add question cards to the list of articles and set database loading to false.
      */
     private void onDbArticlesLoaded() {
-        LiveData<List<KeyWordRoomModel>> allTopicsLiveData = keyWordDbService.getAllKeyWords();
-        allTopicsLiveData.observe(mainActivity, new Observer<List<KeyWordRoomModel>>() {
+        LiveData<List<TopicRoomModel>> allTopicsLiveData = keyWordDbService.getAllKeyWords();
+        allTopicsLiveData.observe(mainActivity, new Observer<List<TopicRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> topics) {
+            public void onChanged(@Nullable List<TopicRoomModel> topics) {
                 if (!topics.isEmpty()) {
-                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
+                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveTopicsFromDb);
                     swipeCardArrayAdapter.notifyDataSetChanged();
                     SwipeLoadingService.setLoadingDatabase(false);
                     allTopicsLiveData.removeObserver(this);
@@ -314,7 +314,7 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
                     storeArticlesInDatabase(apiArticlesToAdd);
                     swipeCardsList.addAll(apiArticlesToAdd);
                     CollectionService.removeDuplicatesArticleList(swipeCardsList);
-                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveKeyWords);
+                    QuestionCardService.mixQuestionCardsIntoSwipeCards(swipeCardsList, liveTopicsFromDb);
                     SwipeLoadingService.resetLoading();
                     reloadFragment();
                 });
@@ -453,8 +453,8 @@ public class SwipeFragment extends Fragment implements IDeletesArticle, IQueryLi
 
         ratingDbService = RatingDbService.getInstance(mainActivity.getApplication());
         newsArticleDbService = NewsArticleDbService.getInstance(mainActivity.getApplication());
-        keyWordDbService = KeyWordDbService.getInstance(mainActivity.getApplication());
-        dateOffsetDbService = OffsetDbService.getInstance(mainActivity.getApplication());
+        keyWordDbService = TopicDbService.getInstance(mainActivity.getApplication());
+        dateOffsetDbService = DateOffsetDbService.getInstance(mainActivity.getApplication());
         languageComboDbService = LanguageCombinationDbService.getInstance(mainActivity.getApplication());
         newsHistoryDbService = NewsHistoryDbService.getInstance(mainActivity.getApplication());
         setSwipeFunctionality();

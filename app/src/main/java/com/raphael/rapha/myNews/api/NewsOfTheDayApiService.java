@@ -9,18 +9,27 @@ public class NewsOfTheDayApiService {
     static final int DAYS_BEFORE = 7;
     static final int REQUEST_AMOUNT_AFTER_INITIAL_LOAD = 20;
 
-    public static void getArticlesNewsApiByKeyWords(HttpRequest httpRequest, String[] queryWords, int language) throws Exception{
+    /**
+     * Requests articles from the api using the topics strings for the query.
+     * Requests in the language that is passed to the function by languageId.
+     * Calls a callback function in the calling class when finished.
+     * @param httpRequest Contains the calling class.
+     * @param topics An array of all topics to be added to the query for the api.
+     * @param languageId Int representation of the language.
+     * @throws Exception
+     */
+    public static void getArticlesNewsApiByTopics(HttpRequest httpRequest, String[] topics, int languageId) throws Exception{
         boolean firstTimeRequestingData = false;
         if(httpRequest.requestInfo.getContext() != null){
             firstTimeRequestingData = NewsOfTheDayTimeService.firstTimeLoadingData(
                     httpRequest.requestInfo.getContext()
             );
         }
-        int requestAmount = firstTimeRequestingData ? 100 : REQUEST_AMOUNT_AFTER_INITIAL_LOAD;
+        int requestAmount = firstTimeRequestingData ? ApiService.MAX_NUMBER_OF_ARTICLES : REQUEST_AMOUNT_AFTER_INITIAL_LOAD;
         ApiService.getArticlesNewsApiByKeyWords(
                 httpRequest,
-                queryWords,
-                language,
+                topics,
+                languageId,
                 requestAmount,
                 DAYS_BEFORE
         );

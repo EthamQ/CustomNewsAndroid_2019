@@ -2,9 +2,8 @@ package com.raphael.rapha.myNews.api;
 
 import com.raphael.rapha.myNews.api.apiQuery.NewsApiQueryBuilder;
 import com.raphael.rapha.myNews.http.HttpRequest;
-import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.languages.TranslationService;
-import com.raphael.rapha.myNews.utils.DateService;
+import com.raphael.rapha.myNews.generalServices.DateService;
 
 public class ApiService {
 

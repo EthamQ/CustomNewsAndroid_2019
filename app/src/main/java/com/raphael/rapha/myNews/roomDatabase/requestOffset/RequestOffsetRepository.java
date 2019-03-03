@@ -11,7 +11,7 @@ import android.util.Log;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.roomDatabase.AppDatabase;
 import com.raphael.rapha.myNews.roomDatabase.LanguageCombinationDbService;
-import com.raphael.rapha.myNews.roomDatabase.OffsetDbService;
+import com.raphael.rapha.myNews.roomDatabase.DateOffsetDbService;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 
 import java.util.LinkedList;
@@ -59,7 +59,7 @@ public class RequestOffsetRepository {
     }
 
     private void setDateOffsetsForLanguageCombinationId(MainActivity mainActivity, int combinationId, MutableLiveData<LinkedList<RequestOffsetRoomModel>> offsetsForCombinationId){
-        OffsetDbService dateOffsetDbService = OffsetDbService.getInstance(mainActivity.getApplication());
+        DateOffsetDbService dateOffsetDbService = DateOffsetDbService.getInstance(mainActivity.getApplication());
         dateOffsetDbService.getAll().observe(mainActivity, new Observer<List<RequestOffsetRoomModel>>() {
             @Override
             public void onChanged(@Nullable List<RequestOffsetRoomModel> offsets) {

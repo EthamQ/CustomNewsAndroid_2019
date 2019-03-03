@@ -18,7 +18,7 @@ import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.payment.BillingManager;
 import com.raphael.rapha.myNews.payment.MyBillingUpdateListener;
 import com.raphael.rapha.myNews.payment.PurchasedItemsListener;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.TopicDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
 import com.raphael.rapha.myNews.roomDatabase.RatingDbService;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.InAppPaymentService;
@@ -94,7 +94,7 @@ public class SettingsFragment extends Fragment implements PurchasedItemsListener
                     .setPositiveButton("Yes reset", (dialogInterface, i) -> {
                         RatingDbService.getInstance(mainActivity.getApplication())
                                 .deleteAllUserPreferences(mainActivity.getApplication());
-                        KeyWordDbService.getInstance(mainActivity.getApplication()).deleteAll();
+                        TopicDbService.getInstance(mainActivity.getApplication()).deleteAll();
                         NewsHistoryDbService.getInstance(mainActivity.getApplication()).deleteAll();
                         NewsOfTheDayTimeService.resetLastLoaded(getContext());
                         SwipeTimeService.setFirstTopicWasLiked(getContext(), false);

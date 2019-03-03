@@ -13,15 +13,13 @@ import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.SwipeFragment;
 import com.raphael.rapha.myNews.categoryDistribution.CategoryRatingService;
 import com.raphael.rapha.myNews.questionCards.QuestionCardRatingService;
-import com.raphael.rapha.myNews.questionCards.QuestionCardService;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
-import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 
 import java.util.List;
 
 public class QuestionSwipeCard implements ISwipeCard {
 
-    private String questionText = "Are you interested in...";
+    private final String questionText = "Are you interested in...";
     public String questionKeyword;
     private int newsCategory;
 
@@ -55,11 +53,11 @@ public class QuestionSwipeCard implements ISwipeCard {
         CategoryRatingService.rateAsInteresting(swipeFragment, this);
 
         // Check if it is the first time the user likes a topic.
-        LiveData<List<KeyWordRoomModel>> likedKeyWordsLiveData
+        LiveData<List<TopicRoomModel>> likedKeyWordsLiveData
                 = swipeFragment.keyWordDbService.getAllLikedKeyWords();
-        likedKeyWordsLiveData.observe(swipeFragment, new Observer<List<KeyWordRoomModel>>() {
+        likedKeyWordsLiveData.observe(swipeFragment, new Observer<List<TopicRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> likedTopics) {
+            public void onChanged(@Nullable List<TopicRoomModel> likedTopics) {
                 QuestionCardRatingService.likeKeyWord(swipeFragment, QuestionSwipeCard.this);
                 swipeFragment.showDailyNewsDialogue(likedTopics.size());
                 likedKeyWordsLiveData.removeObserver(this);

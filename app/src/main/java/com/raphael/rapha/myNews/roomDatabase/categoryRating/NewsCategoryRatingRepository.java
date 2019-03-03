@@ -9,22 +9,21 @@ import com.raphael.rapha.myNews.roomDatabase.AppDatabase;
 
 import java.util.List;
 
-public class UserPreferenceRepository {
-    private IUserPreferenceDao dao;
-    private LiveData<List<UserPreferenceRoomModel>> allCategories;
+public class NewsCategoryRatingRepository {
+    private INewsCategoryRatingDao dao;
+    private LiveData<List<NewsCategoryRatingRoomModel>> allCategories;
 
-    public UserPreferenceRepository(Application application){
+    public NewsCategoryRatingRepository(Application application){
         AppDatabase database = AppDatabase.getInstance(application);
         dao = database.dao();
         allCategories = dao.getAllUserPreferences();
     }
 
-    public void insert(UserPreferenceRoomModel userPreferenceRoomModel){
+    public void insert(NewsCategoryRatingRoomModel userPreferenceRoomModel){
         new InsertPreferenceAsyncTask(dao).execute(userPreferenceRoomModel);
     }
 
-    public void update(UserPreferenceRoomModel userPreferenceRoomModel){
-        Log.d("RIGHTEXIT", "update");
+    public void update(NewsCategoryRatingRoomModel userPreferenceRoomModel){
         new UpdatePreferencesAsyncTask(dao).execute(userPreferenceRoomModel);
     }
 
@@ -36,19 +35,19 @@ public class UserPreferenceRepository {
         new DeleteAllPreferencesAsyncTask(dao).execute();
     }
 
-    public LiveData<List<UserPreferenceRoomModel>> getAllUserPreferences(){
+    public LiveData<List<NewsCategoryRatingRoomModel>> getAllUserPreferences(){
         return allCategories;
     }
 
-    private static class InsertPreferenceAsyncTask extends AsyncTask<UserPreferenceRoomModel, Void, Void>{
+    private static class InsertPreferenceAsyncTask extends AsyncTask<NewsCategoryRatingRoomModel, Void, Void>{
 
-        private IUserPreferenceDao dao;
+        private INewsCategoryRatingDao dao;
 
-        private InsertPreferenceAsyncTask(IUserPreferenceDao dao){
+        private InsertPreferenceAsyncTask(INewsCategoryRatingDao dao){
                 this.dao = dao;
         }
         @Override
-        protected Void doInBackground(UserPreferenceRoomModel... userPreferenceRoomModels) {
+        protected Void doInBackground(NewsCategoryRatingRoomModel... userPreferenceRoomModels) {
             dao.insertOneNewsCategory(userPreferenceRoomModels[0]);
             return null;
         }
@@ -56,9 +55,9 @@ public class UserPreferenceRepository {
 
     private static class DeleteAllPreferencesAsyncTask extends AsyncTask<Void, Void, Void>{
 
-        private IUserPreferenceDao dao;
+        private INewsCategoryRatingDao dao;
 
-        private DeleteAllPreferencesAsyncTask(IUserPreferenceDao dao){
+        private DeleteAllPreferencesAsyncTask(INewsCategoryRatingDao dao){
             this.dao = dao;
         }
         @Override
@@ -68,15 +67,15 @@ public class UserPreferenceRepository {
         }
     }
 
-    private static class UpdatePreferencesAsyncTask extends AsyncTask<UserPreferenceRoomModel, Void, Void>{
+    private static class UpdatePreferencesAsyncTask extends AsyncTask<NewsCategoryRatingRoomModel, Void, Void>{
 
-        private IUserPreferenceDao dao;
+        private INewsCategoryRatingDao dao;
 
-        private UpdatePreferencesAsyncTask(IUserPreferenceDao dao){
+        private UpdatePreferencesAsyncTask(INewsCategoryRatingDao dao){
             this.dao = dao;
         }
         @Override
-        protected Void doInBackground(UserPreferenceRoomModel... preferences) {
+        protected Void doInBackground(NewsCategoryRatingRoomModel... preferences) {
             dao.updateUserPreference(preferences[0]);
             return null;
         }

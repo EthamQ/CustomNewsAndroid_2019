@@ -7,7 +7,7 @@ import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.languages.TranslationService;
 import com.raphael.rapha.myNews.newsCategories.NewsCategory;
 import com.raphael.rapha.myNews.newsCategories.NewsCategoryContainer;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -21,9 +21,7 @@ public class TopicService {
      * @param languageId
      * @return
      */
-    public static String[] getTopicsTranslated(List<KeyWordRoomModel> allTopics, NewsCategory newsCategory, int languageId){
-        Log.d("topiccc", "getTopicsTranslated for language: " + languageId);
-        Log.d("eeeee", "translate id: " + newsCategory.getCategoryID());
+    public static String[] getTopicsTranslated(List<TopicRoomModel> allTopics, NewsCategory newsCategory, int languageId){
         switch(languageId){
             case LanguageSettingsService.INDEX_ENGLISH:
                 return getTopicsForCategoryInEnglish(allTopics, newsCategory);
@@ -51,8 +49,7 @@ public class TopicService {
      * @param languageId
      * @return
      */
-    public static String[] getTopicsForCategory(List<KeyWordRoomModel> allTopics, int categoryId, int languageId){
-        Log.d("iii", "getTopicsForCategory: " + categoryId);
+    public static String[] getTopicsForCategory(List<TopicRoomModel> allTopics, int categoryId, int languageId){
         NewsCategory categoryToQuery = NewsCategoryContainer.getCategory(categoryId);
         String[] topicsTranslated = getTopicsTranslated(allTopics, categoryToQuery, languageId);
         return topicsTranslated;
@@ -67,27 +64,23 @@ public class TopicService {
      * @param newsCategory
      * @return
      */
-    public static String[] getTopicsForCategoryInEnglish(List<KeyWordRoomModel> allTopics, NewsCategory newsCategory){
-        Log.d("eeeeee", "getTopicsForCategoryInEnglish: " + newsCategory.getCategoryID() + ", topics size: " + allTopics.size());
+    public static String[] getTopicsForCategoryInEnglish(List<TopicRoomModel> allTopics, NewsCategory newsCategory){
         // Get query strings that the user prefers or hasn't set yet.
-        LinkedList<KeyWordRoomModel> keyWords = new LinkedList<>();
+        LinkedList<TopicRoomModel> keyWords = new LinkedList<>();
         for(int i = 0; i < allTopics.size(); i++){
-            boolean keyWordBelongsToCategory = allTopics.get(i).categoryId == newsCategory.getCategoryID();
-            boolean keyWordShouldBeAdded = !(allTopics.get(i).status == KeyWordRoomModel.DISLIKED);
+            boolean keyWordBelongsToCategory = allTopics.get(i).categoryId == newsCategory.getNewsCategoryID();
+            boolean keyWordShouldBeAdded = !(allTopics.get(i).status == TopicRoomModel.DISLIKED);
             if(keyWordBelongsToCategory && keyWordShouldBeAdded){
                 transformSingleTopicToMultipleWords(allTopics, keyWords, i);
             }
         }
-        Log.d("eeeeee", "getTopicsForCategoryInEnglish return: " + newsCategory.getCategoryID() + ", topics size: " + allTopics.size());
         return  combineDefaultAndUserPreferredTopics(newsCategory, keyWords);
     }
 
-    private static String[] combineDefaultAndUserPreferredTopics(NewsCategory newsCategory, LinkedList<KeyWordRoomModel> userPreferredKeyWords){
-        Log.d("ffffff", "combineDefaultAndUserPreferredTopics1: " + newsCategory.getCategoryID());
-        Log.d("ffffff", "combineDefaultAndUserPreferredTopics2: " + newsCategory.getCategoryID() +", "+ newsCategory.DEFAULT_QUERY_STRINGS_EN );
+    private static String[] combineDefaultAndUserPreferredTopics(NewsCategory newsCategory, LinkedList<TopicRoomModel> userPreferredKeyWords){
         // Combine user preferred and default query strings in one array.
         String[] queryWords = new String[userPreferredKeyWords.size() + newsCategory.DEFAULT_QUERY_STRINGS_EN.length];
-        Log.d("ffffff", "combineDefaultAndUserPreferredTopics3: " + newsCategory.getCategoryID());
+
         // Add user preferred query strings.
         for(int i = 0; i < userPreferredKeyWords.size(); i++){
             queryWords[i] = userPreferredKeyWords.get(i).keyWord;
@@ -101,20 +94,14 @@ public class TopicService {
     }
 
 
-    private static void transformSingleTopicToMultipleWords(List<KeyWordRoomModel> allTopics, LinkedList<KeyWordRoomModel> keyWords, int index){
+    private static void transformSingleTopicToMultipleWords(List<TopicRoomModel> allTopics, LinkedList<TopicRoomModel> keyWords, int index){
         TopicWordsTransformation queryWordTransformation = new TopicWordsTransformation();
-        KeyWordRoomModel keyWordToAdd = allTopics.get(index);
-        LinkedList<KeyWordRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
+        TopicRoomModel keyWordToAdd = allTopics.get(index);
+        LinkedList<TopicRoomModel> transformedKeyWords = queryWordTransformation.transformQueryStrings(keyWordToAdd);
         for(int k = 0; k < transformedKeyWords.size(); k++){
             keyWords.add(transformedKeyWords.get(k));
         }
     }
-
-
-
-
-
-
 
     public static String getCurrentLanguageString(MainActivity mainActivity){
         boolean[] activeLanguages = LanguageSettingsService.loadChecked(mainActivity);

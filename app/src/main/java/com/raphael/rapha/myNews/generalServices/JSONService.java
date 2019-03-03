@@ -1,9 +1,9 @@
-package com.raphael.rapha.myNews.utils;
+package com.raphael.rapha.myNews.generalServices;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class JSONUtils {
+public class JSONService {
 	
 	/**
 	 * If the "key" value of the jsonObject is null then it returns an empty String.

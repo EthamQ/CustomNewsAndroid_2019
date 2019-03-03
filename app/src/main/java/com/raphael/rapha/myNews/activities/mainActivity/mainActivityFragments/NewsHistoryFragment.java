@@ -5,26 +5,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.raphael.rapha.myNews.R;
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
 import com.raphael.rapha.myNews.activities.viewElements.DimensionService;
 import com.raphael.rapha.myNews.customAdapters.NewsOfTheDayListAdapter;
-import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
-import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsHistoryDbService;
-import com.raphael.rapha.myNews.roomDatabase.newsHistory.NewsHistoryRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.

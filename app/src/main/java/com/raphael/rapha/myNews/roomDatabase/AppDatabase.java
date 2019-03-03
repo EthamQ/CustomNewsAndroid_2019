@@ -9,12 +9,12 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.INewsCategoryRatingDao;
+import com.raphael.rapha.myNews.roomDatabase.categoryRating.NewsCategoryRatingRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.ITopicDao;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsHistory.NewsHistoryRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsHistory.INewsHistoryDao;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.IUserPreferenceDao;
-import com.raphael.rapha.myNews.roomDatabase.categoryRating.UserPreferenceRoomModel;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.IKeyWordDao;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.ILanguageCombinationDao;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.INewsArticleDao;
@@ -23,20 +23,20 @@ import com.raphael.rapha.myNews.roomDatabase.requestOffset.IRequestOffsetDao;
 import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomModel;
 
 @Database(entities = {
-        UserPreferenceRoomModel.class,
+        NewsCategoryRatingRoomModel.class,
         NewsArticleRoomModel.class,
-        KeyWordRoomModel.class,
+        TopicRoomModel.class,
         LanguageCombinationRoomModel.class,
         NewsHistoryRoomModel.class,
         RequestOffsetRoomModel.class
-}, version = 108, exportSchema = false)
+}, version = 109, exportSchema = false)
 @TypeConverters({RoomConverters.class})
 public abstract class AppDatabase extends RoomDatabase{
 
         private static AppDatabase instance;
-        public abstract IUserPreferenceDao dao();
+        public abstract INewsCategoryRatingDao dao();
         public abstract INewsArticleDao newsArticleDao();
-        public abstract IKeyWordDao keyWordDao();
+        public abstract ITopicDao keyWordDao();
         public abstract ILanguageCombinationDao languageCombinationDao();
         public abstract IRequestOffsetDao requestOffsetDao();
         public abstract INewsHistoryDao newsHistoryDao();
@@ -63,7 +63,7 @@ public abstract class AppDatabase extends RoomDatabase{
 
         private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void>{
 
-                private IUserPreferenceDao dao;
+                private INewsCategoryRatingDao dao;
 
                 private PopulateDbAsyncTask(AppDatabase db){
                         dao = db.dao();

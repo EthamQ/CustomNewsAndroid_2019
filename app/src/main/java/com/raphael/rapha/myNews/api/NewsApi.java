@@ -32,12 +32,8 @@ public class NewsApi {
     public LinkedList<NewsArticle> queryNewsArticles(NewsApiQueryBuilder queryBuilder) throws Exception {
 	    int newsCategory = queryBuilder.getNewsCategory();
 	    int languageId = queryBuilder.getLanguageId();
-	    Log.d("displayy", "query news articles id: " + languageId);
 	    queryBuilder.buildQuery();
-		Log.d("bbb", "querybuild: " + queryBuilder.getQuery());
 	    String urlForApi = URL_ALL_NEWS_API + ApiKey.getApiKey() + queryBuilder.getQuery();
-		Log.d("newswipe", "category: " + queryBuilder.getNewsCategory() + ", received query:  " + urlForApi);
-	    Log.d("URL", urlForApi);
 		IQueryListener queryListener = queryBuilder.getQueryListener();
 		HttpRequest httpRequest = new HttpRequest(queryBuilder.getHttpRequester(), new HttpRequestInfo());
 		JSONObject newsArticleJson = HttpUtils.httpGET(urlForApi, httpRequest);
@@ -55,11 +51,9 @@ public class NewsApi {
 	 * @param queryBuilder
 	 * @throws Exception
 	 */
-	public void queryNewsArticlesAsync(HttpRequest httpRequest, NewsApiQueryBuilder queryBuilder) throws Exception {
-		Log.d("oftheday", "queryNewsArticlesAsync()");
+	public void queryNewsArticlesAsync(HttpRequest httpRequest, NewsApiQueryBuilder queryBuilder) {
 		queryBuilder.buildQuery();
 		String urlForApi = URL_ALL_NEWS_API + ApiKey.getApiKey() + queryBuilder.getQuery();
-		Log.d("URL", urlForApi);
 		HttpUtils.httpGETAsync(httpRequest, urlForApi);
 	}
 

@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -21,13 +19,13 @@ import com.raphael.rapha.myNews.categoryDistribution.CategoryRatingService;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.roomDatabase.LanguageCombinationDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
-import com.raphael.rapha.myNews.roomDatabase.OffsetDbService;
+import com.raphael.rapha.myNews.roomDatabase.DateOffsetDbService;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.IInsertsLanguageCombination;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationData;
 import com.raphael.rapha.myNews.roomDatabase.languageCombination.LanguageCombinationRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
-import com.raphael.rapha.myNews.utils.DateService;
-import com.raphael.rapha.myNews.utils.JSONUtils;
+import com.raphael.rapha.myNews.generalServices.DateService;
+import com.raphael.rapha.myNews.generalServices.JSONService;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -43,7 +41,6 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
     public String description;
     public String url;
     public String urlToImage;
-    public Bitmap imageForTextView;
     public String publishedAt;
     public String content;
     public String foundWithKeyWord;
@@ -207,15 +204,11 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
         long insertedId = dataToPassToOnFinished.insertedId;
 	    if(swipeFragment != null){
             if(swipeFragment.getActivity() != null){
-                OffsetDbService offsetDbService = OffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
+                DateOffsetDbService offsetDbService = DateOffsetDbService.getInstance(swipeFragment.getActivity().getApplication());
                 if(!this.publishedAt.isEmpty()){
                     // Because the api results will include articles published at
-                    // exactly the offset, we subtract a minute to exclude them in the next call
-                    Log.d("newswipe3", "############");
-                    Log.d("newswipe3", "Store offset in database: category: " + this.newsCategory + "offset: " + this.publishedAt);
+                    // exactly the offset, we subtract a second to exclude them in the next call
                     String dateOffset = DateService.subtractSecond(this.publishedAt, 1);
-                    Log.d("newswipe3", "After minute added: category: " + this.newsCategory + "offset: " + dateOffset);
-                    Log.d("newswipe3", "############");
                     offsetDbService.saveRequestOffset(
                             dateOffset,
                             this.newsCategory,
@@ -224,7 +217,6 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
                 }
             }
         }
-
     }
 
     @Override
@@ -240,13 +232,13 @@ public class NewsArticle implements Parcelable, ISwipeCard, IInsertsLanguageComb
      * @param newsCategory
      */
 	public void setArticleProperties(JSONObject articleJson, int newsCategory, String languageId){
-		this.author = JSONUtils.getStringErrorHandled(articleJson, "author");
-		this.title = JSONUtils.getStringErrorHandled(articleJson, "title");
-		this.description = JSONUtils.getStringErrorHandled(articleJson, "description");
-		this.url = JSONUtils.getStringErrorHandled(articleJson, "url");
-		this.urlToImage = JSONUtils.getStringErrorHandled(articleJson, "urlToImage");
-		this.publishedAt = JSONUtils.getStringErrorHandled(articleJson, "publishedAt");
-		this.content = JSONUtils.getStringErrorHandled(articleJson, "content");
+		this.author = JSONService.getStringErrorHandled(articleJson, "author");
+		this.title = JSONService.getStringErrorHandled(articleJson, "title");
+		this.description = JSONService.getStringErrorHandled(articleJson, "description");
+		this.url = JSONService.getStringErrorHandled(articleJson, "url");
+		this.urlToImage = JSONService.getStringErrorHandled(articleJson, "urlToImage");
+		this.publishedAt = JSONService.getStringErrorHandled(articleJson, "publishedAt");
+		this.content = JSONService.getStringErrorHandled(articleJson, "content");
 		this.newsCategory = newsCategory;
 		this.languageId = languageId;
 	}

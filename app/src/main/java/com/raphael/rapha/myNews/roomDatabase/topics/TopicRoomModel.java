@@ -1,4 +1,4 @@
-package com.raphael.rapha.myNews.roomDatabase.keyWordPreference;
+package com.raphael.rapha.myNews.roomDatabase.topics;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
@@ -7,8 +7,8 @@ import android.support.annotation.NonNull;
 
 import java.util.Date;
 
-@Entity(tableName = "KeyWordPreference")
-public class KeyWordRoomModel {
+@Entity(tableName = "TopicRoomModel")
+public class TopicRoomModel {
 
     @Ignore
     public static final int UNSET = 0;
@@ -26,7 +26,7 @@ public class KeyWordRoomModel {
     public Date shownToUser;
     public boolean usedInArticleOfTheDay;
 
-    public KeyWordRoomModel(String keyWord, int categoryId){
+    public TopicRoomModel(String keyWord, int categoryId){
         this.keyWord = keyWord;
         this.categoryId = categoryId;
         status = UNSET;

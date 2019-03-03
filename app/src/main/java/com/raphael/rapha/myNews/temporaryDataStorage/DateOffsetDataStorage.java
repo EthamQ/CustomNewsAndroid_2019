@@ -7,6 +7,7 @@ import com.raphael.rapha.myNews.roomDatabase.requestOffset.RequestOffsetRoomMode
 
 import java.util.List;
 
+//TODO: really bad code needs refactoring!
 public class DateOffsetDataStorage {
 
     public static String requestOffsetFinance;
@@ -14,6 +15,11 @@ public class DateOffsetDataStorage {
     public static String requestOffsetPolitics;
     public static String requestOffsetMovie;
     public static String requestOffsetTechnology;
+    public static String requestOffsetSport;
+    public static String requestOffsetHealth;
+    public static String requestOffsetCrime;
+    public static String requestOffsetScience;
+
 
     public static void resetData(){
         requestOffsetFood = "";
@@ -21,10 +27,13 @@ public class DateOffsetDataStorage {
         requestOffsetFinance = "";
         requestOffsetPolitics = "";
         requestOffsetTechnology = "";
+        requestOffsetSport = "";
+        requestOffsetHealth = "";
+        requestOffsetCrime = "";
+        requestOffsetScience = "";
     }
 
     public static void setOffsetForCategory(int categoryId, String requestOffset){
-        Log.d("newswipe", "SET OFFSET IN STORAGE: cat: " + categoryId + ", offset: " +requestOffset);
         if(categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
             requestOffsetMovie = requestOffset;
         }
@@ -40,6 +49,18 @@ public class DateOffsetDataStorage {
         if(categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
             requestOffsetFood = requestOffset;
         }
+        if(categoryId == NewsCategoryContainer.Science.CATEGORY_ID){
+            requestOffsetScience = requestOffset;
+        }
+        if(categoryId == NewsCategoryContainer.Sport.CATEGORY_ID){
+            requestOffsetSport = requestOffset;
+        }
+        if(categoryId == NewsCategoryContainer.Health.CATEGORY_ID){
+            requestOffsetHealth = requestOffset;
+        }
+        if(categoryId == NewsCategoryContainer.Crime.CATEGORY_ID){
+            requestOffsetCrime = requestOffset;
+        }
     }
 
     public static void setDateOffsets(List<RequestOffsetRoomModel> offsets){
@@ -52,7 +73,7 @@ public class DateOffsetDataStorage {
         }
     }
 
-    public static String getOffsetForCategory(int categoryId){
+    public static String getDateOffsetForCategory(int categoryId){
         if(categoryId == NewsCategoryContainer.Movie.CATEGORY_ID){
             return requestOffsetMovie;
         }
@@ -67,6 +88,18 @@ public class DateOffsetDataStorage {
         }
         if(categoryId == NewsCategoryContainer.Food.CATEGORY_ID){
             return requestOffsetFood;
+        }
+        if(categoryId == NewsCategoryContainer.Science.CATEGORY_ID){
+            return requestOffsetScience;
+        }
+        if(categoryId == NewsCategoryContainer.Sport.CATEGORY_ID){
+            return requestOffsetSport;
+        }
+        if(categoryId == NewsCategoryContainer.Health.CATEGORY_ID){
+            return requestOffsetHealth;
+        }
+        if(categoryId == NewsCategoryContainer.Crime.CATEGORY_ID){
+            return requestOffsetCrime;
         }
         return "";
     }

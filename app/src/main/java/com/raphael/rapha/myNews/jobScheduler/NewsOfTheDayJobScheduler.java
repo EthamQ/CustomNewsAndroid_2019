@@ -15,12 +15,12 @@ import com.raphael.rapha.myNews.http.HttpRequestInfo;
 import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
 import com.raphael.rapha.myNews.loading.DailyNewsLoadingService;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.SwipeTimeService;
 import com.raphael.rapha.myNews.topics.TopicWordsTransformation;
 import com.raphael.rapha.myNews.notifications.NewsOfTheDayNotificationService;
-import com.raphael.rapha.myNews.roomDatabase.KeyWordDbService;
+import com.raphael.rapha.myNews.roomDatabase.TopicDbService;
 import com.raphael.rapha.myNews.roomDatabase.NewsArticleDbService;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
 import com.raphael.rapha.myNews.sharedPreferencesAccess.NewsOfTheDayTimeService;
@@ -35,20 +35,20 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
 
     String TAG = "scheduler";
     NewsArticleDbService newsArticleDbService;
-    KeyWordDbService keyWordDbService;
+    TopicDbService keyWordDbService;
     JobParameters jobParameters;
     // Set them and compare them later to know when all responses have arrived.
     int numberOfSentRequests = 0;
     int numberOfReceivedResponses = 0;
 
-    LiveData<List<KeyWordRoomModel>> likedTopicsLiveData;
+    LiveData<List<TopicRoomModel>> likedTopicsLiveData;
 
     @Override
     public boolean onStartJob(JobParameters jobParameters) {
         DailyNewsLoadingService.reactOnLoadArticlesUnsuccessful(NewsOfTheDayJobScheduler.this);
         Log.d(TAG, "job started");
         newsArticleDbService = NewsArticleDbService.getInstance(getApplication());
-        keyWordDbService = KeyWordDbService.getInstance(getApplication());
+        keyWordDbService = TopicDbService.getInstance(getApplication());
         // To not show them to the user again.
         setReadArticlesToArchived();
         // Request articles for liked keywords for the new request.
@@ -88,9 +88,9 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
 
     private Observer getObserverToRequestArticles(JobParameters jobParameters){
         this.jobParameters = jobParameters;
-        Observer<List<KeyWordRoomModel>> observer = new Observer<List<KeyWordRoomModel>>() {
+        Observer<List<TopicRoomModel>> observer = new Observer<List<TopicRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> topicsToLookFor) {
+            public void onChanged(@Nullable List<TopicRoomModel> topicsToLookFor) {
                 if(topicsToLookFor.size() >= NewsOfTheDayFragment.ARTICLE_MINIMUM){
                     numberOfSentRequests = topicsToLookFor.size();
                     // Provides a language id for every topic at the corresponding index.
@@ -114,7 +114,7 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
                         String[] keyWords = new TopicWordsTransformation().getKeyWordsFromTopics(topicsToLookFor.get(i));
                         try {
                             DailyNewsLoadingService.setLoading(true);
-                            NewsOfTheDayApiService.getArticlesNewsApiByKeyWords(
+                            NewsOfTheDayApiService.getArticlesNewsApiByTopics(
                                     httpRequest, keyWords, languageIds[languageArrayIndex++]
                             );
                         } catch (Exception e) {
@@ -143,7 +143,11 @@ public class NewsOfTheDayJobScheduler extends JobService implements IHttpRequest
         LinkedList<NewsArticle> articlesForKeyword = new LinkedList<>();
         JSONObject newsArticleJson = (JSONObject) info.getRequestResponse();
         try {
-            articlesForKeyword = NewsApiHelper.jsonToNewsArticleArray(newsArticleJson, -1, -1);
+            articlesForKeyword = NewsApiHelper.jsonToNewsArticleArray(
+                    newsArticleJson,
+                    NewsApiHelper.NEWS_CATEGORY_NOT_SET,
+                    NewsApiHelper.LANGUAGE_ID_NOT_SET
+            );
         } catch (Exception e) {
             e.printStackTrace();
         }

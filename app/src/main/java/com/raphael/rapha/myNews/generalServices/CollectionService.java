@@ -1,4 +1,4 @@
-package com.raphael.rapha.myNews.utils;
+package com.raphael.rapha.myNews.generalServices;
 
 
 import com.raphael.rapha.myNews.swipeCardContent.ISwipeCard;

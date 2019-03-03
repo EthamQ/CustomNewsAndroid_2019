@@ -11,7 +11,7 @@ import com.raphael.rapha.myNews.activities.mainActivity.mainActivityFragments.Sw
 
 public class ErrorSwipeCard implements ISwipeCard {
 
-    String errorText = "It was not possible to load new articles from the server.\n\n" +
+    private final String errorText = "It was not possible to load new articles from the server.\n\n" +
             "Check your internet connection or wait a little bit and try it again.";
 
     @Override

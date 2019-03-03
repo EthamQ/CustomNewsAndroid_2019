@@ -14,19 +14,13 @@ public class ArticleDataStorage {
     private static ArrayList<ISwipeCard> backUpArticlesIfError = new ArrayList<>();
 
     public static ArrayList<ISwipeCard> getBackUpArticlesIfError() {
-        Log.d("bbupp", "Size get backup: " + backUpArticlesIfError.size());
-        //Log.d("bbupp", "First title get backup: " + backUpArticlesIfError.get(0).toString());
         return backUpArticlesIfError;
     }
 
     public static void setBackUpArticlesIfError(ArrayList<ISwipeCard> backUpArticlesIfError) {
-        Log.d("bbupp", "Size set backup: " + backUpArticlesIfError.size());
-        //Log.d("bbupp", "First title set backup: " + backUpArticlesIfError.get(0).toString());
         ArticleDataStorage.backUpArticlesIfError.clear();
         ArticleDataStorage.backUpArticlesIfError.addAll(backUpArticlesIfError);
     }
-
-
 
     public static void storeArticlesTemporarily(ArrayList<ISwipeCard> articles){
         temporaryStoredArticles.clear();

@@ -1,9 +1,9 @@
-package com.raphael.rapha.myNews.utils;
+package com.raphael.rapha.myNews.generalServices;
 
 import android.util.Log;
 
 import com.raphael.rapha.myNews.activities.mainActivity.MainActivity;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.roomDatabase.newsArticles.NewsArticleRoomModel;
 import com.raphael.rapha.myNews.swipeCardContent.ISwipeCard;
 import com.raphael.rapha.myNews.swipeCardContent.NewsArticle;
@@ -55,7 +55,7 @@ public class Logging {
         }
     }
 
-    public static void logKeyWordsFromDb(List<KeyWordRoomModel> keyWords){
+    public static void logKeyWordsFromDb(List<TopicRoomModel> keyWords){
         for(int i = 0; i < keyWords.size(); i++){
             Log.d("keywords", keyWords.get(i).toString());
         }

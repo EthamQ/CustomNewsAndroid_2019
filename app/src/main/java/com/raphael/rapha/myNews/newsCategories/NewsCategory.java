@@ -13,7 +13,7 @@ public class NewsCategory {
 
     public NewsCategory(){}
 
-    public int getCategoryID() { return categoryID; }
+    public int getNewsCategoryID() { return categoryID; }
 
     public void setCategoryID(int categoryID) { this.categoryID = categoryID; }
 

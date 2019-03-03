@@ -5,29 +5,29 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
 
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRepository;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRepository;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 
 import java.util.List;
 
-public class KeyWordDbService {
+public class TopicDbService {
 
-    private static KeyWordDbService instance;
-    KeyWordRepository repository;
+    private static TopicDbService instance;
+    TopicRepository repository;
 
-    private KeyWordDbService(Application application){
-        this.repository = new KeyWordRepository(application);
+    private TopicDbService(Application application){
+        this.repository = new TopicRepository(application);
         FillDatabase.fillKeyWords(repository);
     }
 
-    public static synchronized KeyWordDbService getInstance(Application application){
+    public static synchronized TopicDbService getInstance(Application application){
         if(instance == null){
-            instance = new KeyWordDbService(application);
+            instance = new TopicDbService(application);
         }
         return instance;
     }
 
-    public void insert(KeyWordRoomModel keyWordRoomModel){
+    public void insert(TopicRoomModel keyWordRoomModel){
         repository.insert(keyWordRoomModel);
     }
 
@@ -36,34 +36,34 @@ public class KeyWordDbService {
         FillDatabase.fillKeyWords(repository);
     }
 
-    public void update(KeyWordRoomModel keyWordRoomModel){
+    public void update(TopicRoomModel keyWordRoomModel){
         repository.update(keyWordRoomModel);
     }
 
-    public void setAsNewsOfTheDayKeyWord(KeyWordRoomModel keyWordRoomModel){
+    public void setAsNewsOfTheDayKeyWord(TopicRoomModel keyWordRoomModel){
         repository.setUsedInArticleOfTheDay(keyWordRoomModel, true);
     }
 
-    public void removeAsNewsOfTheDayKeyWord(KeyWordRoomModel keyWordRoomModel){
+    public void removeAsNewsOfTheDayKeyWord(TopicRoomModel keyWordRoomModel){
         repository.setUsedInArticleOfTheDay(keyWordRoomModel, false);
     }
 
-    public LiveData<List<KeyWordRoomModel>> getAllKeyWords(){
+    public LiveData<List<TopicRoomModel>> getAllKeyWords(){
         return repository.getAllKeyWords();
     }
 
-    public LiveData<List<KeyWordRoomModel>> getAllKeyWordsArticlesOfTheDay(){
+    public LiveData<List<TopicRoomModel>> getAllKeyWordsArticlesOfTheDay(){
         return repository.getAllKeyWords(true);
     }
 
-    public LiveData<List<KeyWordRoomModel>> getAllLikedKeyWords(){
+    public LiveData<List<TopicRoomModel>> getAllLikedKeyWords(){
         return repository.getAllLikedKeyWords();
     }
 
     public void resetDailyKeyWords(){
-        getAllKeyWordsArticlesOfTheDay().observeForever(new Observer<List<KeyWordRoomModel>>() {
+        getAllKeyWordsArticlesOfTheDay().observeForever(new Observer<List<TopicRoomModel>>() {
             @Override
-            public void onChanged(@Nullable List<KeyWordRoomModel> keyWordRoomModels) {
+            public void onChanged(@Nullable List<TopicRoomModel> keyWordRoomModels) {
                 for(int i = 0; i < keyWordRoomModels.size(); i++){
                     removeAsNewsOfTheDayKeyWord(keyWordRoomModels.get(i));
                 }

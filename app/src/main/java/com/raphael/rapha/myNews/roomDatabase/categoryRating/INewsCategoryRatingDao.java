@@ -1,0 +1,25 @@
+package com.raphael.rapha.myNews.roomDatabase.categoryRating;
+
+import android.arch.lifecycle.LiveData;
+import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
+import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
+
+import java.util.List;
+
+
+@Dao
+public interface INewsCategoryRatingDao {
+    @Query("SELECT * FROM NewsCategoryRatingRoomModel WHERE newsCategoryId = :newsCategoryId")
+    NewsCategoryRatingRoomModel getOne(int newsCategoryId);
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertOneNewsCategory(NewsCategoryRatingRoomModel userPreferenceRoomModel);
+    @Query("SELECT * FROM NewsCategoryRatingRoomModel")
+    LiveData<List<NewsCategoryRatingRoomModel>> getAllUserPreferences();
+    @Query("DELETE FROM NewsCategoryRatingRoomModel")
+    void deleteAllPreferences();
+    @Update
+    void updateUserPreference(NewsCategoryRatingRoomModel userPreferenceRoomModel);
+}

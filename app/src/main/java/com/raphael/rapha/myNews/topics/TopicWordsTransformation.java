@@ -1,6 +1,6 @@
 package com.raphael.rapha.myNews.topics;
 
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -50,23 +50,30 @@ public class TopicWordsTransformation {
     }
 
 
-    public LinkedList<KeyWordRoomModel> transformQueryStrings(KeyWordRoomModel keyWordRoomModel){
-        LinkedList<KeyWordRoomModel> toReturn = new LinkedList<>();
+    /**
+     * Receives a single topic display text and transforms it to a list of one or several
+     * related words that deliver better search results when you send it to the api to look for them.
+     * But the user shouldn't see this list of words, only the api.
+     * @param keyWordRoomModel
+     * @return
+     */
+    public LinkedList<TopicRoomModel> transformQueryStrings(TopicRoomModel keyWordRoomModel){
+        LinkedList<TopicRoomModel> toReturn = new LinkedList<>();
         LinkedList<String> transformedEntries = dictionary.get(keyWordRoomModel.keyWord.toUpperCase());
         if(transformedEntries == null){
             toReturn.add(keyWordRoomModel);
             return toReturn;
         } else{
             for(int i = 0; i < transformedEntries.size(); i++){
-                KeyWordRoomModel toAdd = new KeyWordRoomModel(transformedEntries.get(i), keyWordRoomModel.categoryId);
+                TopicRoomModel toAdd = new TopicRoomModel(transformedEntries.get(i), keyWordRoomModel.categoryId);
                 toReturn.add(toAdd);
             }
             return toReturn;
         }
     }
 
-    public String[] getKeyWordsFromTopics(KeyWordRoomModel topicToLookFor){
-        List<KeyWordRoomModel> transformedKeyWords = transformQueryStrings(topicToLookFor);
+    public String[] getKeyWordsFromTopics(TopicRoomModel topicToLookFor){
+        List<TopicRoomModel> transformedKeyWords = transformQueryStrings(topicToLookFor);
         String[] keyWords = new String[transformedKeyWords.size()];
         for(int k = 0; k < keyWords.length; k++){
             keyWords[k] = transformedKeyWords.get(k).keyWord;

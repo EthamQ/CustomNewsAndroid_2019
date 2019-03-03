@@ -61,8 +61,8 @@ public class NewsCategoryContainer {
         }
 
         for(NewsCategory category: allCategories){
-            Distribution distribution = new Distribution(category.getCategoryID());
-            distribution.amountToFetchFromApi = NewsCategoryContainerHelper.calculateDistribution(category, totalRating);
+            Distribution distribution = new Distribution(category.getNewsCategoryID());
+            distribution.calculateAmountToFetchFromApi(category, totalRating);
             distributionList.add(distribution);
         }
 

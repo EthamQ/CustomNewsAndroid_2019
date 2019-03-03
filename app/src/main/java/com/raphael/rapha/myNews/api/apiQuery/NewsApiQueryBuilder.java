@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.raphael.rapha.myNews.http.IHttpRequester;
 import com.raphael.rapha.myNews.languages.LanguageSettingsService;
-import com.raphael.rapha.myNews.roomDatabase.keyWordPreference.KeyWordRoomModel;
+import com.raphael.rapha.myNews.roomDatabase.topics.TopicRoomModel;
 import com.raphael.rapha.myNews.topics.TopicService;
 
 import java.util.List;
@@ -49,7 +49,7 @@ public class NewsApiQueryBuilder {
      * to the queryWord String.
      * @param newsCategory
      */
-    public void setQueryCategory(int newsCategory, List<KeyWordRoomModel> allTopics){
+    public void setQueryCategory(int newsCategory, List<TopicRoomModel> allTopics){
         Log.d("iii", "query cat:: " + newsCategory);
         this.newsCategory = newsCategory;
         String hashMapKey = QueryCategoryContainer.QueryWord.hashMapKey;
