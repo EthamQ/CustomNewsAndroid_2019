@@ -54,7 +54,13 @@ public class ArticleDetailScrollingActivity extends AppCompatActivity {
         else {
             String previewContent = NewsArticleUtils.removeCharInformation(newsArticle.content);
             String defaultText = "Sorry, the article preview isn't available.";
-            boolean contentValid = previewContent != null && !previewContent.isEmpty();
+            boolean contentValid;
+            if(previewContent.equals(null)){
+                contentValid = false;
+            }
+            else{
+                contentValid = previewContent.isEmpty() ? false : !previewContent.equals("null");
+            }
             contentTextView.setText(contentValid ? previewContent : defaultText);
         }
     }

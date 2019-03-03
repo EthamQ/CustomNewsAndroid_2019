@@ -95,7 +95,7 @@ public class NewsHistoryFragment extends Fragment {
                 int limit = ARTICLE_MAXIMUM > articles.size() ? articles.size() : ARTICLE_MAXIMUM;
                 for(int i = 0; i < limit; i++){
                     articlesToDisplay.add(NewsHistoryDbService.toNewsArticle(articles.get(i)));
-                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
+                    DimensionService.setListViewHeightBasedOnItems(articleListView, false);
                     adapter.notifyDataSetChanged();
                 }
             }
