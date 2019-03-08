@@ -91,10 +91,10 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("Football".toUpperCase(), "Football");
         dictionary.put("Swimming".toUpperCase(), " nage");
         dictionary.put("Boxing".toUpperCase(), "boxe");
-        dictionary.put("MMA".toUpperCase(), "MMA");
+        dictionary.put("MMA".toUpperCase(), "MMA OR UFC");
         dictionary.put("Tennis".toUpperCase(), "tennis");
         dictionary.put("Hockey".toUpperCase(), "hockey");
-        dictionary.put("Bike".toUpperCase(), "vélo bicyclette");
+        dictionary.put("Bike".toUpperCase(), "vélo OR bicyclette");
         dictionary.put("Hiking".toUpperCase(), "marche");
         dictionary.put("olympic".toUpperCase(), "olympien");
         dictionary.put("Rugby".toUpperCase(), "Rugby");
@@ -102,7 +102,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("sport".toUpperCase(), "Sport");
         dictionary.put("score".toUpperCase(), "résultat");
         dictionary.put("tournament".toUpperCase(), "tournoi");
-        dictionary.put("championship".toUpperCase(), " championnat ");
+        dictionary.put("championship".toUpperCase(), "championnat");
         dictionary.put("race".toUpperCase(), "course");
         dictionary.put("athlete".toUpperCase(), "athlète");
 
@@ -122,8 +122,8 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("pharmacy".toUpperCase(), "pharmacie");
         dictionary.put("medicare".toUpperCase(), "santé publique");
         dictionary.put("prevention".toUpperCase(), "prévent");
-        dictionary.put("disorder".toUpperCase(), "handicap empêchement");
-        dictionary.put("cancer".toUpperCase(), "cancer chancreu");
+        dictionary.put("disorder".toUpperCase(), "handicap OR empêchement");
+        dictionary.put("cancer".toUpperCase(), "cancer OR chancreu");
         dictionary.put("heart".toUpperCase(), "cœur");
 
         // Crime related
@@ -146,7 +146,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("offence".toUpperCase(), "hôpital");
         dictionary.put("victim".toUpperCase(), "victime");
         dictionary.put("kidnap".toUpperCase(), "kidnapper");
-        dictionary.put("plagiarize".toUpperCase(), "contrefai falsifi");
+        dictionary.put("plagiarize".toUpperCase(), "contrefai OR falsifi");
         dictionary.put("violent".toUpperCase(), "violence force");
         dictionary.put("gang".toUpperCase(), "Gang");
         dictionary.put("stab".toUpperCase(), "poignard");
@@ -158,7 +158,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("Chemistry".toUpperCase(), "chimie");
         dictionary.put("Genetics".toUpperCase(), "génétique");
         dictionary.put("Mathematics".toUpperCase(), "mathématique");
-        dictionary.put("Neuroscience".toUpperCase(), "neuroscience neurologie");
+        dictionary.put("Neuroscience".toUpperCase(), "neuroscience OR neurologie");
         dictionary.put("Engineering".toUpperCase(), "ingénieur");
         dictionary.put("cryptography".toUpperCase(), "cryptographie");
         dictionary.put("science".toUpperCase(), "science");
@@ -166,7 +166,7 @@ public class FrenchDictionary extends LanguageDictionary{
         dictionary.put("study".toUpperCase(), "étude recherche");
         dictionary.put("atom".toUpperCase(), "l'atome");
         dictionary.put("laboratory".toUpperCase(), "laboratoire");
-        dictionary.put("radioactiv".toUpperCase(), "radioacti");
+        dictionary.put("radioactive".toUpperCase(), "radioacti");
         dictionary.put("quantum".toUpperCase(), "quant");
     }
 }

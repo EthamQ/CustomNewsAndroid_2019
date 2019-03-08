@@ -22,7 +22,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("Investment".toUpperCase(), "инвестир");
         dictionary.put("Jobs".toUpperCase(), "работ");
         dictionary.put("Taxes".toUpperCase(), "налог");
-        dictionary.put("insurance".toUpperCase(), "страховка заверение");
+        dictionary.put("insurance".toUpperCase(), "страховка OR заверение");
         dictionary.put("bank".toUpperCase(), "банк");
         dictionary.put("money".toUpperCase(), "деньги рубл");
         dictionary.put("market".toUpperCase(), "рынок рынк");
@@ -30,12 +30,12 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("fund".toUpperCase(), "фонд");
         dictionary.put("bills".toUpperCase(), "счёт");
         dictionary.put("customer".toUpperCase(), "покупател клиент");
-        dictionary.put("employer".toUpperCase(), "работодател предприниматель");
+        dictionary.put("employer".toUpperCase(), "работодател OR предприниматель");
         dictionary.put("employee".toUpperCase(), "служащий сотрудник");
 
         // Food related
         dictionary.put("pasta".toUpperCase(), "макарон");
-        dictionary.put("cook".toUpperCase(), "варить готовить");
+        dictionary.put("cook".toUpperCase(), "варить OR готовить");
         dictionary.put("food".toUpperCase(), "еда");
         dictionary.put("meal".toUpperCase(), "блюд");
         dictionary.put("delicious".toUpperCase(), "вкус");
@@ -48,7 +48,7 @@ public class RussianDictionary extends LanguageDictionary {
 
         // Politics related
         dictionary.put("Russia".toUpperCase(), "росси");
-        dictionary.put("Syria".toUpperCase(), "Сирия Сирий");
+        dictionary.put("Syria".toUpperCase(), "Сирия OR Сирий");
         dictionary.put("war".toUpperCase(), "войн");
         dictionary.put("weapons".toUpperCase(), "оружи");
         dictionary.put("politic".toUpperCase(), "политик");
@@ -59,7 +59,9 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("surveillance".toUpperCase(), "наблюдение");
         dictionary.put("europe".toUpperCase(), " Европ");
         dictionary.put("sanctions".toUpperCase(), " принудительн");
-
+        dictionary.put("Trump".toUpperCase(), "трамп");
+        dictionary.put("Putin".toUpperCase(), "путин");
+        dictionary.put("Macron".toUpperCase(), "макрон");
         dictionary.put("Communism".toUpperCase(), "коммунизм");
         dictionary.put("Law".toUpperCase(), "закон");
         dictionary.put("Capitalism".toUpperCase(), "капитализм");
@@ -81,7 +83,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("actor".toUpperCase(), "актёр актрис");
 
         // Technology related
-        dictionary.put("Programming".toUpperCase(), "программир");
+        dictionary.put("Programming".toUpperCase(), "программир OR алгоритм");
         dictionary.put("AI Artificial Intelligence".toUpperCase(), "искусственн интеллигенци");
         dictionary.put("technology".toUpperCase(), "технологи");
         dictionary.put("screen".toUpperCase(), "экран");
@@ -95,7 +97,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("Football".toUpperCase(), "футболь");
         dictionary.put("Swimming".toUpperCase(), "плавать");
         dictionary.put("Boxing".toUpperCase(), "бокс");
-        dictionary.put("MMA".toUpperCase(), "MMA");
+        dictionary.put("MMA".toUpperCase(), "MMA OR UFC");
         dictionary.put("Tennis".toUpperCase(), "теннис");
         dictionary.put("Hockey".toUpperCase(), "хоккей");
         dictionary.put("Bike".toUpperCase(), "велосипед");
@@ -140,20 +142,20 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("kill".toUpperCase(), "убить убил убива");
         dictionary.put("crime".toUpperCase(), "преступлен");
         dictionary.put("choke".toUpperCase(), "душить");
-        dictionary.put("steal".toUpperCase(), "красть крал ворова вор краж");
+        dictionary.put("steal".toUpperCase(), "красть OR крал OR ворова OR вор OR краж");
         dictionary.put("shoot".toUpperCase(), "стрел стреля");
         dictionary.put("felony".toUpperCase(), "преступление");
-        dictionary.put("rape".toUpperCase(), "изнасилован насилова");
+        dictionary.put("rape".toUpperCase(), "изнасилован OR насилова");
         dictionary.put("fraud".toUpperCase(), "обман");
         dictionary.put("misdemeanour".toUpperCase(), "нарушение");
-        dictionary.put("robbery".toUpperCase(), "ата́ка набег нападение");
+        dictionary.put("robbery".toUpperCase(), "атака OR набег OR нападение");
         dictionary.put("offence".toUpperCase(), "больница");
         dictionary.put("victim".toUpperCase(), "жертв пострадав");
-        dictionary.put("kidnap".toUpperCase(), "похищен похити похища");
-        dictionary.put("plagiarize".toUpperCase(), "изврати извраща");
+        dictionary.put("kidnap".toUpperCase(), "похищен OR похити OR похища");
+        dictionary.put("plagiarize".toUpperCase(), "изврати OR извраща");
         dictionary.put("violent".toUpperCase(), "насилие");
         dictionary.put("gang".toUpperCase(), "братва");
-        dictionary.put("stab".toUpperCase(), "зареза заколо закалыва");
+        dictionary.put("stab".toUpperCase(), "зареза OR заколо OR закалыва");
 
         //Science related
         dictionary.put("Physics".toUpperCase(), "физик");
@@ -170,7 +172,7 @@ public class RussianDictionary extends LanguageDictionary {
         dictionary.put("study".toUpperCase(), "исследован");
         dictionary.put("atom".toUpperCase(), "атом");
         dictionary.put("laboratory".toUpperCase(), "лаборатория");
-        dictionary.put("radioactiv".toUpperCase(), "радиоактивн");
+        dictionary.put("radioactive".toUpperCase(), "радиоактивн");
         dictionary.put("quantum".toUpperCase(), "квант");
     }
 }

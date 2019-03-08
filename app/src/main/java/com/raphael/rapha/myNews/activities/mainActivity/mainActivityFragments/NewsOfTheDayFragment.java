@@ -212,28 +212,37 @@ public class NewsOfTheDayFragment extends Fragment {
                     setTextNotEnoughTopics();
                 }
                 else if(!topics.isEmpty() && articlesAreReady){
-                    // Provides a language id for every topic at the corresponding index.
                     int[] languageIds = LanguageSettingsService.generateLanguageDistributionNewsOfTheDay(
-                            topics.size(),
-                            LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity)
+                            topics.size(), LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity)
                     );
-                    int languageArrayIndex = 0;
-                    int languageId = languageIds[languageArrayIndex];
-                    for(int i = 0; i < topics.size(); i++){
-                        // Get articles for every topic and add them to the view.
+                    for(int i = 0; i < languageIds.length; i++){
                         addArticleForTopicToView(
                                 topics.get(i).keyWord,
-                                LanguageSettingsService.getLanguageIdAsString(languageId)
-                        );
-                        languageArrayIndex++;
-                        // Quick fix. Needs improvement. We don't know which language the request used.
-                        // So for now we're looking for the topic in all languages.
-                        languageId = languageIds[languageArrayIndex % languageIds.length];
-                        addArticleForTopicToView(
-                                topics.get(i).keyWord,
-                                LanguageSettingsService.getLanguageIdAsString(languageId)
+                                LanguageSettingsService.getLanguageIdAsString(languageIds[i])
                         );
                     }
+                    for(int i = 0; i < languageIds.length; i++){
+                        addArticleForTopicToView(
+                                topics.get(i).keyWord,
+                                LanguageSettingsService.getLanguageIdAsString(languageIds[(i + 1) % languageIds.length])
+                        );
+                    }
+
+
+
+
+
+//                    boolean[] languages = LanguageSettingsService.loadCheckedLoadedNewsOfTheDay(mainActivity);
+//                    for(int i = 0; i < topics.size(); i++){
+//                        for(int j = 0; j < languages.length; j++){
+//                            if(languages[j]){
+//                                addArticleForTopicToView(
+//                                        topics.get(i).keyWord,
+//                                        LanguageSettingsService.getLanguageIdAsString(j)
+//                                );
+//                            }
+//                        }
+//                    }
                     topicsOfTheDayLiveData.removeObserver(this);
                 }
             }
@@ -260,17 +269,18 @@ public class NewsOfTheDayFragment extends Fragment {
                         for(int i = 0; i < articlesForTopic.size(); i++){
                             if(articlesForTopic.get(i).languageId.equals(languageId)){
                                 NewsArticleRoomModel modelToAdd = articlesForTopic.get(i);
-                                if(!modelToAdd.hasBeenRead){
-                                    newsArticleDbService.setAsRead(modelToAdd);
-                                }
                                 NewsArticle articleToAdd = newsArticleDbService.createNewsArticle(modelToAdd);
-                                articlesOfTheDay.add(articleToAdd);
-                                adapter.notifyDataSetChanged();
-                                DimensionService.setListViewHeightBasedOnItems(articleListView, true);
-                                setTextArticlesLoaded();
-                                articlesForTopicLiveData.removeObserver(this);
-                                cleanUpDailyArticles();
-                                break;
+                                if(!topicExists(articleToAdd)){
+                                    if(!modelToAdd.hasBeenRead){
+                                        newsArticleDbService.setAsRead(modelToAdd);
+                                    }
+                                    articlesOfTheDay.add(articleToAdd);
+                                    adapter.notifyDataSetChanged();
+                                    DimensionService.setListViewHeightBasedOnItems(articleListView, true);
+                                    setTextArticlesLoaded();
+                                    articlesForTopicLiveData.removeObserver(this);
+                                    break;
+                                }
                             }
                         }
                     }
@@ -321,8 +331,8 @@ public class NewsOfTheDayFragment extends Fragment {
 
     }
 
-    private void cleanUpDailyArticles(){
-        CollectionService.removeDuplicatesNewsArticleList(articlesOfTheDay);
+    private boolean topicExists(NewsArticle article){
+        return CollectionService.containsTopicNewsArticle(articlesOfTheDay, article.foundWithKeyWord);
     }
 
     /**

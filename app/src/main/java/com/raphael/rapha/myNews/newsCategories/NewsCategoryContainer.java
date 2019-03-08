@@ -272,7 +272,7 @@ public class NewsCategoryContainer {
         };
 
         public static final String[] SCIENCE_DEFAULT_QUERY_STRINGS_EN = new String[] {
-                "science", "scientist", "study", "atom", "laboratory", "radioactiv", "quantum"
+                "science", "scientist", "study", "atom", "laboratory", "radioactive", "quantum"
         };
 
         public Science(){

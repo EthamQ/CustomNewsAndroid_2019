@@ -87,6 +87,10 @@ public class CollectionService {
         return list.stream().filter(article -> article instanceof NewsArticle && ((NewsArticle)article).title.equals(title)).findFirst().isPresent();
     }
 
+    public static boolean containsTopicNewsArticle(final List<NewsArticle> list, final String topic){
+        return list.stream().filter(article -> article.foundWithKeyWord.equals(topic)).findFirst().isPresent();
+    }
+
     private static boolean containsTitleNewsArticle(final List<NewsArticle> list, final String title){
         return list.stream().filter(article -> article.title.equals(title)).findFirst().isPresent();
     }

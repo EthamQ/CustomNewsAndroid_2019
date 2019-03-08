@@ -93,7 +93,7 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("Football".toUpperCase(), "Football");
         dictionary.put("Swimming".toUpperCase(), "Schwimmen");
         dictionary.put("Boxing".toUpperCase(), "Boxen");
-        dictionary.put("MMA".toUpperCase(), "MMA");
+        dictionary.put("MMA".toUpperCase(), "MMA OR UFC");
         dictionary.put("Tennis".toUpperCase(), "Tennis");
         dictionary.put("Hockey".toUpperCase(), "Hockey");
         dictionary.put("Bike".toUpperCase(), "Fahrrad");
@@ -168,7 +168,7 @@ public class GermanDictionary extends LanguageDictionary{
         dictionary.put("study".toUpperCase(), "Studie");
         dictionary.put("atom".toUpperCase(), "Atom");
         dictionary.put("laboratory".toUpperCase(), "Labor");
-        dictionary.put("radioactiv".toUpperCase(), "radioaktiv");
+        dictionary.put("radioactive".toUpperCase(), "radioaktiv");
         dictionary.put("quantum".toUpperCase(), "quantum");
     }
 }

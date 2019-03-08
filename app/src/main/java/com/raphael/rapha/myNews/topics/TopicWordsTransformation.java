@@ -17,14 +17,14 @@ public class TopicWordsTransformation {
 
     private void initTransformDictionary(){
         LinkedList<String> germanPolitics = new LinkedList<>();
-        germanPolitics.add("Merkel");
-        germanPolitics.add("Seehofer");
-        germanPolitics.add("SPD");
-        germanPolitics.add("CDU");
-        germanPolitics.add("FDP");
-        germanPolitics.add("Grüne");
-        germanPolitics.add("Sigmar Gabriel");
-        germanPolitics.add("Bundeskanzler");
+        germanPolitics.add("\"Merkel\" OR ");
+        germanPolitics.add("\"Seehofer\" OR ");
+        germanPolitics.add("\"SPD\" OR ");
+        germanPolitics.add("\"CDU\" OR ");
+        germanPolitics.add("\"FDP\" OR ");
+        germanPolitics.add("\"Grüne\" OR ");
+        germanPolitics.add("Bundestag OR ");
+        germanPolitics.add("\"Bundeskanzler\"");
         dictionary.put("German Politics".toUpperCase(), germanPolitics);
 
         LinkedList<String> programming = new LinkedList<>();
