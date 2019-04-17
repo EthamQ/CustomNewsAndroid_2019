@@ -22,6 +22,7 @@ one news article for every topic you liked in the "News of the day" menu.
 Which languages are supported?
 You can get news in either russian, french, english or german.
 You can even select multiple languages at once.
+
 ------------------------------------------------------------------------------------------------
 
 Known issues:
