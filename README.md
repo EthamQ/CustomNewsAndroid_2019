@@ -1,5 +1,7 @@
 # CustomNewsAndroid_2019
 
+The first time for me working "intensively" with Android Studio.
+
 A test version of this app is in the app store under the link.
 https://play.google.com/apps/testing/com.raphael.myNewsMultilingual
 
